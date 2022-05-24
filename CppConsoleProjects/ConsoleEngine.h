@@ -156,6 +156,104 @@ public:
 		}
 	}
 
+	// Draw line from start to end
+	void Line(int xStart, int yStart, int xEnd, int yEnd, wchar_t c = 0x2588, short color = 0x000F)
+	{
+		// Use Bresnam's Line Algorithm
+		int x = 0;
+		int y = 0;
+		int dx = 0;
+		int dxA = 0;
+		int dy = 0;
+		int dyA = 0;
+		int px = 0;
+		int py = 0;
+		int xe = 0;
+		int ye = 0;
+		int i = 0;
+
+		dx = xEnd - xStart;
+		dy = yEnd - yStart;
+		dxA = abs(dx);
+		dyA = abs(dy);
+		px = 2 * dyA - dxA;
+		py = 2 * dxA - dyA;
+
+		if (dyA <= dxA)
+		{
+			if (dx >= 0)
+			{
+				x = xStart;
+				y = yStart;
+				xe = xEnd;
+			}
+			else
+			{
+				x = xEnd;
+				y = yEnd;
+				xe = xStart;
+			}
+
+			Draw(x,y,c,color);
+
+			for (i = 0; x < xe; i++)
+			{
+				x += 1;
+				if (px < 0)
+					px += (2 * dyA);
+
+				else
+				{
+					if ((dx < 0 && dy < 0) || (dx > 0 && dy > 0))
+						y += 1;
+					else
+						y -= 1;
+
+					px += 2 * (dyA - dxA);
+				}
+
+				Draw(x,y,c,color);
+			}
+		}
+		else
+		{
+			if (dy >= 0)
+			{
+				x = xStart;
+				y = yStart;
+				ye = yEnd;
+			}
+			else
+			{
+				x = xEnd;
+				y = yEnd;
+				ye = yStart;
+			}
+
+			Draw(x, y, c, color);
+
+			for (i = 0; y < ye; i++)
+			{
+				y += 1;
+				if (py <= 0)
+					py += (2 * dxA);
+
+				else
+				{
+					if ((dx < 0 && dy < 0) || (dx > 0 && dy > 0))
+						x += 1;
+					else
+						x -= 1;
+
+					py += 2 * (dxA - dyA);
+				}
+
+				Draw(x, y, c, color);
+			}
+		}
+
+	}
+
 	// Fill an area with character and color
 	void Fill(int xStart, int yStart, int xEnd, int yEnd, wchar_t c = 0x2588, short color = 0x000F)
 	{
