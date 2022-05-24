@@ -127,11 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Asteroids.cpp" />
     <ClCompile Include="ConsoleFPS.cpp" />
     <ClCompile Include="CppConsoleProjects.cpp" />
-    <ClCompile Include="Demo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Asteroids.h" />
     <ClInclude Include="ConsoleEngine.h" />
     <ClInclude Include="ConsoleFPS.h" />
   </ItemGroup>

@@ -402,7 +402,3 @@ protected:
 
 };
 
-// Define static variables
-std::atomic<bool> ConsoleEngine::atomActive(false);
-std::condition_variable ConsoleEngine::gameFinished;
-std::mutex ConsoleEngine::mutexGame;

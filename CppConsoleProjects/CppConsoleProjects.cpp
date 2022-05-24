@@ -9,14 +9,24 @@
 #include <utility>
 #include <algorithm>
 
-#include "ConsoleFPS.h";
+//#include "ConsoleFPS.h";
+#include "ConsoleEngine.h"
+#include "Asteroids.h";
 
 using namespace std;
 
+// Define static variables
+std::atomic<bool> ConsoleEngine::atomActive(false);
+std::condition_variable ConsoleEngine::gameFinished;
+std::mutex ConsoleEngine::mutexGame;
+
 // int selection = 0;
 
-/*int main()
+int main()
 {
-	ConsoleFPS fpsGame;
-	fpsGame.RunEngine();
-}*/
+	Asteroids game;
+	game.ConstructConsole(160, 100, 8, 8);
+	game.Start();
+
+	return 0;
+}
