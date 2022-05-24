@@ -1,6 +1,12 @@
 ﻿  Asteroids.cpp
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(52,28): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(52,17): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   CppConsoleProjects.cpp
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\CppConsoleProjects.cpp(12,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleFPS.h(35,12): warning C4305: 'initializing': truncation from 'double' to 'float'
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\CppConsoleProjects.cpp(14,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(52,28): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(52,17): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   Generating Code...
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(136): warning C4715: 'ConsoleEngine::ConstructConsole': not all control paths return a value
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(145): warning C4715: 'ConsoleEngine::ConstructConsole': not all control paths return a value
   CppConsoleProjects.vcxproj -> C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\x64\Debug\CppConsoleProjects.exe

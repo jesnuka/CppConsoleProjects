@@ -50,6 +50,15 @@ enum Color
 	BG_WHITE = 0x00F0,
 };
 
+// For drawing full colored pixels, instead of character
+enum Pixel
+{
+	PIXEL_FULL = 0x2588,
+	PIXEL_THREEQUARTERS = 0x2593,
+	PIXEL_HALF = 0x2592,
+	PIXEL_QUARTER = 0x2591
+};
+
 class ConsoleEngine
 {
 public:
