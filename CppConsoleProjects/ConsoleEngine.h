@@ -23,7 +23,7 @@ enum Color
 	FG_DARK_RED = 0x0004,
 	FG_DARK_MAGENTA = 0x0005,
 	FG_DARK_YELLOW = 0x0006,
-	FG_GREY = 0x0007, // Thanks MS :-/
+	FG_GREY = 0x0007,
 	FG_DARK_GREY = 0x0008,
 	FG_BLUE = 0x0009,
 	FG_GREEN = 0x000A,
@@ -133,6 +133,50 @@ public:
 
 		SetConsoleCtrlHandler((PHANDLER_ROUTINE)CloseHandler, TRUE);
 
+	}
+
+	// Draw a character and color on coordinates
+	virtual void Draw(int x, int y, wchar_t c = 0x2588, short color = 0x000F)
+	{
+		// Draw on coordinates of screen buffer, if in bounds
+		if (x >= 0 && x < screenWidth && y >= 0 && y < screenHeight)
+		{
+			bufferScreen[y * screenWidth + x].Char.UnicodeChar = c;
+			bufferScreen[y * screenWidth + x].Attributes = color;
+
+		}
+	}
+
+	// Fill an area with character and color
+	void Fill(int xStart, int yStart, int xEnd, int yEnd, wchar_t c = 0x2588, short color = 0x000F)
+	{
+		BoundaryCheck(xStart, yStart);
+		BoundaryCheck(xEnd, yEnd); // TODO: Clip
+		for (int i = xStart; i < xEnd; i++)
+		{
+			for (int j = yStart; j < yEnd; j++)
+				Draw(i, j, c, color);
+		}
+	}
+
+	// Check if coordinates are out of bounds, in which case limit then to in-bounds
+	void BoundaryCheck(int &x, int &y)
+	{
+		if (x < 0)
+			x = 0;
+		if (x >= screenWidth)
+			x = screenWidth;
+		if (y < 0)
+			y = 0;
+		if (y >= screenHeight)
+			y = screenHeight;
+	}
+
+	// Destructor
+	~ConsoleEngine()
+	{
+		SetConsoleActiveScreenBuffer(consoleOriginal);
+		delete[] bufferScreen;
 	}
 
 	void Start()
