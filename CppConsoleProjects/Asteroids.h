@@ -27,6 +27,7 @@ private:
 	vector<gameObject> asteroids;
 	gameObject player;
 	vector<pair<float, float>> modelShip;
+	vector<pair<float, float>> modelAsteroid;
 
 protected:
 	virtual bool OnUserCreate()
@@ -49,6 +50,15 @@ protected:
 			{2.5f, 2.5f},
 		};
 
+
+		int asteroidVertices = 20;
+		// Asteroid model
+		for (int i = 0; i < asteroidVertices; i++)
+		{
+			float radius = 1.0f; // Unit circle
+			float angle = ((float)i / (float)asteroidVertices) * (2 * M_PI);
+			modelAsteroid.push_back(make_pair(radius * sinf(angle), radius * cosf(angle)));
+		}
 		
 		return true;
 	}
@@ -66,14 +76,8 @@ protected:
 			ast.y += ast.yDir * elapsedTime;
 			WrapCoordinates(ast.x, ast.y, ast.x, ast.y);
 
-			for (int i = 0; i < ast.size; i++)
-			{
-				for (int j = 0; j < ast.size; j++)
-				{
-					Draw(ast.x + i, ast.y + j, PIXEL_QUARTER, FG_RED);
-				}
+			WireFrame(modelAsteroid, ast.x, ast.y, ast.angle, ast.size);
 
-			}
 		}
 		
 		// Player Steering
