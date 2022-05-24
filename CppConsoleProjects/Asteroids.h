@@ -26,6 +26,7 @@ private:
 
 	vector<gameObject> asteroids;
 	gameObject player;
+	vector<pair<float, float>> modelShip;
 
 protected:
 	virtual bool OnUserCreate()
@@ -39,6 +40,14 @@ protected:
 		player.xDir = 0;
 		player.yDir = 0;
 		player.angle = 0;
+
+		// Player ship, a triangle
+		modelShip =
+		{
+			{0.0f, -5.0f},
+			{-2.5f, 2.5f},
+			{2.5f, 2.5f},
+		};
 
 		
 		return true;
@@ -99,37 +108,7 @@ protected:
 
 
 		// Draw the Player Ship
-		// Ship consists of 3 points to form a triangle
-		// These never change
-		float xModel[3] = {0.0f, -2.5f, 2.5f};
-		float yModel[3] = {-5.5f, 2.5f, 2.5f};
-
-		// These are the points that are rotated and drawn to the screen
-		float xShip[3];
-		float yShip[3];
-
-		// Rotate points
-		for (int i = 0; i < 3; i++)
-		{
-			xShip[i] = xModel[i] * cosf(player.angle) - yModel[i] * sinf(player.angle);
-			yShip[i] = xModel[i] * sinf(player.angle) + yModel[i] * cosf(player.angle);
-		}
-
-		// Translate points to player's location
-		for (int i = 0; i < 3; i++)
-		{
-			xShip[i] = xShip[i] + player.x;
-			yShip[i] = yShip[i] + player.y;
-		}
-
-		// Draw the points now, that are rotated and translated
-		for (int i = 0; i < 4; i++)
-		{
-			int j = (i + 1);
-			//Draw(xShip[i % 3], yShip[i % 3], PIXEL_FULL, FG_BLUE);
-			//Line(xShip[i % 3], yShip[i % 3], xShip[(i+1) % 3], yShip[(i + 1) % 3]);
-			Line(xShip[i % 3], yShip[i % 3], xShip[j % 3], yShip[j % 3]);
-		}
+		WireFrame(modelShip, player.x, player.y, player.angle);
 
 		return true;
 	}

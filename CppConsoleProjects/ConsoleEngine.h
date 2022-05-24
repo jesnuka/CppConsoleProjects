@@ -145,7 +145,7 @@ public:
 	}
 
 	// Draw a character and color on coordinates
-	virtual void Draw(int x, int y, wchar_t c = 0x2588, short color = 0x000F)
+	virtual void Draw(int x, int y, wchar_t c = PIXEL_FULL, short color = FG_WHITE)
 	{
 		// Draw on coordinates of screen buffer, if in bounds
 		if (x >= 0 && x < screenWidth && y >= 0 && y < screenHeight)
@@ -157,9 +157,9 @@ public:
 	}
 
 	// Draw line from start to end
-	void Line(int xStart, int yStart, int xEnd, int yEnd, wchar_t c = 0x2588, short color = 0x000F)
+	void Line(int xStart, int yStart, int xEnd, int yEnd, wchar_t c = PIXEL_FULL, short color = FG_WHITE)
 	{
-		// Use Bresnam's Line Algorithm
+		// Use Bresenham's Line Algorithm
 		int x = 0;
 		int y = 0;
 		int dx = 0;
@@ -255,7 +255,7 @@ public:
 	}
 
 	// Fill an area with character and color
-	void Fill(int xStart, int yStart, int xEnd, int yEnd, wchar_t c = 0x2588, short color = 0x000F)
+	void Fill(int xStart, int yStart, int xEnd, int yEnd, wchar_t c = PIXEL_FULL, short color = FG_WHITE)
 	{
 		BoundaryCheck(xStart, yStart);
 		BoundaryCheck(xEnd, yEnd);
@@ -277,6 +277,43 @@ public:
 			y = 0;
 		if (y >= screenHeight)
 			y = screenHeight;
+	}
+
+	// Draw wireframe model to coordinates, with rotation and scale
+	void WireFrame(const vector<pair<float, float>> modelCoordinates, float x, float y, float rotation = 0.0f, float scale = 1.0f, wchar_t c = PIXEL_FULL, short color = FG_WHITE)
+	{
+		// Create translated model vector from the pairs of coordinates
+		vector<pair<float, float>> transCoordinates;
+		int vertices = modelCoordinates.size(); // Amount of vertices in the model
+		transCoordinates.resize(vertices);
+
+		// Rotate
+		for (int i = 0; i < vertices; i++)
+		{
+			transCoordinates[i].first = modelCoordinates[i].first * cosf(rotation) - modelCoordinates[i].second * sinf(rotation);
+			transCoordinates[i].second = modelCoordinates[i].first * sinf(rotation) + modelCoordinates[i].second * cosf(rotation);
+		}
+
+		// Scale
+		for (int i = 0; i < vertices; i++)
+		{
+			transCoordinates[i].first = transCoordinates[i].first * scale;
+			transCoordinates[i].second = transCoordinates[i].second * scale;
+		}
+
+		// Translate
+		for (int i = 0; i < vertices; i++)
+		{
+			transCoordinates[i].first = transCoordinates[i].first + x;
+			transCoordinates[i].second = transCoordinates[i].second + y;
+		}
+
+		// Draw lines from vertices to vertices
+		for (int i = 0; i < vertices; i++)
+		{
+			Line((int)transCoordinates[i % vertices].first, (int)transCoordinates[i % vertices].second,
+				(int)transCoordinates[(i+1) % vertices].first, (int)transCoordinates[(i + 1) % vertices].second, c, color);
+		}
 	}
 
 	// Destructor
