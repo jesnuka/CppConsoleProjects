@@ -130,6 +130,9 @@
     <ClCompile Include="Console3DEngine.cpp" />
     <ClCompile Include="CppConsoleProjects.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Console3DEngine.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -1,39 +1,6 @@
-#define _USE_MATH_DEFINES
-#include <iostream>
-#include <Windows.h>
-#include <stdio.h>
-#include <string>
-#include <math.h>
-#include <chrono>
-#include <vector>
-#include <utility>
-#include <algorithm>
-using namespace std;
+#include "Console3DEngine.h"
 
-// Settings
-int screenWidth = 120;
-int screenHeight = 40;
-bool paused = false;
-
-// Player
-float playerX = 8.0f;
-float playerY = 8.0f;
-float playerAngle = 0.0f;
-
-float playerRotationSpeed = 2.0f;
-float playerMovementSpeed = 5.0f;
-
-float FOV = M_PI / 4.0;
-float depth = 16.0f;
-
-//Map
-int mapHeight = 16;
-int mapWidth = 16;
-int mapMode = 0;
-
-wstring CreateMap(int width, int height, int mapMode);
-
-int main()
+void ConsoleEngine::RunEngine()
 {
     // Screen Buffer
     wchar_t* screen = new wchar_t[screenWidth * screenHeight];
@@ -299,7 +266,7 @@ int main()
     }
 }
 
-wstring CreateMap(int width, int height, int mapMode)
+wstring ConsoleEngine::CreateMap(int mapWidth, int mapHeight, int mapMode)
 {
     wstring map;
 
@@ -307,15 +274,15 @@ wstring CreateMap(int width, int height, int mapMode)
     {
         case 0:
             // Create empty map
-           for (int i = 0; i < height; i++)
+           for (int i = 0; i < mapHeight; i++)
             {
-               for (int j = 0; j < width; j++)
+               for (int j = 0; j < mapWidth; j++)
                {
-                   if (i == 0 || i == (height - 1))
+                   if (i == 0 || i == (mapHeight - 1))
                        map += L"#";
                    else
                    {
-                       if(j == 0 || j == (width - 1))
+                       if(j == 0 || j == (mapWidth - 1))
                            map += L"#";
                        else
                            map += L".";
@@ -326,15 +293,15 @@ wstring CreateMap(int width, int height, int mapMode)
             break;
         case 1:
             // Create empty map
-            for (int i = 0; i < height; i++)
+            for (int i = 0; i < mapHeight; i++)
             {
-                for (int j = 0; j < width; j++)
+                for (int j = 0; j < mapWidth; j++)
                 {
-                    if (i == 0 || i == (height - 1))
+                    if (i == 0 || i == (mapHeight - 1))
                         map += L"#";
                     else
                     {
-                        if (j == 0 || j == (width - 1))
+                        if (j == 0 || j == (mapWidth - 1))
                             map += L"#";
                         else
                             map += L".";
@@ -344,14 +311,14 @@ wstring CreateMap(int width, int height, int mapMode)
             }
 
             // Add some walls
-            for (int i = 0; i < width - 2; i++)
+            for (int i = 0; i < mapWidth - 2; i++)
             {
                 map[3 * mapWidth + i] = L'#';
                 map[7 * mapWidth + i] = L'#';
                 map[11 * mapWidth + i] = L'#';
             }
 
-            for (int i = 2; i < width; i++)
+            for (int i = 2; i < mapWidth; i++)
             {
                 map[5 * mapWidth + i] = L'#';
                 map[9 * mapWidth + i] = L'#';
@@ -361,15 +328,15 @@ wstring CreateMap(int width, int height, int mapMode)
             break;
         default:
             // Create empty map
-           for (int i = 0; i < height; i++)
+           for (int i = 0; i < mapHeight; i++)
             {
-               for (int j = 0; j < width; j++)
+               for (int j = 0; j < mapWidth; j++)
                {
-                   if (i == 0 || i == (height - 1))
+                   if (i == 0 || i == (mapHeight - 1))
                        map += L"#";
                    else
                    {
-                       if(j == 0 || j == (width - 1))
+                       if(j == 0 || j == (mapWidth - 1))
                            map += L"#";
                        else
                            map += L".";
