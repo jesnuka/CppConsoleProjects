@@ -18,12 +18,18 @@
     <ClCompile Include="CppConsoleProjects.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Console3DEngine.cpp">
+    <ClCompile Include="ConsoleFPS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Demo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Console3DEngine.h">
+    <ClInclude Include="ConsoleFPS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

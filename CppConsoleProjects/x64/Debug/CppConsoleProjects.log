@@ -1,4 +1,3 @@
-﻿  CppConsoleProjects.cpp
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\CppConsoleProjects.cpp(12,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Console3DEngine.h(32,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+﻿  Demo.cpp
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(136): warning C4715: 'ConsoleEngine::ConstructConsole': not all control paths return a value
   CppConsoleProjects.vcxproj -> C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\x64\Debug\CppConsoleProjects.exe
