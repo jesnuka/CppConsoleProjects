@@ -11,8 +11,8 @@ public:
 	}
 
 private:
-	float playerX;
-	float playerY;
+	float playerX = 0.0f;
+	float playerY = 0.0f;
 
 protected:
 	virtual bool OnUserCreate()
@@ -32,7 +32,7 @@ protected:
 				Draw(i, j, L'#', rand() % 16);
 		}*/
 
-		if (keys[VK_LEFT].isHeld)
+		/*if (keys[VK_LEFT].isHeld)
 			playerX -= 10 * elapsedTime;
 		if (keys[VK_RIGHT].isHeld)
 			playerX += 10 * elapsedTime;
@@ -47,8 +47,18 @@ protected:
 		// Draw player at coordinates
 		//Draw(playerX, playerY, L'P', rand() % 16);
 		// Or larger player
-		Fill(playerX, playerY, playerX + 3, playerY + 3, 0x2588, rand() % 16);
+		Fill(playerX, playerY, playerX + 3, playerY + 3, 0x2588, rand() % 16);*/
 
+		Fill(0, 0, screenWidth, screenHeight, L' ', 0);
+		// Draw mouse cursor
+		//Draw(mousePositionX - 1, mousePositionY);
+		/*Draw(mousePositionX, mousePositionY);
+		Draw(mousePositionX+1, mousePositionY);
+		Draw(mousePositionX, mousePositionY-1);
+		Draw(mousePositionX, mousePositionY+1); */
+		playerX = mousePositionX;
+		playerY = mousePositionY;
+		Fill(playerX, playerY, playerX + 3, playerY + 3, 0x2588, rand() % 16);
 
 		return true;
 	}
@@ -60,4 +70,9 @@ int main()
 	Demo game;
 	game.ConstructConsole(160, 100, 8, 8);
 	game.Start();
+	/*Demo test;
+	test.ConstructConsole(128,80, 12,10);
+	test.Start();*/
+
+	return 0;
 }

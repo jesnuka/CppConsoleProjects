@@ -56,8 +56,8 @@ public:
 
 	ConsoleEngine()
 	{
-		screenWidth = 120;
-		screenHeight = 40;
+		screenWidth = 80;
+		screenHeight = 30;
 
 		console = GetStdHandle(STD_OUTPUT_HANDLE);
 		consoleInput = GetStdHandle(STD_INPUT_HANDLE);
@@ -123,7 +123,7 @@ public:
 			return  Error(L"SetConsoleWindowInfo");
 
 		// Allow mouse input by setting flags
-		if (!SetConsoleMode(console, ENABLE_EXTENDED_FLAGS | ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT))
+		if (!SetConsoleMode(consoleInput, ENABLE_EXTENDED_FLAGS | ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT))
 			Error(L"SetConsoleMode");
 
 		// Allocate screen buffer memory
@@ -151,11 +151,11 @@ public:
 	void Fill(int xStart, int yStart, int xEnd, int yEnd, wchar_t c = 0x2588, short color = 0x000F)
 	{
 		BoundaryCheck(xStart, yStart);
-		BoundaryCheck(xEnd, yEnd); // TODO: Clip
-		for (int i = xStart; i < xEnd; i++)
+		BoundaryCheck(xEnd, yEnd);
+		for (int x = xStart; x < xEnd; x++)
 		{
-			for (int j = yStart; j < yEnd; j++)
-				Draw(i, j, c, color);
+			for (int y = yStart; y < yEnd; y++)
+				Draw(x, y, c, color);
 		}
 	}
 
@@ -261,20 +261,26 @@ private:
 					switch (inputBuffer[i].EventType)
 					{
 					case FOCUS_EVENT:
+					{
 						consoleInFocus = inputBuffer[i].Event.FocusEvent.bSetFocus;
+					}
 						break;
 
 					case MOUSE_EVENT:
 						switch (inputBuffer[i].Event.MouseEvent.dwEventFlags)
 						{
 						case MOUSE_MOVED:
+						{
 							mousePositionX = inputBuffer[i].Event.MouseEvent.dwMousePosition.X;
 							mousePositionY = inputBuffer[i].Event.MouseEvent.dwMousePosition.Y;
+						}
 							break;
 
 						case 0:
+						{
 							for (int j = 0; j < 5; j++)
 								mouseNewState[j] = (inputBuffer[i].Event.MouseEvent.dwButtonState & (1 << j)) > 0;
+						}
 							break;
 						default:
 							break;
