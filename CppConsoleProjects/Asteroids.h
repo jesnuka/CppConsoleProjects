@@ -44,6 +44,7 @@ protected:
 			// Position = Velocity * Time (+ Old Position)
 			ast.x += ast.xDir * elapsedTime;
 			ast.y += ast.yDir * elapsedTime;
+			WrapCoordinates(ast.x, ast.y, ast.x, ast.y);
 
 			for (int i = 0; i < ast.size; i++)
 			{
@@ -56,5 +57,34 @@ protected:
 		}
 
 		return true;
+	}
+	
+	// Wrap coordinates around toroid
+	void WrapCoordinates(float xInput, float yInput, float &xOutput, float &yOutput)
+	{
+		xOutput = xInput;
+		yOutput = yInput;
+
+		//Check if boundaries are crossed
+		// If they are, place output on the other side of the screen
+		if (xInput < 0.0f)
+			xOutput = xInput + (float)screenWidth;
+		if (xInput >= screenWidth)
+			xOutput = xInput - (float)screenWidth;
+		if (yInput < 0.0f)
+			yOutput = yInput + (float)screenHeight;
+		if (yInput >= screenHeight)
+			yOutput = yInput - (float)screenHeight;
+	}
+
+	// Override draw to make use of WrapCoordinates function
+	// Draw a character and color on coordinates
+	virtual void Draw(int x, int y, wchar_t c = 0x2588, short color = 0x000F)
+	{
+		// Before actually drawing, wrap the coordinates
+		float xWrapped;
+		float yWrapped;
+		WrapCoordinates(x, y, xWrapped, yWrapped);
+		ConsoleEngine::Draw(xWrapped, yWrapped, c, color);
 	}
 };
