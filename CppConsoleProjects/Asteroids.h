@@ -53,7 +53,10 @@ protected:
 
 		for (int i = 0; i < asteroidVertices; i++)
 		{
-			float radius = 1.0f; // Unit circle
+			//float radius = 1.0f; // Unit circle
+			// Randomize a number between minimum of 0.2 to maximum of 1.2
+			// This creates different distance vertices for the asteroid, making it more jagged looking
+			float radius = (float)rand() / (float)RAND_MAX * 0.4f + 0.8f;
 			float angle = ((float)i / (float)asteroidVertices) * (2 * M_PI);
 			modelAsteroid.push_back(make_pair(radius * sinf(angle), radius * cosf(angle)));
 		}
@@ -103,9 +106,10 @@ protected:
 			// Position = Velocity * Time (+ Old Position)
 			ast.x += ast.xDir * elapsedTime;
 			ast.y += ast.yDir * elapsedTime;
+			ast.angle += 0.5f * elapsedTime;
 			WrapCoordinates(ast.x, ast.y, ast.x, ast.y);
 
-			WireFrame(modelAsteroid, ast.x, ast.y, ast.angle, ast.size);
+			WireFrame(modelAsteroid, ast.x, ast.y, ast.angle, ast.size, PIXEL_FULL, FG_YELLOW);
 
 		}
 
