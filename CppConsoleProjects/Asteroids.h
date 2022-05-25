@@ -24,10 +24,17 @@ private:
 
 	};
 
+	// Store asteroids
 	vector<gameObject> asteroids;
+	// Store player bullets
+	vector<gameObject> bullets;
 	gameObject player;
 	vector<pair<float, float>> modelShip;
 	vector<pair<float, float>> modelAsteroid;
+
+	// Player Values
+	bool dead = false;
+	int score = 0;
 
 protected:
 	virtual bool OnUserCreate()
@@ -53,6 +60,7 @@ protected:
 
 		int asteroidVertices = 20;
 		// Asteroid model
+
 		for (int i = 0; i < asteroidVertices; i++)
 		{
 			float radius = 1.0f; // Unit circle
@@ -68,6 +76,9 @@ protected:
 		// Empty screen
 		Fill(0, 0, screenWidth, screenHeight, L' ', 0);
 
+		// Stores newly generated asteroids that have been split from a larger one
+		vector<gameObject> splitAsteroids;
+
 		// Update and draw asteroids
 		for (auto& ast : asteroids)
 		{
@@ -79,6 +90,77 @@ protected:
 			WireFrame(modelAsteroid, ast.x, ast.y, ast.angle, ast.size);
 
 		}
+
+		// Update and draw bullets
+		for (auto &bullet : bullets)
+		{
+			// Position = Velocity * Time (+ Old Position)
+			bullet.x += bullet.xDir * elapsedTime;
+			bullet.y += bullet.yDir * elapsedTime;
+			WrapCoordinates(bullet.x, bullet.y, bullet.x, bullet.y);
+			Draw(bullet.x, bullet.y, PIXEL_FULL, FG_WHITE);
+			// TODO: Draw at the tip of player ship
+
+			// Check for collision, slow method but works for small scale
+			for (auto& ast : asteroids)
+			{
+				if (PointInsideCircle(bullet.x, bullet.y, ast.size, ast.x, ast.y))
+				{
+					// Move bullet off-screen to have it be destroyed in the remove_if check
+					bullet.x = -100;
+
+					// Check if asteroid is larger than minimum size to split
+					if (ast.size > 4)
+					{
+						// Randomize two angles for the new split asteroids
+						float newAngle1 = ((float)rand() / (float)RAND_MAX) * (2 * M_PI);
+						float newAngle2 = ((float)rand() / (float)RAND_MAX) * (2 * M_PI);
+
+						// Create split asteroids. Size is half of the parent asteroid
+						splitAsteroids.push_back({ast.x, ast.y, 10.0f * sinf(newAngle1), 10.0f * cosf(newAngle1), (int)ast.size >> 1, 0.0f });
+						splitAsteroids.push_back({ast.x, ast.y, 10.0f * sinf(newAngle2), 10.0f * cosf(newAngle2), (int)ast.size >> 1, 0.0f });
+					}
+
+					// Destroy parent asteroid by moving it out of bounds, forcing it to be destroyed later
+					ast.x = -100;
+				}
+			}
+
+		}
+
+		// Add newly created splitAsteroids to asteroids vector now, that vectors are not accessed anymore
+		for (auto& ast : splitAsteroids)
+		{
+			asteroids.push_back(ast);
+		}
+
+		// Destroy off-screen bullets
+		if (bullets.size() > 0)
+		{
+			// Use "remove_if" - function
+			auto i = remove_if(bullets.begin(), bullets.end(), [&](gameObject o)
+				{
+					// Check if coordinates are off the screen
+					return(o.x < 1 || o.y < 1 || o.x >= screenWidth || o.y >= screenHeight);
+				});
+			// If something to be removed was found, remove it from the vector
+			if (i != bullets.end()) 
+				bullets.erase(i);
+		}
+		// Destroy off-screen bullets
+		if (asteroids.size() > 0)
+		{
+			// Use "remove_if" - function
+			auto i = remove_if(asteroids.begin(), asteroids.end(), [&](gameObject o)
+				{
+					// Check if coordinates are off the screen
+					return(o.x < 1);
+				});
+			// If something to be removed was found, remove it from the vector
+			if (i != asteroids.end())
+				asteroids.erase(i);
+		}
+
 		
 		// Player Steering
 		if (keys[VK_LEFT].isHeld)
@@ -96,19 +178,33 @@ protected:
 
 		}
 		// Can't go backwards
-		/*if (keys[VK_DOWN].isHeld)
+		if (keys[VK_DOWN].isHeld)
 		{
 			// Acceleration = Velocity * Time
 			// cos is negative, because 0 is at the top, and screenHeight is at the bottom of the screen
 			player.xDir -= sin(player.angle) * 20.0f * elapsedTime;
 			player.yDir -= -cos(player.angle) * 20.0f * elapsedTime;
 
-		}*/
+		}
 
 		player.x += player.xDir * elapsedTime;
 		player.y += player.yDir * elapsedTime;
 
 		WrapCoordinates(player.x, player.y, player.x, player.y);
+
+		// Check for player and asteroid collision
+		for (auto& ast : asteroids)
+		{
+			if (PointInsideCircle(ast.x, ast.y, ast.size, player.x, player.y))
+				dead = true;
+		}
+
+
+		// Shoot bullets
+		if (keys[VK_SPACE].isReleased)
+		{
+			bullets.push_back({player.x, player.y, 50.0f * sinf(player.angle), -50.0f * cosf(player.angle), 0, 0});
+		}
 
 
 		// Draw the Player Ship
@@ -133,6 +229,12 @@ protected:
 			yOutput = yInput + (float)screenHeight;
 		if (yInput >= screenHeight)
 			yOutput = yInput - (float)screenHeight;
+	}
+
+	// Function for checking if a point is inside a circle by checking the distance
+	bool PointInsideCircle(int x1, int y1, float radius, int x2, int y2)
+	{
+		return sqrt((x1 - x2)*(x1 - x2) + (y1 - y2) * (y1 - y2)) < radius;
 	}
 
 	// Override draw to make use of WrapCoordinates function
