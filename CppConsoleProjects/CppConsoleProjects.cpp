@@ -22,6 +22,20 @@ std::mutex ConsoleEngine::mutexGame;
 
 // int selection = 0;
 
+class ProjectMenu : public ConsoleEngine
+{
+	virtual bool OnUserCreate()
+	{
+		return true;
+	}
+
+	virtual bool OnUserUpdate(float elapsedTime)
+	{
+		return true;
+	}
+
+};
+
 int main()
 {
 	//ConsoleFPS FPSGame;
