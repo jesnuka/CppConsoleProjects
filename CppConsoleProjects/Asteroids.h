@@ -35,6 +35,7 @@ private:
 
 	// Player Values
 	int score = 0;
+	int highScore = 0;
 
 protected:
 	virtual bool OnUserCreate()
@@ -81,6 +82,7 @@ protected:
 		player.angle = 0;
 
 		player.dead = false;
+		score = 0;
 	}
 
 	virtual bool OnUserUpdate(float elapsedTime)
@@ -179,6 +181,27 @@ protected:
 				asteroids.erase(i);
 		}
 
+		// Check if any asteroids are left after 
+		if (asteroids.empty())
+		{
+			// Increase score, and also create two new asteroids away from the player
+			score += 1000;
+
+			// TODO: Place away from player velocity direction instead of player.angle, to avoid crashing better
+			// Spawn asteroids 90 degrees away from the player
+			asteroids.push_back({30.0f * sinf(player.angle - (M_PI / 2)), 
+									30.0f * cosf(player.angle - (M_PI / 2)),
+									10.0f * sinf(player.angle),
+									10.0f * sinf(player.angle),
+									16, 0.0f});
+			asteroids.push_back({ 30.0f * sinf(player.angle - (M_PI / 2)),
+									30.0f * cosf(player.angle - (M_PI / 2)),
+									10.0f * sinf(-player.angle),
+									10.0f * sinf(-player.angle),
+									16, 0.0f });
+
+		}
+
 		
 		// Player Steering
 		if (keys[VK_LEFT].isHeld)
@@ -228,8 +251,11 @@ protected:
 		// Draw the Player Ship
 		WireFrame(modelShip, player.x, player.y, player.angle);
 
+		if (score > highScore)
+			highScore = score;
 		// Draw the Player Score
-		DrawString(2, 2, L"SCORE: " + to_wstring(score));
+		DrawString(2, 2, L"HIGHSCORE: " + to_wstring(highScore));
+		DrawString(2, 4, L"SCORE: " + to_wstring(score));
 
 		return true;
 	}
