@@ -39,16 +39,6 @@ private:
 protected:
 	virtual bool OnUserCreate()
 	{
-		// Spawn single asteroid
-		asteroids.push_back({20.0f , 20.0f, 8.0f, -6.0f, (int)16, 0});
-
-		// Initialize the Player
-		player.x = screenWidth / 2;
-		player.y = screenHeight / 2;
-		player.xDir = 0;
-		player.yDir = 0;
-		player.angle = 0;
-
 		// Player ship, a triangle
 		modelShip =
 		{
@@ -56,7 +46,6 @@ protected:
 			{-2.5f, 2.5f},
 			{2.5f, 2.5f},
 		};
-
 
 		int asteroidVertices = 20;
 		// Asteroid model
@@ -67,12 +56,39 @@ protected:
 			float angle = ((float)i / (float)asteroidVertices) * (2 * M_PI);
 			modelAsteroid.push_back(make_pair(radius * sinf(angle), radius * cosf(angle)));
 		}
+
+		RestartGame();
+
 		
 		return true;
 	}
 
+	void RestartGame()
+	{
+		// Remove asteroids and bullets
+		asteroids.clear();
+		bullets.clear();
+
+		// Spawn asteroids
+		asteroids.push_back({ 20.0f , 20.0f, 8.0f, -6.0f, (int)16, 0 });
+		asteroids.push_back({ 80.0f , 20.0f, -6.0f, -4.0f, (int)16, 0 });
+
+		// Initialize the Player
+		player.x = screenWidth / 2;
+		player.y = screenHeight / 2;
+		player.xDir = 0;
+		player.yDir = 0;
+		player.angle = 0;
+
+		dead = false;
+	}
+
 	virtual bool OnUserUpdate(float elapsedTime)
 	{
+		// Check for player death
+		if (dead)
+			RestartGame();
+
 		// Empty screen
 		Fill(0, 0, screenWidth, screenHeight, L' ', 0);
 
