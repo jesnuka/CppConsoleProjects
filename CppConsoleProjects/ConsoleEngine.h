@@ -156,6 +156,16 @@ public:
 		}
 	}
 
+	// Draw a string / text on the screen at coordinates
+	virtual void DrawString(int x, int y, wstring str, short color = FG_WHITE)
+	{
+		for (int i = 0; i < str.size(); i++)
+		{
+			bufferScreen[y * screenWidth + x + i].Char.UnicodeChar = str[i];
+			bufferScreen[y * screenWidth + x + i].Attributes = color;
+		}
+	}
+
 	// Draw line from start to end
 	void Line(int xStart, int yStart, int xEnd, int yEnd, wchar_t c = PIXEL_FULL, short color = FG_WHITE)
 	{
