@@ -4,6 +4,21 @@ using namespace std;
 
 bool Racing::OnUserCreate()
 {
+	// Create the racing track
+
+	// The start / finish line
+	track.push_back(make_pair(0.0f, 10.0f));
+
+	track.push_back(make_pair(0.0f, 200.0f)); // Straight for 200 units
+	track.push_back(make_pair(1.0f, 200.0f)); // Sharp bend for 200 units
+	track.push_back(make_pair(0.0f, 100.0f)); // etc.
+	track.push_back(make_pair(-1.0f, 300.0f)); 
+	track.push_back(make_pair(0.0f, 200.0f)); 
+	track.push_back(make_pair(-1.0f, 400.0f)); 
+	track.push_back(make_pair(1.0f, 200.0f)); 
+	track.push_back(make_pair(-0.5f, 200.0f)); 
+	track.push_back(make_pair(0.5f, 200.0f)); 
+
 	return true;
 }
 
@@ -12,7 +27,47 @@ bool Racing::OnUserUpdate(float elapsedTime)
 	// Get input
 
 	if (keys[VK_UP].isHeld)
-		distance += 10.0f * elapsedTime;
+	{
+		if (carVelocity < carVelocityMax)
+			carVelocity += carAcceleration * elapsedTime;
+		else
+			carVelocity = carVelocityMax;
+	}
+	else if(!keys[VK_UP].isHeld && carVelocity > 0.0f)
+	{
+		if ((carVelocity - ((carAcceleration * 2) * elapsedTime)) > 0.0f)
+			carVelocity -= (carAcceleration * 2) * elapsedTime;
+		else
+			carVelocity = 0.0f;
+	}
+
+	if (carVelocity > 0.0f)
+	{
+		distance += carVelocity * elapsedTime;
+
+
+		// Get the current location on the track, which section we are in
+		float trackDistance = 0;
+		trackSection = 0;
+
+		for (int i = 0; i < track.size(); i++)
+		{
+			if (trackDistance > distance)
+			{
+				trackSection = i - 1;
+				break;
+			}
+			else
+				trackDistance += track[i].second;
+
+		}
+
+		// Get the curvature of the current track section for displaying it
+		float trackCurvature = track[trackSection].first;
+
+		float curvatureDifference = (trackCurvature - currentCurvature) * elapsedTime * (carVelocity / carVelocityMax);
+		currentCurvature += curvatureDifference;
+	}
 
 	// Empty screen
 	Fill(0, 0, screenWidth, screenHeight, L' ', 0);
@@ -27,7 +82,7 @@ bool Racing::OnUserUpdate(float elapsedTime)
 			// Perspective percentage, with smaller y values it goes towards 0 and towards 1 with larger y values
 			float perspective = (float)j / (screenWidth / 2);
 
-			float middlePoint = 0.5f;
+			float middlePoint = 0.5f + currentCurvature * powf(1.0f - perspective, 3);
 			// Road width uses perspective value to become less wide towards the middle of the screen
 			// However, it also has minimum and maximum values
 			float roadWidth = 0.1f + perspective * 0.8f;
@@ -39,6 +94,8 @@ bool Racing::OnUserUpdate(float elapsedTime)
 			// Draw grass colour using a modified sin wave, to get a perspective effect
 			// Sin function is between {-1, 1}, where negative values are given darker coloring
 			short grassColour = sinf(20.0f * powf(1.0f - perspective, 3) + distance * 0.1f) > 0.0f ? FG_GREEN : FG_DARK_GREEN;
+			// Use the same method for drawing the road edge coloring
+			short roadEdgeColour = sinf(80.0f * powf(1.0f - perspective, 2) + distance) > 0.0f ? FG_WHITE : FG_RED;
 
 			// Define the areas where grass and road edges are located
 			int grassLeft = (middlePoint - roadWidth - roadEdgeWidth) * screenWidth;
@@ -55,13 +112,13 @@ bool Racing::OnUserUpdate(float elapsedTime)
 				Draw(i, bottomRow, PIXEL_FULL, grassColour);
 			// Draw in left road edge
 			if (i >= grassLeft && i < roadEdgeLeft)
-				Draw(i, bottomRow, PIXEL_FULL, FG_RED);
+				Draw(i, bottomRow, PIXEL_FULL, roadEdgeColour);
 			// Draw in road
 			if (i >= roadEdgeLeft && i < roadEdgeRight)
 				Draw(i, bottomRow, PIXEL_FULL, FG_GREY);
 			// Draw in right road edge
 			if (i >= roadEdgeRight && i < grassRight)
-				Draw(i, bottomRow, PIXEL_FULL, FG_RED);
+				Draw(i, bottomRow, PIXEL_FULL, roadEdgeColour);
 			// Draw in grass
 			if (i >= grassRight && i < screenWidth)
 				Draw(i, bottomRow, PIXEL_FULL, grassColour);
