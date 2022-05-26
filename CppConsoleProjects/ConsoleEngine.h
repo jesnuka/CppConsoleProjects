@@ -157,12 +157,24 @@ public:
 	}
 
 	// Draw a string / text on the screen at coordinates
-	virtual void DrawString(int x, int y, wstring str, short color = FG_WHITE)
+	virtual void DrawString(int x, int y, wstring str, short color = FG_WHITE, bool alpha = false)
 	{
 		for (int i = 0; i < str.size(); i++)
 		{
-			bufferScreen[y * screenWidth + x + i].Char.UnicodeChar = str[i];
-			bufferScreen[y * screenWidth + x + i].Attributes = color;
+			// If alpha enabled, don't draw on empty space
+			if (alpha)
+			{
+				if (str[i] != L' ')
+				{
+					bufferScreen[y * screenWidth + x + i].Char.UnicodeChar = str[i];
+					bufferScreen[y * screenWidth + x + i].Attributes = color;
+				}
+			}
+			else
+			{
+				bufferScreen[y * screenWidth + x + i].Char.UnicodeChar = str[i];
+				bufferScreen[y * screenWidth + x + i].Attributes = color;
+			}
 		}
 	}
 

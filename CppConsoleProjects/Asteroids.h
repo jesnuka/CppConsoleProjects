@@ -6,6 +6,11 @@
 
 class Asteroids : public ConsoleEngine
 {
+public:
+	Asteroids()
+	{
+		appName = L"Asteroids";
+	}
 private:
 	struct gameObject
 	{

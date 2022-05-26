@@ -130,11 +130,13 @@
     <ClCompile Include="Asteroids.cpp" />
     <ClCompile Include="ConsoleFPS.cpp" />
     <ClCompile Include="ProjectMenu.cpp" />
+    <ClCompile Include="Racing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asteroids.h" />
     <ClInclude Include="ConsoleEngine.h" />
     <ClInclude Include="ConsoleFPS.h" />
+    <ClInclude Include="Racing.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
