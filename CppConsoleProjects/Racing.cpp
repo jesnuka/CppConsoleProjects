@@ -109,6 +109,28 @@ bool Racing::OnUserUpdate(float elapsedTime)
 	// Empty screen
 	Fill(0, 0, screenWidth, screenHeight, L' ', 0);
 
+	// Draw the sky
+	for (int j = 0; j < (screenHeight / 2); j++)
+	{
+		for (int i = 0; i < screenWidth; i++)
+		{
+			wchar_t color = j < screenHeight / 4 ? PIXEL_HALF : PIXEL_FULL;
+			Draw(i, j, color, FG_DARK_BLUE);
+		}
+	}
+
+	// Draw hills
+	for (int i = 0; i < screenWidth; i++)
+	{
+		// Use a low frequency sine wave to draw the hills, offset by the trackPerfectCurvature
+		int hillHeight = (int)(fabs(sinf(i * 0.01f + trackPerfectCurvature) * 15.0f));
+
+		for (int j = (screenHeight / 2) - hillHeight; j < (screenHeight / 2); j++)
+		{
+			Draw(i, j, PIXEL_FULL, FG_DARK_YELLOW);
+		}
+	}
+
 	// Draw the track
 	for (int j = 0; j < (screenHeight / 2); j++)
 	{
