@@ -41,6 +41,21 @@ bool Racing::OnUserUpdate(float elapsedTime)
 			carVelocity = 0.0f;
 	}
 
+	if (keys[VK_LEFT].isHeld)
+	{
+		carCurvature -= 0.7f * elapsedTime;
+	}
+	if (keys[VK_RIGHT].isHeld)
+	{
+		carCurvature += 0.7f * elapsedTime;
+	}
+
+	// Check if player is too far off the perfect curvature, meaning they are not in the middle of the track, and slow them down
+	if (fabs(trackPerfectCurvature - carCurvature) >= 0.7f)
+	{
+		carVelocity -= (carAcceleration * 2) * elapsedTime;
+	}
+
 	if (carVelocity > 0.0f)
 	{
 		distance += carVelocity * elapsedTime;
@@ -67,6 +82,9 @@ bool Racing::OnUserUpdate(float elapsedTime)
 
 		float curvatureDifference = (trackCurvature - currentCurvature) * elapsedTime * (carVelocity / carVelocityMax);
 		currentCurvature += curvatureDifference;
+
+		// Calculate the target curvature the player should aim for
+		trackPerfectCurvature += currentCurvature * elapsedTime * (carVelocity / carVelocityMax);
 	}
 
 	// Empty screen
@@ -80,7 +98,7 @@ bool Racing::OnUserUpdate(float elapsedTime)
 			// Assume screenWidth is a normalized space, with 0 on the left and 1 on the right
 
 			// Perspective percentage, with smaller y values it goes towards 0 and towards 1 with larger y values
-			float perspective = (float)j / (screenWidth / 2);
+			float perspective = (float)j / (screenWidth / 2.5);
 
 			float middlePoint = 0.5f + currentCurvature * powf(1.0f - perspective, 3);
 			// Road width uses perspective value to become less wide towards the middle of the screen
@@ -127,6 +145,8 @@ bool Racing::OnUserUpdate(float elapsedTime)
 	}
 
 	// Draw in the player car
+	carPositionFloat = carCurvature - trackPerfectCurvature;
+
 	int carPosition = (screenWidth / 2) + ((int)(screenWidth * carPositionFloat) / 2) - carSpriteWidth;
 
 	DrawString(carPosition, carPositionheight + 0, L"     ###     ", FG_WHITE, true);
@@ -136,6 +156,12 @@ bool Racing::OnUserUpdate(float elapsedTime)
 	DrawString(carPosition, carPositionheight + 4, L"|| ####### ||", FG_WHITE, true);
 	DrawString(carPosition, carPositionheight + 5, L"||#########||", FG_WHITE, true);
 	DrawString(carPosition, carPositionheight + 6, L"||  #####  ||", FG_WHITE, true);
+
+	// Draw Player Stats
+	DrawString(0,0, L"DISTANCE: " + to_wstring(distance));
+	DrawString(0,1, L"TRACK CURVATURE: " + to_wstring(trackPerfectCurvature));
+	DrawString(0,2, L"CAR CURVATURE: " + to_wstring(carCurvature));
+	DrawString(0,3, L"SPEED: " + to_wstring(carVelocity));
 
 	return true;
 }

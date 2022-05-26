@@ -19,12 +19,14 @@ private:
 	vector<pair<float, float>> track;
 	int trackSection = 0;
 	float currentCurvature = 0.0f;
+	float trackPerfectCurvature = 0.0f;
 
 	// Player Car
 	float carPositionFloat = 0.0f;
 	float carAcceleration = 50.0f;
 	float carVelocity = 0.0f;
 	float carVelocityMax = 100.0f;
+	float carCurvature = 0.0f;
 
 	// Fixed height on the screen
 	int carPositionheight = 80;

@@ -1,19 +1,8 @@
-﻿  ProjectMenu.cpp
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ProjectMenu.cpp(12,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleFPS.h(35,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+﻿  Racing.cpp
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(309,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ProjectMenu.cpp(14,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(78,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(78,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(79,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(79,23): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ProjectMenu.cpp(15,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  Racing.cpp
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(309,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(101,18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(102,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(103,18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(104,22): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-  Generating Code...
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(145): warning C4715: 'ConsoleEngine::ConstructConsole': not all control paths return a value
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(101,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(119,18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(120,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(121,18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(122,22): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
   CppConsoleProjects.vcxproj -> C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\x64\Debug\CppConsoleProjects.exe
