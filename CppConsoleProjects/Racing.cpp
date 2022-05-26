@@ -14,10 +14,17 @@ bool Racing::OnUserCreate()
 	track.push_back(make_pair(0.0f, 100.0f)); // etc.
 	track.push_back(make_pair(-1.0f, 300.0f)); 
 	track.push_back(make_pair(0.0f, 200.0f)); 
-	track.push_back(make_pair(-1.0f, 400.0f)); 
+	track.push_back(make_pair(-1.0f, 300.0f)); 
 	track.push_back(make_pair(1.0f, 200.0f)); 
 	track.push_back(make_pair(-0.5f, 200.0f)); 
+	track.push_back(make_pair(0.8f, 500.0f)); 
 	track.push_back(make_pair(0.5f, 200.0f)); 
+	track.push_back(make_pair(-1.0, 400.0f)); 
+
+	for (auto& tr : track)
+		lapDistance += tr.second;
+
+	lapTimes = { 0,0,0,0,0 };
 
 	return true;
 }
@@ -65,15 +72,27 @@ bool Racing::OnUserUpdate(float elapsedTime)
 		float trackDistance = 0;
 		trackSection = 0;
 
+		lapTime += elapsedTime;
+
+		// Lap driven fully, restart distance and lap time
+		if (distance >= lapDistance)
+		{
+			distance -= lapDistance;
+			lapTimes.push_front(lapTime);
+			lapTimes.pop_back();
+			lapTime = 0.0f;
+		}
+		
+		// Find the track position
 		for (int i = 0; i < track.size(); i++)
 		{
 			if (trackDistance > distance)
-			{
-				trackSection = i - 1;
 				break;
-			}
 			else
+			{
 				trackDistance += track[i].second;
+				trackSection = i;
+			}
 
 		}
 
@@ -115,6 +134,8 @@ bool Racing::OnUserUpdate(float elapsedTime)
 			// Use the same method for drawing the road edge coloring
 			short roadEdgeColour = sinf(80.0f * powf(1.0f - perspective, 2) + distance) > 0.0f ? FG_WHITE : FG_RED;
 
+			short lapColour = (trackSection) == 0 ? FG_WHITE : FG_GREY;
+
 			// Define the areas where grass and road edges are located
 			int grassLeft = (middlePoint - roadWidth - roadEdgeWidth) * screenWidth;
 			int roadEdgeLeft = (middlePoint - roadWidth) * screenWidth;
@@ -133,7 +154,7 @@ bool Racing::OnUserUpdate(float elapsedTime)
 				Draw(i, bottomRow, PIXEL_FULL, roadEdgeColour);
 			// Draw in road
 			if (i >= roadEdgeLeft && i < roadEdgeRight)
-				Draw(i, bottomRow, PIXEL_FULL, FG_GREY);
+				Draw(i, bottomRow, PIXEL_FULL, lapColour);
 			// Draw in right road edge
 			if (i >= roadEdgeRight && i < grassRight)
 				Draw(i, bottomRow, PIXEL_FULL, roadEdgeColour);
@@ -158,10 +179,30 @@ bool Racing::OnUserUpdate(float elapsedTime)
 	DrawString(carPosition, carPositionheight + 6, L"||  #####  ||", FG_WHITE, true);
 
 	// Draw Player Stats
-	DrawString(0,0, L"DISTANCE: " + to_wstring(distance));
-	DrawString(0,1, L"TRACK CURVATURE: " + to_wstring(trackPerfectCurvature));
-	DrawString(0,2, L"CAR CURVATURE: " + to_wstring(carCurvature));
-	DrawString(0,3, L"SPEED: " + to_wstring(carVelocity));
+	DrawString(0,0, L"LAP DISTANCE: " + to_wstring(lapDistance));
+	DrawString(0,1, L"DISTANCE: " + to_wstring(distance));
+	DrawString(0,2, L"TRACK CURVATURE: " + to_wstring(trackPerfectCurvature));
+	DrawString(0,3, L"CAR CURVATURE: " + to_wstring(carCurvature));
+	DrawString(0,4, L"SPEED: " + to_wstring(carVelocity));
+
+	auto lapTimeDisplay = [](float t)
+	{
+		int minutes = t / 60.0f;
+		int seconds = t - (minutes * 60.0f);
+		int milliseconds = (t - (float)seconds) * 1000.0f;
+		wstring time = to_wstring(minutes) + L'.' + to_wstring(seconds) + L':' + to_wstring(milliseconds);
+		return time;
+	};
+	// Display Lap Times
+
+	DrawString(0, 10, L"CURRENT LAP TIME: " + lapTimeDisplay(lapTime));
+
+	int l = 12;
+	for (auto &lap : lapTimes)
+	{
+		DrawString(0, l, L"LAP TIME: " + lapTimeDisplay(lap));
+		l++;
+	}
 
 	return true;
 }

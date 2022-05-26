@@ -1,5 +1,8 @@
 #pragma once
 
+#include "ConsoleEngine.h"
+using namespace std;
+
 class Racing : public ConsoleEngine
 {
 public:
@@ -18,8 +21,11 @@ private:
 	// Whole track is formed out of these track segments
 	vector<pair<float, float>> track;
 	int trackSection = 0;
+	float lapDistance = 0.0f;
+	float lapTime = 0.0f;
 	float currentCurvature = 0.0f;
 	float trackPerfectCurvature = 0.0f;
+	list<float> lapTimes;
 
 	// Player Car
 	float carPositionFloat = 0.0f;

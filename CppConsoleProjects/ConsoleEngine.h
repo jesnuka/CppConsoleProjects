@@ -11,6 +11,7 @@
 #include <utility>
 #include <algorithm>
 #include <condition_variable>
+#include <list>
 using namespace std;
 
 // Based on Command Line Game Engine by @Javidx9 at OneLoneCoder.com 

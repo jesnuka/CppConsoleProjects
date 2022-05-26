@@ -2,6 +2,7 @@
 // Based on Command Line Asteroids by @Javidx9 at OneLoneCoder.com 
 
 #include "ConsoleEngine.h"
+using namespace std;
 
 
 class Asteroids : public ConsoleEngine
