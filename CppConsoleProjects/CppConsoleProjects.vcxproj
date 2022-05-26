@@ -129,7 +129,7 @@
   <ItemGroup>
     <ClCompile Include="Asteroids.cpp" />
     <ClCompile Include="ConsoleFPS.cpp" />
-    <ClCompile Include="CppConsoleProjects.cpp" />
+    <ClCompile Include="ProjectMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asteroids.h" />

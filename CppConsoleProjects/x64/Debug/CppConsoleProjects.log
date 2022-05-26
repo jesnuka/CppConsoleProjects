@@ -1,40 +1,11 @@
-﻿  Asteroids.cpp
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(297,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(73,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(73,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(74,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(74,23): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(15,25): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(16,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(44,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(75,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(86,24): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(86,14): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(92,66): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(92,59): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(92,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(92,42): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(92,32): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(101,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(102,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(159,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(160,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(164,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(165,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(206,65): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(206,55): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(206,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(206,35): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(206,28): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  CppConsoleProjects.cpp
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\CppConsoleProjects.cpp(12,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+﻿  ProjectMenu.cpp
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ProjectMenu.cpp(12,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleFPS.h(35,12): warning C4305: 'initializing': truncation from 'double' to 'float'
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(297,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\CppConsoleProjects.cpp(14,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ProjectMenu.cpp(14,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(73,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(73,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(74,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(74,23): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  Generating Code...
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(145): warning C4715: 'ConsoleEngine::ConstructConsole': not all control paths return a value
   CppConsoleProjects.vcxproj -> C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\x64\Debug\CppConsoleProjects.exe
