@@ -1,6 +1,7 @@
 #include "ConsoleEngine.h"
 #include "Racing.h"
 using namespace std;
+// Based on Command Line Arcade Racing Game by @Javidx9 at OneLoneCoder.com 
 
 bool Racing::OnUserCreate()
 {
