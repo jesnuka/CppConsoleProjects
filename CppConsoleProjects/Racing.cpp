@@ -29,6 +29,50 @@ bool Racing::OnUserCreate()
 	return true;
 }
 
+void Racing::DrawCarDirection(int carPosition)
+{
+	switch (carDirection)
+	{
+	case 0:
+		DrawString(carPosition, carPositionheight + 0, L"     ###     ", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 1, L"  ||#####||  ", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 2, L"    #####    ", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 3, L"    #####    ", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 4, L"|| ####### ||", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 5, L"||#########||", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 6, L"||  #####  ||", FG_WHITE, true);
+		break;
+	case 1:
+		DrawString(carPosition, carPositionheight + 0, L"        ###  ", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 1, L"    //#####//", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 2, L"     #####   ", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 3, L"     #####   ", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 4, L"///######////", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 5, L"//########//O", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 6, L"///##### ////", FG_WHITE, true);
+		break;
+	case -1:
+		DrawString(carPosition, carPositionheight + 0, L"  ###  ", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 1, L"\\\\#####\\\\", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 2, L"   #####   ", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 3, L"   #####   ", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 4, L"\\\\\\\\######\\\\\\", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 5, L"O\\\\########\\\\", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 6, L"\\\\\\\\ #####\\\\\\", FG_WHITE, true);
+		break;
+	default:
+		DrawString(carPosition, carPositionheight + 0, L"     ###     ", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 1, L"  ||#####||  ", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 2, L"    #####    ", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 3, L"    #####    ", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 4, L"|| ####### ||", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 5, L"||#########||", FG_WHITE, true);
+		DrawString(carPosition, carPositionheight + 6, L"||  #####  ||", FG_WHITE, true);
+		break;
+
+	}
+}
+
 bool Racing::OnUserUpdate(float elapsedTime)
 {
 	// Get input
@@ -50,12 +94,16 @@ bool Racing::OnUserUpdate(float elapsedTime)
 
 	if (keys[VK_LEFT].isHeld)
 	{
+		carDirection = -1;
 		carCurvature -= 0.7f * elapsedTime;
 	}
 	if (keys[VK_RIGHT].isHeld)
 	{
+		carDirection = 1;
 		carCurvature += 0.7f * elapsedTime;
 	}
+	else if (!keys[VK_RIGHT].isHeld && !keys[VK_LEFT].isHeld)
+		carDirection = 0;
 
 	// Check if player is too far off the perfect curvature, meaning they are not in the middle of the track, and slow them down
 	if (fabs(trackPerfectCurvature - carCurvature) >= 0.7f)
@@ -192,13 +240,7 @@ bool Racing::OnUserUpdate(float elapsedTime)
 
 	int carPosition = (screenWidth / 2) + ((int)(screenWidth * carPositionFloat) / 2) - carSpriteWidth;
 
-	DrawString(carPosition, carPositionheight + 0, L"     ###     ", FG_WHITE, true);
-	DrawString(carPosition, carPositionheight + 1, L"  ||#####||  ", FG_WHITE, true);
-	DrawString(carPosition, carPositionheight + 2, L"    #####    ", FG_WHITE, true);
-	DrawString(carPosition, carPositionheight + 3, L"    #####    ", FG_WHITE, true);
-	DrawString(carPosition, carPositionheight + 4, L"|| ####### ||", FG_WHITE, true);
-	DrawString(carPosition, carPositionheight + 5, L"||#########||", FG_WHITE, true);
-	DrawString(carPosition, carPositionheight + 6, L"||  #####  ||", FG_WHITE, true);
+	DrawCarDirection(carPosition);
 
 	// Draw Player Stats
 	DrawString(0,0, L"LAP DISTANCE: " + to_wstring(lapDistance));

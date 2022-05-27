@@ -33,10 +33,15 @@ private:
 	float carVelocity = 0.0f;
 	float carVelocityMax = 100.0f;
 	float carCurvature = 0.0f;
+	int carDirection = 0;
 
 	// Fixed height on the screen
 	int carPositionheight = 80;
 	int carSpriteWidth = 7;
+
+private: 
+
+	void DrawCarDirection(int carPosition);
 
 protected:
 
