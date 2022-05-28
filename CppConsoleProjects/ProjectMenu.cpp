@@ -15,6 +15,7 @@
 #include "Racing.h"
 #include "ImprovedConsoleFPS.h"
 #include "ColoredConsoleFPS.h"
+#include "Splines.h"
 
 using namespace std;
 
@@ -34,11 +35,11 @@ private:
 	ConsoleFPS FPSGame;
 	ImprovedConsoleFPS improvedFPSGame;
 	ColoredConsoleFPS coloredFPSGame;
+	Splines splines;
 
 
 	int projectSelection = 0;
-	//int projectAmount = 4;
-	int projectAmount = 3;
+	int projectAmount = 4;
 	vector<short> selectionColors;
 
 	virtual bool OnUserCreate()
@@ -64,6 +65,10 @@ private:
 			asteroidsGame.Start();
 			break;
 		case 2:
+			splines.ConstructConsole(160, 80, 9, 9);
+			splines.Start();
+			break;
+		case 3:
 			improvedFPSGame.ConstructConsole(120, 40, 9, 9);
 			improvedFPSGame.Start();
 				break;
@@ -105,8 +110,9 @@ private:
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4, L"C++ CONSOLE ENGINE PROJECTS MENU");
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 3, L"- RACING - ", selectionColors[0]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 6, L"- ASTEROIDS - ", selectionColors[1]);
-		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 9, L"- RAY CAST FPS - ", selectionColors[2]);
-		//DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 12, L"- ADVANCED RAY CAST FPS - ", selectionColors[3]);
+		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 9, L"- SPLINES - ", selectionColors[2]);
+		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 12, L"- RAY CAST FPS - ", selectionColors[3]);
+		//DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 15, L"- ADVANCED RAY CAST FPS - ", selectionColors[4]);
 
 		// Draw selection lines
 
