@@ -20,7 +20,8 @@
 bool Splines::OnUserCreate()
 {
 	// Populate path with points, creating the path
-	path.points = { {15, 35}, { 45, 35 }, { 75, 35 }, { 105, 35 } };
+	path.points = { {15, 35}, { 25, 35 }, { 35, 35 }, { 45, 35 },
+					{55, 35}, { 65, 35 }, { 75, 35 }, { 85, 35 } };
 
 	return true;
 }
@@ -63,8 +64,8 @@ bool Splines::OnUserUpdate(float elapsedTime)
 		path.points[selectedPoint].y += 20.0f * elapsedTime;
 	}
 
-	// Draw the Spline
-	for (float t = 0; t < 1.0f; t+= 0.01f)
+	// Draw the Spline, but don't draw two end control points
+	for (float t = 0; t < (float)path.points.size() - 3.0f; t += 0.005f)
 	{
 		Point2 point = path.GetPoint(t);
 		Draw(point.x, point.y);

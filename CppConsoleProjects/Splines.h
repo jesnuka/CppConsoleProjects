@@ -36,8 +36,11 @@ struct Spline // Catmull-Rom Spline
 	{
 		int p1 = (int)t + 1;
 		int p2 = p1 + 1;
-		int p3 = p1 + 1;
+		int p3 = p1 + 2;
 		int p0 = p1 - 1;
+
+		// Get leftover of floor(t)
+		t = t - (int)t;
 
 		float t2 = t * t;
 		float t3 = t2 * t;
