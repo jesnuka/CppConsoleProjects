@@ -107,7 +107,6 @@ private:
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 3, L"- RACING - ", selectionColors[0]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 6, L"- ASTEROIDS - ", selectionColors[1]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 9, L"- RAY CAST FPS - ", selectionColors[2]);
-		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 9, to_wstring(projectSelection), selectionColors[2]);
 
 		// Draw selection lines
 
