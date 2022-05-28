@@ -13,6 +13,7 @@
 #include "ConsoleEngine.h"
 #include "Asteroids.h";
 #include "Racing.h";
+#include "ImprovedConsoleFPS.h"
 
 using namespace std;
 
@@ -32,11 +33,11 @@ private:
 	Racing racingGame;
 	Asteroids asteroidsGame;
 	ConsoleFPS FPSGame;
+	ImprovedConsoleFPS improvedFPSGame;
 
 
 	int projectSelection = 0;
-	//int projectAmount = 3;
-	int projectAmount = 2;
+	int projectAmount = 3;
 	vector<short> selectionColors;
 
 	virtual bool OnUserCreate()
@@ -61,6 +62,11 @@ private:
 			asteroidsGame.ConstructConsole(160, 100, 8, 8);
 			asteroidsGame.Start();
 			break;
+		case 2:
+			// Does not use ConsoleEngine currently
+			improvedFPSGame.ConstructConsole(120, 40, 9, 9);
+			improvedFPSGame.Start();
+				break;
 	/*	case 2:
 			// Does not use ConsoleEngine currently
 			ProjectMenu::ConstructConsole(120, 40, 9, 9);
@@ -82,13 +88,13 @@ private:
 		if (keys[VK_DOWN].isPressed)
 		{
 			selectionColors[projectSelection] = FG_WHITE;
-			projectSelection = abs((projectSelection + 1)) % projectAmount;
+			projectSelection = ((projectSelection + 1) % projectAmount + projectAmount) % projectAmount;
 			selectionColors[projectSelection] = FG_RED;
 		}
 		if (keys[VK_UP].isPressed)
 		{
 			selectionColors[projectSelection] = FG_WHITE;
-			projectSelection = abs((projectSelection - 1)) % projectAmount;
+			projectSelection = ((projectSelection - 1) % projectAmount + projectAmount) % projectAmount;
 			selectionColors[projectSelection] = FG_RED;
 		}
 		if (keys[VK_SPACE].isPressed || keys[VK_RETURN].isPressed)
@@ -100,7 +106,8 @@ private:
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4, L"C++ CONSOLE ENGINE PROJECTS MENU");
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 3, L"- RACING - ", selectionColors[0]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 6, L"- ASTEROIDS - ", selectionColors[1]);
-		//DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 9, L"- FIRST PERSON RAY CAST MAZE - ", selectionColors[2]);
+		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 9, L"- RAY CAST FPS - ", selectionColors[2]);
+		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 9, to_wstring(projectSelection), selectionColors[2]);
 
 		// Draw selection lines
 
