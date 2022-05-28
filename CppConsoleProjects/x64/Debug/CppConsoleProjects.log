@@ -1,4 +1,52 @@
-﻿  ProjectMenu.cpp
+﻿  Asteroids.cpp
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(310,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(79,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(79,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(80,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(80,23): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(15,25): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(16,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(44,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(75,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(86,24): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(86,14): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(92,66): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(92,59): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(92,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(92,42): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(92,32): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(101,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(102,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(159,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(160,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(164,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(165,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(206,65): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(206,55): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(206,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(206,35): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.cpp(206,28): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  ConsoleFPS.cpp
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleFPS.h(35,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleFPS.cpp(180,33): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleFPS.cpp(255,91): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleFPS.cpp(257,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleFPS.cpp(257,83): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleFPS.cpp(257,110): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleFPS.cpp(259,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleFPS.cpp(259,83): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  ImprovedConsoleFPS.cpp
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(310,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ImprovedConsoleFPS.h(26,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ImprovedConsoleFPS.cpp(243,29): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ImprovedConsoleFPS.cpp(307,87): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ImprovedConsoleFPS.cpp(309,31): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ImprovedConsoleFPS.cpp(309,79): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ImprovedConsoleFPS.cpp(309,106): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ImprovedConsoleFPS.cpp(311,31): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ImprovedConsoleFPS.cpp(311,79): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ImprovedConsoleFPS.cpp(316,10): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  ProjectMenu.cpp
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ProjectMenu.cpp(12,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleFPS.h(35,12): warning C4305: 'initializing': truncation from 'double' to 'float'
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(310,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
@@ -9,5 +57,27 @@ C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleP
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(80,23): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ProjectMenu.cpp(15,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ImprovedConsoleFPS.h(26,12): warning C4305: 'initializing': truncation from 'double' to 'float'
+  Racing.cpp
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(310,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(191,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(211,18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(212,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(213,18): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(214,22): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(255,15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(256,15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(257,20): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.32.31326\include\utility(247,16): warning C4244: 'initializing': conversion from '_Ty' to '_Ty1', possible loss of data
+          with
+          [
+              _Ty=double
+          ]
+          and
+          [
+              _Ty1=float
+          ]
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(23): message : see reference to function template instantiation 'std::pair<float,float>::pair<double,float,0>(std::pair<double,float> &&) noexcept' being compiled
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Racing.cpp(23): message : see reference to function template instantiation 'std::pair<float,float>::pair<double,float,0>(std::pair<double,float> &&) noexcept' being compiled
+  Generating Code...
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(146): warning C4715: 'ConsoleEngine::ConstructConsole': not all control paths return a value
   CppConsoleProjects.vcxproj -> C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\x64\Debug\CppConsoleProjects.exe
