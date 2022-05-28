@@ -64,6 +64,26 @@ bool Splines::OnUserUpdate(float elapsedTime)
 		path.points[selectedPoint].y += 20.0f * elapsedTime;
 	}
 
+	// Move agent around the path
+
+	if (keys[0x0041].isHeld) // A
+	{
+		agentPosition -= 5.0f * elapsedTime;
+	}
+	if (keys[0x0044].isHeld) // D
+	{
+		agentPosition += 5.0f * elapsedTime;
+	}
+
+
+	// Loop agent position around
+
+	if (agentPosition >= (float)path.points.size())
+		agentPosition -= (float)path.points.size();
+
+	if (agentPosition < 0.0f)
+		agentPosition += (float)path.points.size();
+
 	// Draw the Spline, but don't draw two end control points
 	for (float t = 0; t < (float)path.points.size(); t += 0.005f)
 	{
@@ -80,6 +100,15 @@ bool Splines::OnUserUpdate(float elapsedTime)
 	}
 	Fill(path.points[selectedPoint].x - 1, path.points[selectedPoint].y - 1, path.points[selectedPoint].x + 2, path.points[selectedPoint].y + 2, PIXEL_FULL, FG_YELLOW);
 	DrawString(path.points[selectedPoint].x, path.points[selectedPoint].y, to_wstring(selectedPoint));
+
+	// Draw the agent position while demonstrating the GetGradient function
+	Point2 aPoint = path.GetPoint(agentPosition, true);
+	Point2 aGradient = path.GetGradient(agentPosition, true);
+
+	// Draw agent in the direction it is going on the spline
+	float r = atan2(-aGradient.y, aGradient.x);
+
+	Line(5.0f * sin(r) + aPoint.x, 5.0f * cos(r) + aPoint.y, -5.0f * sin(r) + aPoint.x, -5.0f * cos(r) + aPoint.y, PIXEL_FULL, FG_GREEN);
 
 	return true;
 }
