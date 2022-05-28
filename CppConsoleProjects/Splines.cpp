@@ -65,9 +65,9 @@ bool Splines::OnUserUpdate(float elapsedTime)
 	}
 
 	// Draw the Spline, but don't draw two end control points
-	for (float t = 0; t < (float)path.points.size() - 3.0f; t += 0.005f)
+	for (float t = 0; t < (float)path.points.size(); t += 0.005f)
 	{
-		Point2 point = path.GetPoint(t);
+		Point2 point = path.GetPoint(t, true);
 		Draw(point.x, point.y);
 	}
 

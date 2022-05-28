@@ -32,12 +32,24 @@ struct Spline // Catmull-Rom Spline
 {
 	vector<Point2> points;
 
-	Point2 GetPoint(float t)
+	Point2 GetPoint(float t, bool loop)
 	{
-		int p1 = (int)t + 1;
-		int p2 = p1 + 1;
-		int p3 = p1 + 2;
-		int p0 = p1 - 1;
+		int p1, p2, p3, p0;
+
+		if (!loop) // Non-looped spline
+		{
+			p1 = (int)t + 1;
+			p2 = p1 + 1;
+			p3 = p1 + 2;
+			p0 = p1 - 1;
+		}
+		else // Looped around spline, where end goes back around to the beginning
+		{
+			p1 = (int)t;
+			p2 = (p1 + 1) % points.size();
+			p3 = (p1 + 2) % points.size();
+			p0 = p1 >= 1 ? (p1 - 1) : points.size() - 1;
+		}
 
 		// Get leftover of floor(t)
 		t = t - (int)t;
