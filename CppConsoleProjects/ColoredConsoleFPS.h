@@ -29,8 +29,8 @@ private:
 
 	//Map
 	wstring map;
-	int mapHeight = 16;
-	int mapWidth = 16;
+	int mapHeight = 32;
+	int mapWidth = 32;
 	int mapMode = 0;
 
 private:

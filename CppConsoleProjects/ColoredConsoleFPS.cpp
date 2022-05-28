@@ -64,6 +64,35 @@ wstring ColoredConsoleFPS::CreateMap(int mapWidth, int mapHeight, int mapMode)
         }
 
         break;
+    case 2:
+        // Create map with multiple smaller rooms
+        for (int i = 0; i < mapHeight; i++)
+        {
+            for (int j = 0; j < mapWidth; j++)
+            {
+                if (i == 0 || i == (mapHeight - 1))
+                    map += L"#";
+                else if(j == (int) mapWidth / 2 && i < (mapHeight - 3))
+                    map += L"#";
+                else if (i == (int)mapHeight / 2 && j > ((mapWidth / 2) + 2))
+                    map += L"#";
+                else if (i == (int)mapHeight / 3 && j > ((mapWidth / 2) + 2))
+                    map += L"#";
+                else if (i == (int)mapHeight / 2 && j < ((mapWidth / 2) - 2))
+                    map += L"#";
+                else if (i == (int)mapHeight / 3 && j < ((mapWidth / 2) - 2))
+                    map += L"#";
+                else
+                {
+                    if (j == 0 || j == (mapWidth - 1))
+                        map += L"#";
+                    else
+                        map += L".";
+                }
+
+            }
+        }
+        break;
     default:
         // Create empty map
         for (int i = 0; i < mapHeight; i++)
@@ -90,19 +119,19 @@ wstring ColoredConsoleFPS::CreateMap(int mapWidth, int mapHeight, int mapMode)
 
 bool ColoredConsoleFPS::OnUserCreate()
 {
-    map = CreateMap(mapWidth, mapHeight, 1);
+    map = CreateMap(mapWidth, mapHeight, 2);
     return true;
 }
 
 bool ColoredConsoleFPS::OnUserUpdate(float elapsedTime)
 {
     // Rotate player Left
-    if (keys[VK_LEFT].isHeld || keys[0x41].isHeld)
+    if (keys[VK_LEFT].isHeld && !keys[VK_SHIFT].isHeld || keys[0x41].isHeld && !keys[VK_SHIFT].isHeld)
     {
         playerAngle -= playerRotationSpeed * elapsedTime;
     }
     // Rotate player right
-    if (keys[VK_RIGHT].isHeld || keys[0x44].isHeld)
+    if (keys[VK_RIGHT].isHeld && !keys[VK_SHIFT].isHeld || keys[0x44].isHeld && !keys[VK_SHIFT].isHeld)
     {
         playerAngle += playerRotationSpeed * elapsedTime;
     }
@@ -136,7 +165,7 @@ bool ColoredConsoleFPS::OnUserUpdate(float elapsedTime)
     }
 
     // Strafe player right
-    if (keys[0x51].isHeld || (keys[VK_RIGHT].isHeld && keys[VK_SHIFT].isHeld))
+    if (keys[0x45].isHeld || (keys[VK_RIGHT].isHeld && keys[VK_SHIFT].isHeld))
     {
         playerY += cosf(playerAngle) * playerMovementSpeed * elapsedTime;
         playerX += sinf(playerAngle) * playerMovementSpeed * elapsedTime;
@@ -150,7 +179,7 @@ bool ColoredConsoleFPS::OnUserUpdate(float elapsedTime)
     }
 
     // Strafe player left
-    if (keys[0x45].isHeld || (keys[VK_LEFT].isHeld && keys[VK_SHIFT].isHeld))
+    if (keys[0x51].isHeld || (keys[VK_LEFT].isHeld && keys[VK_SHIFT].isHeld))
     {
         playerY -= cosf(playerAngle) * playerMovementSpeed * elapsedTime;
         playerX -= sinf(playerAngle) * playerMovementSpeed * elapsedTime;

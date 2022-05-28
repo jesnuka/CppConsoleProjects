@@ -23,8 +23,6 @@ std::atomic<bool> ConsoleEngine::atomActive(false);
 std::condition_variable ConsoleEngine::gameFinished;
 std::mutex ConsoleEngine::mutexGame;
 
-// int selection = 0;
-
 class ProjectMenu : public ConsoleEngine
 {
 
@@ -39,8 +37,7 @@ private:
 
 
 	int projectSelection = 0;
-	//int projectAmount = 4;
-	int projectAmount = 3;
+	int projectAmount = 4;
 	vector<short> selectionColors;
 
 	virtual bool OnUserCreate()
@@ -66,19 +63,12 @@ private:
 			asteroidsGame.Start();
 			break;
 		case 2:
-			// Does not use ConsoleEngine currently
 			improvedFPSGame.ConstructConsole(120, 40, 9, 9);
 			improvedFPSGame.Start();
 				break;
-		/*case 3:
-			// Does not use ConsoleEngine currently
-			coloredFPSGame.ConstructConsole(120, 40, 9, 9);
-			coloredFPSGame.Start();*/
-			break;
-	/*	case 2:
-			// Does not use ConsoleEngine currently
-			ProjectMenu::ConstructConsole(120, 40, 9, 9);
-			FPSGame.RunEngine();*/
+		case 3:
+			coloredFPSGame.ConstructConsole(200, 100, 6, 6);
+			coloredFPSGame.Start();
 			break;
 		default:
 			asteroidsGame.ConstructConsole(160, 100, 8, 8);
@@ -115,7 +105,7 @@ private:
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 3, L"- RACING - ", selectionColors[0]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 6, L"- ASTEROIDS - ", selectionColors[1]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 9, L"- RAY CAST FPS - ", selectionColors[2]);
-		//DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 12, L"- COLORED RAY CAST FPS - ", selectionColors[3]);
+		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 12, L"- ADVANCED RAY CAST FPS - ", selectionColors[3]);
 
 		// Draw selection lines
 
@@ -130,8 +120,6 @@ int main()
 	ProjectMenu project;
 	project.ConstructConsole(100, 80, 9, 9);
 	project.Start();
-
-//	
 
 	return 0;
 }
