@@ -1,8 +1,22 @@
 #include "ImprovedConsoleFPS.h"
 #include "ConsoleEngine.h"
 
-// Based on Console FPS by @Javidx9 at OneLoneCoder.com 
+// Based on Ultimate Console FPS by Javidx9
+/*
+    License
+	~~~~~~~
+	One Lone Coder Console Game Engine  Copyright (C) 2018  Javidx9
+	This program comes with ABSOLUTELY NO WARRANTY.
+	This is free software, and you are welcome to redistribute it
+	under certain conditions; See license for details. 
+	Original works located at:
+	https://www.github.com/onelonecoder
+	https://www.onelonecoder.com
+	https://www.youtube.com/javidx9
+	GNU GPLv3
+	https://github.com/OneLoneCoder/videos/blob/master/LICENSE
 
+*/
 
 wstring ImprovedConsoleFPS::CreateMap(int mapWidth, int mapHeight, int mapMode)
 {
@@ -97,12 +111,12 @@ bool ImprovedConsoleFPS::OnUserCreate()
 bool ImprovedConsoleFPS::OnUserUpdate(float elapsedTime)
 {
     // Rotate player Left
-    if (keys[VK_LEFT].isHeld || keys[0x41].isHeld)
+    if (keys[VK_LEFT].isHeld && !keys[VK_SHIFT].isHeld || keys[0x41].isHeld && !keys[VK_SHIFT].isHeld)
     {
         playerAngle -= playerRotationSpeed * elapsedTime;
     }
     // Rotate player right
-    if (keys[VK_RIGHT].isHeld || keys[0x44].isHeld)
+    if (keys[VK_RIGHT].isHeld && !keys[VK_SHIFT].isHeld || keys[0x44].isHeld && !keys[VK_SHIFT].isHeld)
     {
         playerAngle += playerRotationSpeed * elapsedTime;
     }
@@ -136,7 +150,7 @@ bool ImprovedConsoleFPS::OnUserUpdate(float elapsedTime)
     }
 
     // Strafe player right
-    if (keys[0x51].isHeld || (keys[VK_RIGHT].isHeld && keys[VK_SHIFT].isHeld))
+    if (keys[0x45].isHeld || (keys[VK_RIGHT].isHeld && keys[VK_SHIFT].isHeld))
     {
         playerY += cosf(playerAngle) * playerMovementSpeed * elapsedTime;
         playerX += sinf(playerAngle) * playerMovementSpeed * elapsedTime;
@@ -150,7 +164,7 @@ bool ImprovedConsoleFPS::OnUserUpdate(float elapsedTime)
     }
 
     // Strafe player left
-    if (keys[0x45].isHeld || (keys[VK_LEFT].isHeld && keys[VK_SHIFT].isHeld))
+    if (keys[0x51].isHeld || (keys[VK_LEFT].isHeld && keys[VK_SHIFT].isHeld))
     {
         playerY -= cosf(playerAngle) * playerMovementSpeed * elapsedTime;
         playerX -= sinf(playerAngle) * playerMovementSpeed * elapsedTime;

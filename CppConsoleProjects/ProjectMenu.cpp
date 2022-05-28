@@ -37,7 +37,8 @@ private:
 
 
 	int projectSelection = 0;
-	int projectAmount = 4;
+	//int projectAmount = 4;
+	int projectAmount = 3;
 	vector<short> selectionColors;
 
 	virtual bool OnUserCreate()
@@ -66,9 +67,9 @@ private:
 			improvedFPSGame.ConstructConsole(120, 40, 9, 9);
 			improvedFPSGame.Start();
 				break;
-		case 3:
+		/*case 3:
 			coloredFPSGame.ConstructConsole(200, 100, 6, 6);
-			coloredFPSGame.Start();
+			coloredFPSGame.Start();*/
 			break;
 		default:
 			asteroidsGame.ConstructConsole(160, 100, 8, 8);
@@ -105,7 +106,7 @@ private:
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 3, L"- RACING - ", selectionColors[0]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 6, L"- ASTEROIDS - ", selectionColors[1]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 9, L"- RAY CAST FPS - ", selectionColors[2]);
-		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 12, L"- ADVANCED RAY CAST FPS - ", selectionColors[3]);
+		//DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 12, L"- ADVANCED RAY CAST FPS - ", selectionColors[3]);
 
 		// Draw selection lines
 

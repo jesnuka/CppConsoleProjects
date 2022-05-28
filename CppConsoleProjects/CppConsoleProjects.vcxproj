@@ -133,6 +133,7 @@
     <ClCompile Include="ImprovedConsoleFPS.cpp" />
     <ClCompile Include="ProjectMenu.cpp" />
     <ClCompile Include="Racing.cpp" />
+    <ClCompile Include="Splines.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asteroids.h" />
@@ -141,6 +142,7 @@
     <ClInclude Include="ConsoleFPS.h" />
     <ClInclude Include="ImprovedConsoleFPS.h" />
     <ClInclude Include="Racing.h" />
+    <ClInclude Include="Splines.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

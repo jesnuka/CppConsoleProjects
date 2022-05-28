@@ -1,5 +1,22 @@
 #pragma once
 
+// Based on Command Line Game Engine by @Javidx9 at OneLoneCoder.com 
+/*
+	License
+	~~~~~~~
+	One Lone Coder Console Game Engine  Copyright (C) 2018  Javidx9
+	This program comes with ABSOLUTELY NO WARRANTY.
+	This is free software, and you are welcome to redistribute it
+	under certain conditions; See license for details.
+	Original works located at:
+		https://www.github.com/onelonecoder
+		https://www.onelonecoder.com
+		https://www.youtube.com/javidx9
+
+	GNU GPLv3
+		https://github.com/OneLoneCoder/videos/blob/master/LICENSE
+*/
+
 #define _USE_MATH_DEFINES
 #include <iostream>
 #include <Windows.h>
@@ -14,7 +31,7 @@
 #include <list>
 using namespace std;
 
-// Based on Command Line Game Engine by @Javidx9 at OneLoneCoder.com 
+
 enum Color
 {
 	FG_BLACK = 0x0000,
