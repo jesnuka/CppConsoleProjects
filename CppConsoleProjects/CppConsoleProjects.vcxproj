@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Asteroids.cpp" />
+    <ClCompile Include="ColoredConsoleFPS.cpp" />
     <ClCompile Include="ConsoleFPS.cpp" />
     <ClCompile Include="ImprovedConsoleFPS.cpp" />
     <ClCompile Include="ProjectMenu.cpp" />
@@ -135,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asteroids.h" />
+    <ClInclude Include="ColoredConsoleFPS.h" />
     <ClInclude Include="ConsoleEngine.h" />
     <ClInclude Include="ConsoleFPS.h" />
     <ClInclude Include="ImprovedConsoleFPS.h" />

@@ -9,11 +9,12 @@
 #include <utility>
 #include <algorithm>
 
-#include "ConsoleFPS.h";
+#include "ConsoleFPS.h"
 #include "ConsoleEngine.h"
-#include "Asteroids.h";
-#include "Racing.h";
+#include "Asteroids.h"
+#include "Racing.h"
 #include "ImprovedConsoleFPS.h"
+#include "ColoredConsoleFPS.h"
 
 using namespace std;
 
@@ -34,9 +35,11 @@ private:
 	Asteroids asteroidsGame;
 	ConsoleFPS FPSGame;
 	ImprovedConsoleFPS improvedFPSGame;
+	ColoredConsoleFPS coloredFPSGame;
 
 
 	int projectSelection = 0;
+	//int projectAmount = 4;
 	int projectAmount = 3;
 	vector<short> selectionColors;
 
@@ -67,6 +70,11 @@ private:
 			improvedFPSGame.ConstructConsole(120, 40, 9, 9);
 			improvedFPSGame.Start();
 				break;
+		/*case 3:
+			// Does not use ConsoleEngine currently
+			coloredFPSGame.ConstructConsole(120, 40, 9, 9);
+			coloredFPSGame.Start();*/
+			break;
 	/*	case 2:
 			// Does not use ConsoleEngine currently
 			ProjectMenu::ConstructConsole(120, 40, 9, 9);
@@ -107,6 +115,7 @@ private:
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 3, L"- RACING - ", selectionColors[0]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 6, L"- ASTEROIDS - ", selectionColors[1]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 9, L"- RAY CAST FPS - ", selectionColors[2]);
+		//DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 12, L"- COLORED RAY CAST FPS - ", selectionColors[3]);
 
 		// Draw selection lines
 
