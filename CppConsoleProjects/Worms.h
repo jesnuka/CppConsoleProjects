@@ -31,6 +31,11 @@ public:
 	float accelY = 0.0f;
 	float friction = 0.8f;
 
+	// Number of times the object can bounce, before dead flag is set
+	// Default, -1, is for infinite bounces
+	int bouncesBeforeDeath = -1;
+	bool dead = false;
+
 	float radius = 4.0f;
 	// Stable objects do not move, and don't need to have more calculations
 	bool stable = false;
@@ -54,6 +59,7 @@ public:
 		velocityY = 10.0f * sinf((float)rand() / (float)RAND_MAX * 2.0F * M_PI);
 		radius = 1.0f;
 		friction = 0.8f;
+		bouncesBeforeDeath = 5;
 	}
 
 	virtual void Draw(ConsoleEngine* engine, float offsetX, float offsetY)
@@ -110,7 +116,8 @@ private:
 
 	// List of all the physics objects, as pointers because they are abstract
 	// Subclasses can therefore also be added to this list
-	list<PhysicsObject*> objects;
+	// These are unique_ptr:s to allow them to be deleted when they go out of scope
+	list<unique_ptr<PhysicsObject>> objects;
 
 	unsigned char* map = nullptr;
 

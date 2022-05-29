@@ -134,13 +134,13 @@ bool Worms::OnUserUpdate(float elapsedTime)
 	if (mouse[2].isReleased)
 	{
 		Dummy *dummy = new Dummy(mousePositionX + cameraPosX, mousePositionY + cameraPosY);
-		objects.push_back(dummy);
+		objects.push_back(unique_ptr<Dummy>(dummy));
 	}
 	if (mouse[0].isReleased)
 	{
 		// Launch debris
 		for (int i = 0; i < 20; i++)
-			objects.push_back(new Debris(mousePositionX + cameraPosX, mousePositionY + cameraPosY));
+			objects.push_back(unique_ptr<Debris>(new Debris(mousePositionX + cameraPosX, mousePositionY + cameraPosY)));
 	}
 
 
@@ -240,6 +240,14 @@ bool Worms::OnUserUpdate(float elapsedTime)
 				o->velocityX = o->friction * (-2.0f * dot * (responseX / responseMagnitude) + o->velocityX);
 				o->velocityY = o->friction * (-2.0f * dot * (responseY / responseMagnitude) + o->velocityY);
 
+				// Calculate bounces to determine if dead flag needs to be set
+				if (o->bouncesBeforeDeath > 0)
+				{
+					// If bouncesBeforeDeath is 0, set dead to true
+					o->bouncesBeforeDeath -= 1;
+					o->dead = o->bouncesBeforeDeath == 0;
+				}
+
 			}
 			else // With no collision, move object to the potential position
 			{
@@ -251,6 +259,10 @@ bool Worms::OnUserUpdate(float elapsedTime)
 			if (velocityMagnitude < 0.1f)
 				o->stable = true;
 		}
+
+		// Use lambda function to remove dead physics objects from the list
+		// Because of the unique_ptr, once they are removed, they will be deleted as they are out of scope automatically
+		objects.remove_if([](unique_ptr<PhysicsObject> &o) {return o->dead; });
 	}
 	// Empty screen
 	Fill(0, 0, screenWidth, screenHeight, L' ', 0);
