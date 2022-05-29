@@ -39,7 +39,35 @@ vector<pair<float, float>> DefineDebris()
 	model.push_back({0.0f, 1.0f});
 
 	return model;
+}vector<pair<float, float>> DefineMissile()
+{
+	// Draw missile shaped model
+	vector<pair<float, float>> model;
+	model.push_back({ 0.0f, 0.0f });
+	model.push_back({ 1.0f, 1.0f });
+	model.push_back({ 2.0f, 1.0f });
+	model.push_back({ 2.5f, 0.0f });
+	model.push_back({ 2.0f, -1.0f });
+	model.push_back({ 1.0f, -1.0f });
+	model.push_back({ 0.0f, 0.0f });
+	model.push_back({ -1.0f, -1.0f });
+	model.push_back({ -2.5f, -1.0f });
+	model.push_back({ -2.0f, 0.0f });
+	model.push_back({ -2.5f, 1.0f });
+	model.push_back({ -1.0f, 1.0f });
+
+	// Scale points to make the shape be unit sized
+	for (auto& v : model)
+	{
+		v.first /= 2.5f; 
+		v.second /= 2.5f;
+	}
+
+	return model;
 }
+
+// Factory function for creation
+vector<pair<float, float>> Missile::model = DefineMissile();
 
 // Factory function for creation
 vector<pair<float, float>> Debris::model = DefineDebris();
@@ -117,7 +145,7 @@ void Worms::PerlinNoise1D(int count, float *seed, int octaves, float bias, float
 void Worms::Explosion(float worldX, float worldY, float radius)
 {
 	// Draw a circle of "Sky", so 0, to create a hole in the terrain
-	// This is done using Bresenhem Circle Algorithm as a lambda function
+	// This is done using Bresenham Circle Algorithm as a lambda function
 
 	auto CircleBresenham = [&](int xc, int yc, int r)
 	{
@@ -202,6 +230,10 @@ bool Worms::OnUserUpdate(float elapsedTime)
 	{
 		Dummy *dummy = new Dummy(mousePositionX + cameraPosX, mousePositionY + cameraPosY);
 		objects.push_back(unique_ptr<Dummy>(dummy));
+	}
+	if (mouse[1].isReleased)
+	{
+		objects.push_back(unique_ptr<Missile>(new Missile(mousePositionX + cameraPosX, mousePositionY + cameraPosY)));
 	}
 	if (mouse[0].isReleased)
 	{
@@ -312,6 +344,13 @@ bool Worms::OnUserUpdate(float elapsedTime)
 					// If bouncesBeforeDeath is 0, set dead to true
 					o->bouncesBeforeDeath -= 1;
 					o->dead = o->bouncesBeforeDeath == 0;
+
+					if (o->dead)
+					{
+						int action = o->DeathAction();
+						if (action > 1)
+							Explosion(o->posX, o->posY, action);
+					}
 				}
 
 			}

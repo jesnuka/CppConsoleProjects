@@ -47,6 +47,7 @@ public:
 	}
 
 	virtual void Draw(ConsoleEngine *engine, float offsetX, float offsetY) = 0;
+	virtual int DeathAction() = 0;
 };
 
 class Debris : public PhysicsObject
@@ -68,6 +69,43 @@ public:
 		// Position is offset by camera, atan2f to get the angle using velocities, Scale is done using radius to see the bounding radius
 		engine->WireFrame(model, posX - offsetX, posY - offsetY, atan2f(velocityY, velocityX), radius, PIXEL_FULL, FG_DARK_GREEN);
 	}
+	
+	virtual int DeathAction()
+	{
+		return 0;
+	}
+
+private:
+	// Share model across models of the same class
+	static vector<pair<float, float>> model;
+};
+
+class Missile : public PhysicsObject
+{
+public:
+	Missile(float x = 0.0f, float y = 0.0f, float _velocityX = 0.0f, float _velocityY = 0.0f) : PhysicsObject(x, y)
+	{
+		velocityX = 10.0f * cosf((float)rand() / (float)RAND_MAX * 2.0F * M_PI);
+		velocityY = 10.0f * sinf((float)rand() / (float)RAND_MAX * 2.0F * M_PI);
+		radius = 2.5f;
+		friction = 0.5f;
+		velocityX = _velocityX;
+		velocityY = _velocityY;
+		bouncesBeforeDeath = 1;
+		dead = false;
+	}
+
+	virtual void Draw(ConsoleEngine* engine, float offsetX, float offsetY)
+	{
+		// Draw wireframe model
+		// Position is offset by camera, atan2f to get the angle using velocities, Scale is done using radius to see the bounding radius
+		engine->WireFrame(model, posX - offsetX, posY - offsetY, atan2f(velocityY, velocityX), radius, PIXEL_FULL, FG_YELLOW);
+	}
+
+	virtual int DeathAction()
+	{
+		return 20; // Big radius explosion
+	}
 
 private:
 	// Share model across models of the same class
@@ -87,6 +125,11 @@ public:
 		// Draw wireframe model of dummy, 
 		// Position is offset by camera, atan2f to get the angle using velocities, Scale is done using radius to see the bounding radius
 		engine->WireFrame(model, posX - offsetX, posY - offsetY, atan2f(velocityY, velocityX),radius, PIXEL_FULL, FG_WHITE);
+	}
+
+	virtual int DeathAction()
+	{
+		return 0; 
 	}
 
 private:
