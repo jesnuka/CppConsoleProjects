@@ -150,6 +150,21 @@ struct Spline // Catmull-Rom Spline
 
 		return length;
 	}
+
+	// Get spline location using x,y position
+	float GetSegmentNormalizedOffset(float position)
+	{
+		// First find the base point in the spline
+		int i = 0;
+		while (position > points[i].length)
+		{
+			position -= points[i].length;
+			i += 1;
+		}
+
+		// Now get the remainder of the length, which is the offset
+		return (float)i + (position / points[i].length);
+	}
 };
 
 class Splines : public ConsoleEngine
@@ -163,6 +178,8 @@ private:
 	Spline path;
 	int selectedPoint = 0;
 	float agentPosition = 0.0f;
+
+	vector<pair<float, float>> modelShip;
 
 protected:
 

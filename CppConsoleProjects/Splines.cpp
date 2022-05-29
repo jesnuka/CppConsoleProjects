@@ -32,6 +32,9 @@ bool Splines::OnUserCreate()
 							   20.0f * cosf((float)i / pointAmount * M_PI * 2.0F) + screenHeight / 2});
 	}
 
+	// Define wireframe model for the demo ship
+	modelShip = { {1,1},{1,3},{3,0},{0,-3},{-3,0},{-1,3},{-1,1} };
+
 	return true;
 }
 
@@ -77,21 +80,21 @@ bool Splines::OnUserUpdate(float elapsedTime)
 
 	if (keys[0x0041].isHeld) // A
 	{
-		agentPosition -= 5.0f * elapsedTime;
+		agentPosition -= 20.0f * elapsedTime;
 	}
 	if (keys[0x0044].isHeld) // D
 	{
-		agentPosition += 5.0f * elapsedTime;
+		agentPosition += 20.0f * elapsedTime;
 	}
 
 
 	// Loop agent position around
 
-	if (agentPosition >= (float)path.points.size())
-		agentPosition -= (float)path.points.size();
+	if (agentPosition >= (float)path.totalSplineLength)
+		agentPosition -= (float)path.totalSplineLength;
 
 	if (agentPosition < 0.0f)
-		agentPosition += (float)path.points.size();
+		agentPosition += (float)path.totalSplineLength;
 
 	// Draw the Spline, but don't draw two end control points
 	for (float t = 0; t < (float)path.points.size(); t += 0.005f)
@@ -116,13 +119,25 @@ bool Splines::OnUserUpdate(float elapsedTime)
 	DrawString(path.points[selectedPoint].x, path.points[selectedPoint].y, to_wstring(selectedPoint));
 
 	// Draw the agent position while demonstrating the GetGradient function
-	Point2 aPoint = path.GetPoint(agentPosition, true);
-	Point2 aGradient = path.GetGradient(agentPosition, true);
+	float offset = path.GetSegmentNormalizedOffset(agentPosition);
+
+	Point2 aPoint = path.GetPoint(offset, true);
+	Point2 aGradient = path.GetGradient(offset, true);
+
+	// Draw offset to the screen
+	DrawString(2, 2, L"MARKER OFFSET:" + to_wstring(offset));
+	DrawString(2, 4, L"MARKER POSITION:" + to_wstring(agentPosition));
+	DrawString(2, 6, L"CONTROLS:");
+	DrawString(2, 8, L"[WASD / ARROW KEYS] TO MOVE POINTS, [XZ] TO SELECT POINTS");
+	DrawString(2, 10, L"[AD] TO MOVE MARKER ON THE SPLINE");
 
 	// Draw agent in the direction it is going on the spline
 	float r = atan2(-aGradient.y, aGradient.x);
 
 	Line(5.0f * sinf(r) + aPoint.x, 5.0f * cosf(r) + aPoint.y, -5.0f * sinf(r) + aPoint.x, -5.0f * cosf(r) + aPoint.y, PIXEL_FULL, FG_GREEN);
+
+	// Draw demo model on the spline
+	WireFrame(modelShip, aPoint.x, aPoint.y, -r + (M_PI / 2.0F), 5.0F, PIXEL_FULL, FG_CYAN);
 
 	return true;
 }
