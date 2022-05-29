@@ -77,7 +77,7 @@ private:
 			improvedFPSGame.Start();
 				break;
 		case 4:
-			wormsGame.ConstructConsole(220, 120, 6, 6);
+			wormsGame.ConstructConsole(256, 160, 5, 5);
 			wormsGame.Start();
 			break;
 		case 5:

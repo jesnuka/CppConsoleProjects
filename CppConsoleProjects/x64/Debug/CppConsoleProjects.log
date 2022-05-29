@@ -9,5 +9,10 @@ C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleP
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ColoredConsoleFPS.h(41,12): warning C4305: 'initializing': truncation from 'double' to 'float'
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Splines.h(53,1): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Splines.h(100,1): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  Worms.cpp
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(465,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(113,25): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(117,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  Generating Code...
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(301): warning C4715: 'ConsoleEngine::ConstructConsole': not all control paths return a value
   CppConsoleProjects.vcxproj -> C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\x64\Debug\CppConsoleProjects.exe

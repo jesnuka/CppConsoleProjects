@@ -34,9 +34,15 @@ private:
 	int mapWidth = 1024;
 	int mapHeight = 512;
 
+	// Camera
+	float cameraPosX = 0.0f;
+	float cameraPosY = 0.0f;
+	float mapScrollSpeed = 200.0f;
+
 	unsigned char* map = nullptr;
 
-	void CreateMap(int mapWidth, int mapHeight, int mapMode);
+	void CreateMap();
+	void PerlinNoise1D(int nCount, float* fSeed, int nOctaves, float fBias, float* fOutput);
 
 protected:
 
