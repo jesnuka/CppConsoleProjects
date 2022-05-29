@@ -134,6 +134,7 @@
     <ClCompile Include="ProjectMenu.cpp" />
     <ClCompile Include="Racing.cpp" />
     <ClCompile Include="Splines.cpp" />
+    <ClCompile Include="Worms.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asteroids.h" />
@@ -144,6 +145,7 @@
     <ClInclude Include="Racing.h" />
     <ClInclude Include="Splines.h" />
     <ClInclude Include="SpriteEditor.h" />
+    <ClInclude Include="Worms.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

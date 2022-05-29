@@ -17,6 +17,7 @@
 #include "ImprovedConsoleFPS.h"
 #include "ColoredConsoleFPS.h"
 #include "Splines.h"
+#include "Worms.h"
 
 using namespace std;
 
@@ -38,10 +39,11 @@ private:
 	ColoredConsoleFPS coloredFPSGame;
 	Splines splines;
 	SpriteEditor spriteEditor;
+	Worms wormsGame;
 
 
 	int projectSelection = 0;
-	int projectAmount = 5;
+	int projectAmount = 6;
 	vector<short> selectionColors;
 
 	virtual bool OnUserCreate()
@@ -75,6 +77,10 @@ private:
 			improvedFPSGame.Start();
 				break;
 		case 4:
+			wormsGame.ConstructConsole(220, 120, 6, 6);
+			wormsGame.Start();
+			break;
+		case 5:
 			spriteEditor.ConstructConsole(160, 100, 8, 8);
 			spriteEditor.Start();
 			break;
@@ -118,7 +124,8 @@ private:
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 6, L"- ASTEROIDS - ", selectionColors[1]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 9, L"- SPLINES - ", selectionColors[2]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 12, L"- RAY CAST FPS - ", selectionColors[3]);
-		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 15, L"- SPRITE EDITOR - ", selectionColors[4]);
+		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 15, L"- WORMS - ", selectionColors[4]);
+		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 18, L"- SPRITE EDITOR - ", selectionColors[5]);
 		//DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 15, L"- ADVANCED RAY CAST FPS - ", selectionColors[4]);
 
 		// Draw selection lines
