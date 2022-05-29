@@ -62,8 +62,8 @@ protected:
 	virtual bool OnUserCreate()
 	{
 		// Create sprite
-		sprite = new ConsoleSprite(8, 32);
-		spriteFile = L"testSprite.spr";
+		sprite = new ConsoleSprite(8, 8);
+		spriteFile = L"worm.spr";
 
 		return true;
 	}

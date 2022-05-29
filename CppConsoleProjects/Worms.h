@@ -60,6 +60,7 @@ public:
 		velocityY = 10.0f * sinf((float)rand() / (float)RAND_MAX * 2.0F * M_PI);
 		radius = 1.0f;
 		friction = 0.8f;
+		dead = false;
 		bouncesBeforeDeath = 5;
 	}
 
@@ -78,6 +79,39 @@ public:
 private:
 	// Share model across models of the same class
 	static vector<pair<float, float>> model;
+};
+
+class Worm : public PhysicsObject
+{
+public:
+	Worm(float x = 0.0f, float y = 0.0f) : PhysicsObject(x, y)
+	{
+		radius = 3.5f;
+		friction = 0.2f;
+		dead = false;
+		bouncesBeforeDeath = -1;
+
+		// TODO: Add color selection for worms
+		if (wormSprite == nullptr)
+			wormSprite = new ConsoleSprite(L"wormR.spr");
+	}
+
+	virtual void Draw(ConsoleEngine* engine, float offsetX, float offsetY)
+	{
+		// Position is offset by camera, atan2f to get the angle using velocities, Scale is done using radius to see the bounding radius
+		//engine->WireFrame(model, posX - offsetX, posY - offsetY, atan2f(velocityY, velocityX), radius, PIXEL_FULL, FG_DARK_GREEN);
+		engine->DrawPartialSprite(posX - offsetX, posY - offsetY, wormSprite, 0,0, 8,8);
+	}
+
+	virtual int DeathAction()
+	{
+		return 0;
+	}
+
+private:
+	// Share model across models of the same class
+	static vector<pair<float, float>> model;
+	static ConsoleSprite *wormSprite;
 };
 
 class Missile : public PhysicsObject

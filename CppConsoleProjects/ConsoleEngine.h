@@ -90,6 +90,13 @@ public:
 		CreateSprite(width, height);
 	}
 
+	// For loading files
+	ConsoleSprite(std::wstring sFile)
+	{
+		if (!Load(sFile))
+			CreateSprite(8, 8);
+	}
+
 	int sWidth = 0;
 	int sHeight = 0;
 
@@ -330,6 +337,38 @@ public:
 			{
 				bufferScreen[y * screenWidth + x + i].Char.UnicodeChar = str[i];
 				bufferScreen[y * screenWidth + x + i].Attributes = color;
+			}
+		}
+	}
+
+	// Draw sprite on coordinates
+	void DrawSprite(int x, int y, ConsoleSprite* sprite)
+	{
+		if (sprite == nullptr)
+			return;
+
+		for (int i = 0; i < sprite->sWidth; i++)
+		{
+			for (int j = 0; j < sprite->sHeight; j++)
+			{
+				if (sprite->GetSymbol(i, j) != L' ')
+					Draw(x + i, y + j, sprite->GetSymbol(i, j), sprite->GetColour(i, j));
+			}
+		}
+	}
+
+	// Draw part of a sprite on coordinates
+	void DrawPartialSprite(int x, int y, ConsoleSprite* sprite, int ox, int oy, int w, int h)
+	{
+		if (sprite == nullptr)
+			return;
+
+		for (int i = 0; i < w; i++)
+		{
+			for (int j = 0; j < h; j++)
+			{
+				if (sprite->GetSymbol(i + ox, j + oy) != L' ')
+					Draw(x + i, y + j, sprite->GetSymbol(i + ox, j + oy), sprite->GetColour(i + ox, j + oy));
 			}
 		}
 	}

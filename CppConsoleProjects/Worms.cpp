@@ -66,6 +66,8 @@ vector<pair<float, float>> DefineDebris()
 	return model;
 }
 
+ConsoleSprite* Worm::wormSprite = nullptr;
+
 // Factory function for creation
 vector<pair<float, float>> Missile::model = DefineMissile();
 
@@ -237,8 +239,9 @@ bool Worms::OnUserUpdate(float elapsedTime)
 	}
 	if (mouse[0].isReleased)
 	{
-		// Launch debris
-		Explosion(mousePositionX + cameraPosX, mousePositionY + cameraPosY, 10.0f);
+		//Explosion(mousePositionX + cameraPosX, mousePositionY + cameraPosY, 10.0f);
+
+		objects.push_back(unique_ptr<Worm>(new Worm(mousePositionX + cameraPosX, mousePositionY + cameraPosY)));
 	}
 
 

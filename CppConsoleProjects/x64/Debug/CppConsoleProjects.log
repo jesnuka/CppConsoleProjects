@@ -1,6 +1,6 @@
 ﻿  ProjectMenu.cpp
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleFPS.h(49,12): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(465,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(504,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(95,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(95,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Asteroids.h(96,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
@@ -11,26 +11,30 @@ C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleP
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Splines.h(100,1): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.h(59,67): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.h(60,67): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.h(88,67): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.h(89,67): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.h(103,50): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.h(103,34): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.h(122,67): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.h(123,67): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   Worms.cpp
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(465,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(504,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.h(59,67): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.h(60,67): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.h(88,67): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.h(89,67): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.h(103,50): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.h(103,34): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.h(122,67): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.h(123,67): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(27,42): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(27,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(184,34): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(184,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(184,18): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(259,25): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(263,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(299,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(299,85): warning C4305: '+=': truncation from 'double' to 'float'
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(308,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(312,27): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(352,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(186,34): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(186,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(186,18): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(262,25): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(266,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(302,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(302,85): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(311,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(315,27): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\Worms.cpp(355,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Generating Code...
-C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(301): warning C4715: 'ConsoleEngine::ConstructConsole': not all control paths return a value
+C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(308): warning C4715: 'ConsoleEngine::ConstructConsole': not all control paths return a value
   CppConsoleProjects.vcxproj -> C:\Users\hetur\OneDrive\Työpöytä\Cpp_Projektit\CppConsoleProjects\x64\Debug\CppConsoleProjects.exe
