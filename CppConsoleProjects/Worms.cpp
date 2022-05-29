@@ -143,31 +143,94 @@ bool Worms::OnUserUpdate(float elapsedTime)
 	if (cameraPosY >= mapHeight - screenHeight) 
 		cameraPosY = mapHeight - screenHeight;
 
-	// Update physics of physics objects
-	for (auto &o : objects)
+	// Perform 10 loops of physics calculation per update
+	for (int i = 0; i < 10; i++)
 	{
-		// Apply Gravity to object
-		o->accelY += 9.81f;
+		// Update physics of physics objects
+		for (auto &o : objects)
+		{
+			// Apply Gravity to object
+			//o->accelY += 9.81f;
+			o->accelY += 2.0f;
 
-		// Update Velocity in respect to acceleration
-		o->velocityX += o->accelX * elapsedTime;
-		o->velocityY += o->accelY * elapsedTime;
+			// Update Velocity in respect to acceleration
+			o->velocityX += o->accelX * elapsedTime;
+			o->velocityY += o->accelY * elapsedTime;
 
-		// Update position according to the velocity
-		// However, use potential variables because collision needs to be tested first
-		float potentialPosX = o->posX + o->velocityX * elapsedTime;
-		float potentialPosY = o->posY + o->velocityY * elapsedTime;
+			// Update position according to the velocity
+			// However, use potential variables because collision needs to be tested first
+			float potentialPosX = o->posX + o->velocityX * elapsedTime;
+			float potentialPosY = o->posY + o->velocityY * elapsedTime;
 
-		// Reset acceleration at the end
-		o->accelX = 0.0f;
-		o->accelY = 0.0f;
-		o->stable = false;
+			// Reset acceleration at the end
+			o->accelX = 0.0f;
+			o->accelY = 0.0f;
+			o->stable = false;
 
-		o->posX = potentialPosX;
-		o->posY = potentialPosY;
+			// Check map collision
+			float angle = atan2f(o->velocityY, o->velocityX);
+			// Response vector is generated using points that collide with the terrain,
+			// to then calculate the direction the physics object continues moving in
+			float responseX = 0.0f;
+			float responseY = 0.0f;
+			bool collision = false;
 
+			// Iterate around a semi-circle of the object, as collision only happens in the other side (99% of the time)
+			// Step size could be further calculated, to make sure all points are within unit distance from each other
+			for (float r = angle - (M_PI / 2.0f); r < angle + (M_PI / 2.0f); r += M_PI / 8.0f)
+			{
+				float testPosX = (o->radius) * cosf(r) + potentialPosX;
+				float testPosY = (o->radius) * sinf(r) + potentialPosY;
+
+				// Clamp points to map size
+				if (testPosX < 0.0f)
+					testPosX = 0.0f;
+				if (testPosX >= mapWidth)
+					testPosX = mapWidth - 1;
+				if (testPosY < 0.0f)
+					testPosY = 0.0f;
+				if (testPosY >= mapHeight)
+					testPosY = mapHeight - 1;
+
+				// Check for intersection with terrain in that position
+				if (map[(int)testPosY * mapWidth + (int)testPosX] != 0)
+				{
+					// Accumulate collision points to create escape response to object
+					responseX += potentialPosX - testPosX;
+					responseY += potentialPosY - testPosY;
+					collision = true;
+				}
+			}
+
+			float velocityMagnitude = sqrtf(powf(o->velocityX, 2) + powf(o->velocityY, 2));
+			float responseMagnitude = sqrtf(powf(responseX, 2) + powf(responseY, 2));
+
+			if (collision)
+			{
+				// Object has technically not YET collided, but potentially will, 
+				// but is still stopped beforehand to avoid intersection with terrain
+				o->stable = true;
+
+				// Calculate reflection vector of the objects velocity
+				// Dot product between velocity vector and the normalized response vector
+				float dot = o->velocityX * (responseX / responseMagnitude) + o->velocityY * (responseY / responseMagnitude);
+				// Calculate new velocity using the reflection equation "r=d-2(d.n)n"
+				// Additionally, calculate in the friction coefficient, loss of energy to dampen the response
+				o->velocityX = o->friction * (-2.0f * dot * (responseX / responseMagnitude) + o->velocityX);
+				o->velocityY = o->friction * (-2.0f * dot * (responseY / responseMagnitude) + o->velocityY);
+
+			}
+			else // With no collision, move object to the potential position
+			{
+				o->posX = potentialPosX;
+				o->posY = potentialPosY;
+			}
+
+			// When object barely moves anymore, change it to stable
+			if (velocityMagnitude < 0.1f)
+				o->stable = true;
+		}
 	}
-
 	// Empty screen
 	Fill(0, 0, screenWidth, screenHeight, L' ', 0);
 

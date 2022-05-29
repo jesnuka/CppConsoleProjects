@@ -29,6 +29,7 @@ public:
 	float velocityY = 0.0f;
 	float accelX = 0.0f;
 	float accelY = 0.0f;
+	float friction = 0.8f;
 
 	float radius = 4.0f;
 	// Stable objects do not move, and don't need to have more calculations
