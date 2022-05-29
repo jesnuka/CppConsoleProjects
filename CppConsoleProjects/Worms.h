@@ -123,6 +123,7 @@ private:
 
 	void CreateMap();
 	void PerlinNoise1D(int nCount, float* fSeed, int nOctaves, float fBias, float* fOutput);
+	void Explosion(float worldX, float worldY, float radius);
 
 protected:
 

@@ -114,6 +114,73 @@ void Worms::PerlinNoise1D(int count, float *seed, int octaves, float bias, float
 	}
 }
 
+void Worms::Explosion(float worldX, float worldY, float radius)
+{
+	// Draw a circle of "Sky", so 0, to create a hole in the terrain
+	// This is done using Bresenhem Circle Algorithm as a lambda function
+
+	auto CircleBresenham = [&](int xc, int yc, int r)
+	{
+		// Taken from wikipedia
+		int x = 0;
+		int y = r;
+		int p = 3 - 2 * r;
+		if (!r) 
+			return;
+
+		auto drawline = [&](int sx, int ex, int ny)
+		{
+			for (int i = sx; i < ex; i++)
+			{
+				if (ny >= 0 && ny < mapHeight && i >= 0 && i < mapWidth)
+					map[ny * mapWidth + i] = 0; // Turns area to 0 in the bitmap, making it be drawn as sky
+
+			}
+		};
+
+		while (y >= x)
+		{
+			// Modified to draw scan-lines instead of edges
+			drawline(xc - x, xc + x, yc - y);
+			drawline(xc - y, xc + y, yc - x);
+			drawline(xc - x, xc + x, yc + y);
+			drawline(xc - y, xc + y, yc + x);
+			if (p < 0) 
+				p += 4 * x++ + 6;
+			else 
+				p += 4 * (x++ - y--) + 10;
+		}
+	};
+
+	// Create a hole in the terrain
+	CircleBresenham(worldX, worldY, radius);
+	
+
+	// Cause a shockwave to move other objects around using pythagoras theorem
+	for (auto& o : objects)
+	{
+		float dx = o->posX - worldX;
+		float dy = o->posY - worldY;
+		float distance = sqrt(dx*dx + dy*dy);
+
+		// Make sure we don't divide by 0
+		if (distance < 0.00001f)
+			distance = 0.0001f;
+
+		// If close enough, push them away according to how close they are
+		if (distance < radius)
+		{
+			o->velocityX = (dx / distance) * radius;
+			o->velocityY = (dy / distance) * radius;
+			o->stable = false;
+		}
+	}
+
+	// Launch debris
+	for (int i = 0; i < (int)radius; i++)
+		objects.push_back(unique_ptr<Debris>(new Debris(worldX, worldY)));
+}
+
 bool Worms::OnUserCreate()
 {
 	// Create and initialize the map
@@ -139,8 +206,7 @@ bool Worms::OnUserUpdate(float elapsedTime)
 	if (mouse[0].isReleased)
 	{
 		// Launch debris
-		for (int i = 0; i < 20; i++)
-			objects.push_back(unique_ptr<Debris>(new Debris(mousePositionX + cameraPosX, mousePositionY + cameraPosY)));
+		Explosion(mousePositionX + cameraPosX, mousePositionY + cameraPosY, 10.0f);
 	}
 
 
