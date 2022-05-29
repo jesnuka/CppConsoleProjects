@@ -29,9 +29,23 @@ vector<pair<float, float>> DefineDummy()
 	return model;
 }
 
+vector<pair<float, float>> DefineDebris()
+{
+	// Draw a wireframe square
+	vector<pair<float, float>> model;
+	model.push_back({0.0f, 0.0f});
+	model.push_back({1.0f, 0.0f});
+	model.push_back({1.0f, 1.0f});
+	model.push_back({0.0f, 1.0f});
+
+	return model;
+}
+
+// Factory function for creation
+vector<pair<float, float>> Debris::model = DefineDebris();
+
 // Factory function for creation
 vector<pair<float, float>> Dummy::model = DefineDummy();
-
 
 void Worms::CreateMap()
 {
@@ -122,6 +136,13 @@ bool Worms::OnUserUpdate(float elapsedTime)
 		Dummy *dummy = new Dummy(mousePositionX + cameraPosX, mousePositionY + cameraPosY);
 		objects.push_back(dummy);
 	}
+	if (mouse[0].isReleased)
+	{
+		// Launch debris
+		for (int i = 0; i < 20; i++)
+			objects.push_back(new Debris(mousePositionX + cameraPosX, mousePositionY + cameraPosY));
+	}
+
 
 	// Sides of the screen allow for moving the camera around the map
 	if (mousePositionX < 5) 

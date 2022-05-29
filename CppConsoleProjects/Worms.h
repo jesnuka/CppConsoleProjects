@@ -44,6 +44,30 @@ public:
 	virtual void Draw(ConsoleEngine *engine, float offsetX, float offsetY) = 0;
 };
 
+class Debris : public PhysicsObject
+{
+public:
+	Debris(float x = 0.0f, float y = 0.0f) : PhysicsObject(x, y)
+	{
+		// Have initial velocity for debris in a circular direction
+		velocityX = 10.0f * cosf((float)rand() / (float)RAND_MAX * 2.0F * M_PI);
+		velocityY = 10.0f * sinf((float)rand() / (float)RAND_MAX * 2.0F * M_PI);
+		radius = 1.0f;
+		friction = 0.8f;
+	}
+
+	virtual void Draw(ConsoleEngine* engine, float offsetX, float offsetY)
+	{
+		// Draw wireframe model
+		// Position is offset by camera, atan2f to get the angle using velocities, Scale is done using radius to see the bounding radius
+		engine->WireFrame(model, posX - offsetX, posY - offsetY, atan2f(velocityY, velocityX), radius, PIXEL_FULL, FG_DARK_GREEN);
+	}
+
+private:
+	// Share model across models of the same class
+	static vector<pair<float, float>> model;
+};
+
 class Dummy : public PhysicsObject
 {
 public:
