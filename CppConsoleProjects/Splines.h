@@ -26,11 +26,13 @@ struct Point2
 {
 	float x;
 	float y;
+	float length;
 };
 
 struct Spline // Catmull-Rom Spline
 {
 	vector<Point2> points;
+	float totalSplineLength;
 
 	Point2 GetPoint(float t, bool loop = false)
 	{
@@ -124,6 +126,30 @@ struct Spline // Catmull-Rom Spline
 
 		return { resX, resY };
 	}
+
+	float GetSegmentLength(int node, bool loop = false)
+	{
+		 // Calculate the length of a spline segment
+
+		float length = 0.0f;
+		float stepSize = 0.05f;
+
+		Point2 pOld;
+		Point2 pNew;
+		pOld = GetPoint((float)node, loop);
+
+		for (float t = 0; t < 1.0f; t += stepSize)
+		{
+			// Get the precise point on the spline
+			pNew = GetPoint((float)node + t, loop);
+
+			// Pythagoras
+			length += sqrtf(powf(pNew.x - pOld.x, 2) + powf(pNew.y - pOld.y, 2));
+			pOld = pNew;
+		}
+
+		return length;
+	}
 };
 
 class Splines : public ConsoleEngine
@@ -139,6 +165,9 @@ private:
 	float agentPosition = 0.0f;
 
 protected:
+
+	
+
 
 	virtual bool OnUserCreate();
 

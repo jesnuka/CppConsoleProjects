@@ -17,11 +17,20 @@
 	https://github.com/OneLoneCoder/videos/blob/master/LICENSE
 */
 
+
 bool Splines::OnUserCreate()
 {
 	// Populate path with points, creating the path
-	path.points = { {15, 35}, { 25, 35 }, { 35, 35 }, { 45, 35 },
-					{55, 35}, { 65, 35 }, { 75, 35 }, { 85, 35 } };
+	//path.points = { {15, 35}, { 25, 35 }, { 35, 35 }, { 45, 35 },
+	//				{55, 35}, { 65, 35 }, { 75, 35 }, { 85, 35 } };
+
+	int pointAmount = 10;
+	// Draw a circle of points
+	for (int i = 0; i < pointAmount; i++)
+	{
+		path.points.push_back({20.0f * sinf((float)i / pointAmount * M_PI * 2.0F) + screenWidth / 2,
+							   20.0f * cosf((float)i / pointAmount * M_PI * 2.0F) + screenHeight / 2});
+	}
 
 	return true;
 }
@@ -92,12 +101,17 @@ bool Splines::OnUserUpdate(float elapsedTime)
 	}
 
 
+	path.totalSplineLength = 0.0f;
+
 	// Draw Points
 	for (int i = 0; i < path.points.size(); i++)
 	{
+		path.totalSplineLength += (path.points[i].length = path.GetSegmentLength(i, true));
 		Fill(path.points[i].x - 1,path.points[i].y - 1, path.points[i].x + 2, path.points[i].y + 2, PIXEL_FULL, FG_RED);
 		DrawString(path.points[i].x, path.points[i].y, to_wstring(i));
+		DrawString(path.points[i].x + 3, path.points[i].y, to_wstring(path.points[i].length));
 	}
+
 	Fill(path.points[selectedPoint].x - 1, path.points[selectedPoint].y - 1, path.points[selectedPoint].x + 2, path.points[selectedPoint].y + 2, PIXEL_FULL, FG_YELLOW);
 	DrawString(path.points[selectedPoint].x, path.points[selectedPoint].y, to_wstring(selectedPoint));
 
@@ -108,7 +122,7 @@ bool Splines::OnUserUpdate(float elapsedTime)
 	// Draw agent in the direction it is going on the spline
 	float r = atan2(-aGradient.y, aGradient.x);
 
-	Line(5.0f * sin(r) + aPoint.x, 5.0f * cos(r) + aPoint.y, -5.0f * sin(r) + aPoint.x, -5.0f * cos(r) + aPoint.y, PIXEL_FULL, FG_GREEN);
+	Line(5.0f * sinf(r) + aPoint.x, 5.0f * cosf(r) + aPoint.y, -5.0f * sinf(r) + aPoint.x, -5.0f * cosf(r) + aPoint.y, PIXEL_FULL, FG_GREEN);
 
 	return true;
 }
