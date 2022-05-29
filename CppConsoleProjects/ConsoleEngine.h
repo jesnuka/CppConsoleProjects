@@ -77,6 +77,144 @@ enum Pixel
 	PIXEL_QUARTER = 0x2591
 };
 
+class ConsoleSprite
+{
+public:
+	ConsoleSprite()
+	{
+
+	}
+
+	ConsoleSprite(int width, int height)
+	{
+		CreateSprite(width, height);
+	}
+
+	int sWidth = 0;
+	int sHeight = 0;
+
+
+private:
+	wchar_t *symbols = nullptr;
+	wchar_t *colours = nullptr;
+
+	void CreateSprite(int width, int height)
+	{
+		// Initialize variables
+
+		sWidth = width;
+		sHeight = height;
+
+		symbols = new wchar_t[width*height];
+		colours = new wchar_t[width*height];
+
+		for (int i = 0; i < width * height; i++)
+		{
+			symbols[i] = L' ';
+			colours[i] = FG_BLACK;
+		}
+	}
+
+public:
+
+	// These are used to set or get symbol or colour at position xy of the sprite
+	void SetSymbol(int x, int y, wchar_t c)
+	{
+
+		if (x < 0 || x >= sWidth || y < 0 || y >= sHeight)
+			return;
+		else
+			symbols[y * sWidth + x] = c;
+	}
+
+	void SetColour(int x, int y, short c)
+	{
+		if (x < 0 || x >= sWidth || y < 0 || y >= sHeight)
+			return;
+		else
+			colours[y * sWidth + x] = c;
+	}
+
+	short GetSymbol(int x, int y)
+	{
+		if (x < 0 || x >= sWidth || y < 0 || y >= sHeight)
+			return L' ';
+		else
+			return symbols[y * sWidth + x];
+	}
+
+	short GetColour(int x, int y)
+	{
+		if (x < 0 || x >= sWidth || y < 0 || y >= sHeight)
+			return FG_BLACK;
+		else
+			return colours[y * sWidth + x];
+	}
+
+	short SampleSymbol(float x, float y)
+	{
+		int sx = (int)(x * (float)sWidth);
+		int sy = (int)(y * (float)sHeight - 1.0f);
+		if (sx < 0 || sx >= sWidth || sy < 0 || sy >= sHeight)
+			return L' ';
+		else
+			return symbols[sy * sWidth + sx];
+	}
+
+	short SampleColour(float x, float y)
+	{
+		int sx = (int)(x * (float)sWidth);
+		int sy = (int)(y * (float)sHeight - 1.0f);
+		if (sx < 0 || sx >= sWidth || sy < 0 || sy >= sHeight)
+			return FG_BLACK;
+		else
+			return colours[sy * sWidth + sx];
+	}
+
+	// Save sprite as file
+	bool Save(std::wstring sFile)
+	{
+		FILE* f = nullptr;
+		_wfopen_s(&f, sFile.c_str(), L"wb");
+		if (f == nullptr)
+			return false;
+
+		fwrite(&sWidth, sizeof(int), 1, f);
+		fwrite(&sHeight, sizeof(int), 1, f);
+		fwrite(colours, sizeof(short), sWidth * sHeight, f);
+		fwrite(symbols, sizeof(short), sWidth * sHeight, f);
+
+		fclose(f);
+
+		return true;
+	}
+
+	// Load sprite from file
+	bool Load(std::wstring sFile)
+	{
+		delete[] symbols;
+		delete[] colours;
+		sWidth = 0;
+		sHeight = 0;
+
+		FILE* f = nullptr;
+		_wfopen_s(&f, sFile.c_str(), L"rb");
+		if (f == nullptr)
+			return false;
+
+		std::fread(&sWidth, sizeof(int), 1, f);
+		std::fread(&sHeight, sizeof(int), 1, f);
+
+		CreateSprite(sWidth, sHeight);
+
+		std::fread(colours, sizeof(short), sWidth * sHeight, f);
+		std::fread(symbols, sizeof(short), sWidth * sHeight, f);
+
+		std::fclose(f);
+		return true;
+	}
+};
+
 class ConsoleEngine
 {
 public:

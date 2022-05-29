@@ -11,6 +11,7 @@
 
 #include "ConsoleFPS.h"
 #include "ConsoleEngine.h"
+#include "SpriteEditor.h"
 #include "Asteroids.h"
 #include "Racing.h"
 #include "ImprovedConsoleFPS.h"
@@ -36,10 +37,11 @@ private:
 	ImprovedConsoleFPS improvedFPSGame;
 	ColoredConsoleFPS coloredFPSGame;
 	Splines splines;
+	SpriteEditor spriteEditor;
 
 
 	int projectSelection = 0;
-	int projectAmount = 4;
+	int projectAmount = 5;
 	vector<short> selectionColors;
 
 	virtual bool OnUserCreate()
@@ -72,6 +74,10 @@ private:
 			improvedFPSGame.ConstructConsole(120, 40, 9, 9);
 			improvedFPSGame.Start();
 				break;
+		case 4:
+			spriteEditor.ConstructConsole(160, 100, 8, 8);
+			spriteEditor.Start();
+			break;
 		/*case 3:
 			coloredFPSGame.ConstructConsole(200, 100, 6, 6);
 			coloredFPSGame.Start();*/
@@ -112,6 +118,7 @@ private:
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 6, L"- ASTEROIDS - ", selectionColors[1]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 9, L"- SPLINES - ", selectionColors[2]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 12, L"- RAY CAST FPS - ", selectionColors[3]);
+		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 15, L"- SPRITE EDITOR - ", selectionColors[4]);
 		//DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 15, L"- ADVANCED RAY CAST FPS - ", selectionColors[4]);
 
 		// Draw selection lines

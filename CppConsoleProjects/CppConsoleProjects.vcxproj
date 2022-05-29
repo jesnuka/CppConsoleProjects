@@ -143,6 +143,7 @@
     <ClInclude Include="ImprovedConsoleFPS.h" />
     <ClInclude Include="Racing.h" />
     <ClInclude Include="Splines.h" />
+    <ClInclude Include="SpriteEditor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
