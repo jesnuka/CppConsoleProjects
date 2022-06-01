@@ -241,7 +241,9 @@ bool Worms::OnUserUpdate(float elapsedTime)
 	{
 		//Explosion(mousePositionX + cameraPosX, mousePositionY + cameraPosY, 10.0f);
 
-		objects.push_back(unique_ptr<Worm>(new Worm(mousePositionX + cameraPosX, mousePositionY + cameraPosY)));
+		Worm* worm = new Worm(mousePositionX + cameraPosX, mousePositionY + cameraPosY);
+		objectUnderControl = worm;
+		objects.push_back(unique_ptr<Worm>(worm));
 	}
 
 
@@ -264,6 +266,40 @@ bool Worms::OnUserUpdate(float elapsedTime)
 		cameraPosY = 0;
 	if (cameraPosY >= mapHeight - screenHeight) 
 		cameraPosY = mapHeight - screenHeight;
+
+	// User Input
+	if (objectUnderControl != nullptr)
+	{
+		// Only if the object / worm is stable
+		if (objectUnderControl->stable)
+		{
+			// Move Shooting Angle to the Right
+			if (keys[L'D'].isHeld)
+			{
+				Worm* worm = (Worm*)objectUnderControl;
+				worm->shootAngle += 1.0f * elapsedTime;
+				// Wrap angle to back 
+				if (worm->shootAngle < -M_PI)
+					worm->shootAngle -= M_PI * 2.0f;
+			}
+			// Move Shooting Angle to the Left
+			if (keys[L'A'].isHeld)
+			{
+				Worm* worm = (Worm*)objectUnderControl;
+				worm->shootAngle -= 1.0f * elapsedTime;
+				if (worm->shootAngle < -M_PI)
+					worm->shootAngle += M_PI * 2.0f;
+			}
+			// Jump to the cursor direction
+			if (keys[L'X'].isPressed)
+			{
+				float angle = ((Worm*)objectUnderControl)->shootAngle;
+				objectUnderControl->velocityX = 4.0f * cosf(angle);
+				objectUnderControl->velocityY = 8.0f * sinf(angle);
+				objectUnderControl->stable = false;
+			}
+		}
+	}
 
 	// Perform 10 loops of physics calculation per update
 	for (int i = 0; i < 10; i++)
@@ -398,7 +434,25 @@ bool Worms::OnUserUpdate(float elapsedTime)
 
 	// Draw all the objects using each objects own Draw method
 	for (auto& o : objects)
+	{
 		o->Draw(this, cameraPosX, cameraPosY);
+
+		Worm* worm = (Worm*)objectUnderControl;
+
+		// Draw cursor around objectUnderControl worm
+		if (o.get() == worm)
+		{
+			float centerX = worm->posX + 8.0f * cosf(worm->shootAngle) - cameraPosX;
+			float centerY = worm->posY + 8.0f * sinf(worm->shootAngle) - cameraPosY;
+
+			Draw(centerX, centerY, PIXEL_FULL, FG_BLACK);
+			Draw(centerX + 1, centerY, PIXEL_FULL, FG_BLACK);
+			Draw(centerX - 1, centerY, PIXEL_FULL, FG_BLACK);
+			Draw(centerX, centerY + 1, PIXEL_FULL, FG_BLACK);
+			Draw(centerX, centerY - 1, PIXEL_FULL, FG_BLACK);
+		}
+
+	}
 
     return true;
 }

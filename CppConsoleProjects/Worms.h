@@ -108,6 +108,10 @@ public:
 		return 0;
 	}
 
+public:
+
+	float shootAngle = 0.0f;
+
 private:
 	// Share model across models of the same class
 	static vector<pair<float, float>> model;
@@ -179,7 +183,6 @@ public:
 		appName = L"Worms";
 	}
 
-
 private:
 
 	// Map
@@ -195,6 +198,9 @@ private:
 	// Subclasses can therefore also be added to this list
 	// These are unique_ptr:s to allow them to be deleted when they go out of scope
 	list<unique_ptr<PhysicsObject>> objects;
+
+	// The worm that is under player control
+	PhysicsObject* objectUnderControl = nullptr;
 
 	unsigned char* map = nullptr;
 
