@@ -100,7 +100,7 @@ public:
 	{
 		// Position is offset by camera, atan2f to get the angle using velocities, Scale is done using radius to see the bounding radius
 		//engine->WireFrame(model, posX - offsetX, posY - offsetY, atan2f(velocityY, velocityX), radius, PIXEL_FULL, FG_DARK_GREEN);
-		engine->DrawPartialSprite(posX - offsetX, posY - offsetY, wormSprite, 0,0, 8,8);
+		engine->DrawPartialSprite(posX - offsetX - radius, posY - offsetY - radius, wormSprite, 0, 0, 8, 8);
 	}
 
 	virtual int DeathAction()
