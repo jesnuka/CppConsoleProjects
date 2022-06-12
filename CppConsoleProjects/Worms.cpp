@@ -243,12 +243,74 @@ bool Worms::OnUserUpdate(float elapsedTime)
 
 		Worm* worm = new Worm(mousePositionX + cameraPosX, mousePositionY + cameraPosY);
 		objectUnderControl = worm;
+		cameraTrackingObject = worm;
 		objects.push_back(unique_ptr<Worm>(worm));
 	}
 
+	// Start weapon charging
+	if (keys[VK_SPACE].isPressed)
+	{
+		chargingWeapon = true;
+		fireWeapon = false;
+		chargeLevel = 0.0f;
+	}
+	if (keys[VK_SPACE].isHeld)
+	{
+		if (chargingWeapon)
+		{
+			// Increase weapon charge while button is held down
+			chargeLevel += 0.75f * elapsedTime;
+			if (chargeLevel >= 1.0f)
+			{
+				chargeLevel = 1.0f;
+				fireWeapon = true;
+			}
+		}
+	}
+	if (keys[VK_SPACE].isReleased)
+	{
+		if (chargingWeapon)
+			fireWeapon = true;
 
-	// Sides of the screen allow for moving the camera around the map
-	if (mousePositionX < 5) 
+		chargingWeapon = false;
+	}
+
+	// Shoot weapon if fireWeapon is true
+	if (fireWeapon)
+	{
+		Worm* worm = (Worm*)objectUnderControl;
+
+		// Weapon origin
+		float originX = worm->posX;
+		float originY = worm->posY;
+
+		// Weapon direction
+		float dirX = cosf(worm->shootAngle);
+		float dirY = sinf(worm->shootAngle);
+
+		// Create the weapon object
+		Missile* missile = new Missile(originX, originY, dirX * 40.0f * chargeLevel, dirY * 40.0f * chargeLevel);
+		objects.push_back(unique_ptr<Missile>(missile));
+
+		cameraTrackingObject = missile;
+
+		fireWeapon = false;
+		chargeLevel = 0.0f;
+		chargingWeapon = false;
+	}
+
+	if (cameraTrackingObject != nullptr)
+	{
+		cameraTargetPosX = cameraTrackingObject->posX - (screenWidth / 2);
+		cameraTargetPosY = cameraTrackingObject->posY - (screenHeight / 2);
+		// Interpolate actual camera coordinates
+
+		cameraPosX += (cameraTargetPosX - cameraPosX) * 5.0f * elapsedTime;
+		cameraPosY += (cameraTargetPosY - cameraPosY) * 5.0f * elapsedTime;
+	}
+
+	// Sides of the screen allow for moving the camera around the map, if not tracking an object
+	if (mousePositionX < 5)
 		cameraPosX -= mapScrollSpeed * elapsedTime;
 	if (mousePositionX > screenWidth - 5) 
 		cameraPosX += mapScrollSpeed * elapsedTime;
@@ -384,11 +446,15 @@ bool Worms::OnUserUpdate(float elapsedTime)
 					o->bouncesBeforeDeath -= 1;
 					o->dead = o->bouncesBeforeDeath == 0;
 
+					// Object dies
 					if (o->dead)
 					{
 						int action = o->DeathAction();
 						if (action > 1)
+						{
 							Explosion(o->posX, o->posY, action);
+							cameraTrackingObject = objectUnderControl;
+						}
 					}
 				}
 
@@ -450,6 +516,13 @@ bool Worms::OnUserUpdate(float elapsedTime)
 			Draw(centerX - 1, centerY, PIXEL_FULL, FG_BLACK);
 			Draw(centerX, centerY + 1, PIXEL_FULL, FG_BLACK);
 			Draw(centerX, centerY - 1, PIXEL_FULL, FG_BLACK);
+
+			// Draw Charge level of player's weapon
+			for (int i = 0; i < 11 * chargeLevel; i++)
+			{
+				Draw(worm->posX - 5 + i - cameraPosX, worm->posY - 12 - cameraPosY, PIXEL_FULL, FG_GREEN);
+				Draw(worm->posX - 5 + i - cameraPosX, worm->posY - 11 - cameraPosY, PIXEL_FULL, FG_RED);
+			}
 		}
 
 	}

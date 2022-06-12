@@ -192,6 +192,10 @@ private:
 	// Camera
 	float cameraPosX = 0.0f;
 	float cameraPosY = 0.0f;
+
+	float cameraTargetPosX = 0.0f;
+	float cameraTargetPosY = 0.0f;
+
 	float mapScrollSpeed = 200.0f;
 
 	// List of all the physics objects, as pointers because they are abstract
@@ -201,6 +205,11 @@ private:
 
 	// The worm that is under player control
 	PhysicsObject* objectUnderControl = nullptr;
+	PhysicsObject* cameraTrackingObject = nullptr;
+
+	bool fireWeapon = false;
+	bool chargingWeapon = false;
+	float chargeLevel = 0.0f;
 
 	unsigned char* map = nullptr;
 
