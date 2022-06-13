@@ -249,89 +249,7 @@ bool Worms::OnUserUpdate(float elapsedTime)
 		objects.push_back(unique_ptr<Worm>(worm));
 	}
 
-	// Start weapon charging
-	if (keys[VK_SPACE].isPressed)
-	{
-		chargingWeapon = true;
-		fireWeapon = false;
-		chargeLevel = 0.0f;
-	}
-	if (keys[VK_SPACE].isHeld)
-	{
-		if (chargingWeapon)
-		{
-			// Increase weapon charge while button is held down
-			chargeLevel += 0.75f * elapsedTime;
-			if (chargeLevel >= 1.0f)
-			{
-				chargeLevel = 1.0f;
-				fireWeapon = true;
-			}
-		}
-	}
-	if (keys[VK_SPACE].isReleased)
-	{
-		if (chargingWeapon)
-			fireWeapon = true;
-
-		chargingWeapon = false;
-	}
-
-	// Shoot weapon if fireWeapon is true
-	if (fireWeapon)
-	{
-		Worm* worm = (Worm*)objectUnderControl;
-
-		// Weapon origin
-		float originX = worm->posX;
-		float originY = worm->posY;
-
-		// Weapon direction
-		float dirX = cosf(worm->shootAngle);
-		float dirY = sinf(worm->shootAngle);
-
-		// Create the weapon object
-		Missile* missile = new Missile(originX, originY, dirX * 40.0f * chargeLevel, dirY * 40.0f * chargeLevel);
-		objects.push_back(unique_ptr<Missile>(missile));
-
-		cameraTrackingObject = missile;
-
-		fireWeapon = false;
-		chargeLevel = 0.0f;
-		chargingWeapon = false;
-
-		playerActionComplete = true;
-	}
-
-	if (cameraTrackingObject != nullptr)
-	{
-		cameraTargetPosX = cameraTrackingObject->posX - (screenWidth / 2);
-		cameraTargetPosY = cameraTrackingObject->posY - (screenHeight / 2);
-		// Interpolate actual camera coordinates
-
-		cameraPosX += (cameraTargetPosX - cameraPosX) * 5.0f * elapsedTime;
-		cameraPosY += (cameraTargetPosY - cameraPosY) * 5.0f * elapsedTime;
-	}
-
-	// Sides of the screen allow for moving the camera around the map, if not tracking an object
-	if (mousePositionX < 5)
-		cameraPosX -= mapScrollSpeed * elapsedTime;
-	if (mousePositionX > screenWidth - 5) 
-		cameraPosX += mapScrollSpeed * elapsedTime;
-	if (mousePositionY < 5) 
-		cameraPosY -= mapScrollSpeed * elapsedTime;
-	if (mousePositionY > screenHeight - 5) 
-		cameraPosY += mapScrollSpeed * elapsedTime;
-
-	// Clamp the map boundaries to avoid going of bounds
-	if (cameraPosX < 0) 
-		cameraPosX = 0;
-	if (cameraPosX >= mapWidth - screenWidth) 
-		cameraPosX = mapWidth - screenWidth;
-	if (cameraPosY < 0) 
-		cameraPosY = 0;
-	if (cameraPosY >= mapHeight - screenHeight) 
-		cameraPosY = mapHeight - screenHeight;
+	
 
 	// Game State handling using a state machine
 	switch (GameState)
@@ -440,9 +358,94 @@ bool Worms::OnUserUpdate(float elapsedTime)
 					objectUnderControl->velocityY = 8.0f * sinf(angle);
 					objectUnderControl->stable = false;
 				}
+
+				// Start weapon charging
+				if (keys[VK_SPACE].isPressed)
+				{
+					chargingWeapon = true;
+					fireWeapon = false;
+					chargeLevel = 0.0f;
+				}
+				if (keys[VK_SPACE].isHeld)
+				{
+					if (chargingWeapon)
+					{
+						// Increase weapon charge while button is held down
+						chargeLevel += 0.75f * elapsedTime;
+						if (chargeLevel >= 1.0f)
+						{
+							chargeLevel = 1.0f;
+							fireWeapon = true;
+						}
+					}
+				}
+				if (keys[VK_SPACE].isReleased)
+				{
+					if (chargingWeapon)
+						fireWeapon = true;
+
+					chargingWeapon = false;
+				}
+			}
+
+			// Shoot weapon if fireWeapon is true
+			if (fireWeapon)
+			{
+				Worm* worm = (Worm*)objectUnderControl;
+
+				// Weapon origin
+				float originX = worm->posX;
+				float originY = worm->posY;
+
+				// Weapon direction
+				float dirX = cosf(worm->shootAngle);
+				float dirY = sinf(worm->shootAngle);
+
+				// Create the weapon object
+				Missile* missile = new Missile(originX, originY, dirX * 40.0f * chargeLevel, dirY * 40.0f * chargeLevel);
+				objects.push_back(unique_ptr<Missile>(missile));
+
+				cameraTrackingObject = missile;
+
+				fireWeapon = false;
+				chargeLevel = 0.0f;
+				chargingWeapon = false;
+
+				playerActionComplete = true;
 			}
 		}
 	}
+
+	// Camera moves to the camera target position smoothly
+	if (cameraTrackingObject != nullptr)
+	{
+		cameraTargetPosX = cameraTrackingObject->posX - (screenWidth / 2);
+		cameraTargetPosY = cameraTrackingObject->posY - (screenHeight / 2);
+		// Interpolate actual camera coordinates
+
+		cameraPosX += (cameraTargetPosX - cameraPosX) * 5.0f * elapsedTime;
+		cameraPosY += (cameraTargetPosY - cameraPosY) * 5.0f * elapsedTime;
+	}
+
+	// Sides of the screen allow for moving the camera around the map, if not tracking an object
+	if (mousePositionX < 5)
+		cameraPosX -= mapScrollSpeed * elapsedTime;
+	if (mousePositionX > screenWidth - 5)
+		cameraPosX += mapScrollSpeed * elapsedTime;
+	if (mousePositionY < 5)
+		cameraPosY -= mapScrollSpeed * elapsedTime;
+	if (mousePositionY > screenHeight - 5)
+		cameraPosY += mapScrollSpeed * elapsedTime;
+
+	// Clamp the map boundaries to avoid going of bounds
+	if (cameraPosX < 0)
+		cameraPosX = 0;
+	if (cameraPosX >= mapWidth - screenWidth)
+		cameraPosX = mapWidth - screenWidth;
+	if (cameraPosY < 0)
+		cameraPosY = 0;
+	if (cameraPosY >= mapHeight - screenHeight)
+		cameraPosY = mapHeight - screenHeight;
 
 	// Perform 10 loops of physics calculation per update
 	for (int i = 0; i < 10; i++)
