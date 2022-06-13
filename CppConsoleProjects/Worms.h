@@ -211,11 +211,28 @@ private:
 	bool chargingWeapon = false;
 	float chargeLevel = 0.0f;
 
+	bool gameIsStable = false;
+	bool allowControl = false;
+	bool playerActionComplete = false;
+
+
 	unsigned char* map = nullptr;
 
 	void CreateMap();
 	void PerlinNoise1D(int nCount, float* fSeed, int nOctaves, float fBias, float* fOutput);
 	void Explosion(float worldX, float worldY, float radius);
+
+	// State machine for the state of the game
+	enum GAMESTATE
+	{
+		GS_RESET = 0,
+		GS_GENERATE_TERRAIN = 1,
+		GS_GENERATING_TERRAIN,
+		GS_ALLOCATE_UNITS,
+		GS_ALLOCATING_UNITS,
+		GS_START_PLAY,
+		GS_CAMERA_MODE
+	} GameState, NextState;
 
 protected:
 

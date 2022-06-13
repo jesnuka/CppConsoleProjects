@@ -217,7 +217,9 @@ bool Worms::OnUserCreate()
 	map = new unsigned char[mapWidth * mapHeight];
 	memset(map, 0, mapWidth * mapHeight * sizeof(unsigned char));
 
-	CreateMap();
+	// Initialize Game State variables
+	GameState = GS_RESET;
+	NextState = GS_RESET;
 
     return true;
 }
@@ -297,6 +299,8 @@ bool Worms::OnUserUpdate(float elapsedTime)
 		fireWeapon = false;
 		chargeLevel = 0.0f;
 		chargingWeapon = false;
+
+		playerActionComplete = true;
 	}
 
 	if (cameraTrackingObject != nullptr)
@@ -329,36 +333,113 @@ bool Worms::OnUserUpdate(float elapsedTime)
 	if (cameraPosY >= mapHeight - screenHeight) 
 		cameraPosY = mapHeight - screenHeight;
 
-	// User Input
-	if (objectUnderControl != nullptr)
+	// Game State handling using a state machine
+	switch (GameState)
 	{
-		// Only if the object / worm is stable
-		if (objectUnderControl->stable)
+		case GS_RESET:
 		{
-			// Move Shooting Angle to the Right
-			if (keys[L'D'].isHeld)
+			allowControl = false;
+			NextState = GS_GENERATE_TERRAIN;
+			break;
+		}
+		case GS_GENERATE_TERRAIN: // Generate the Terrain, so the Map
+		{
+			allowControl = false;
+			CreateMap();
+			NextState = GS_GENERATING_TERRAIN;
+			break;
+		}
+		case GS_GENERATING_TERRAIN: 
+		{
+			allowControl = false;
+			NextState = GS_ALLOCATE_UNITS;
+			break;
+		}
+		case GS_ALLOCATE_UNITS: // Create the Units
+		{
+			allowControl = false;
+			Worm* worm = new Worm(30.0f, 1.0f);
+			objects.push_back(unique_ptr<Worm>(worm));
+			objectUnderControl = worm;
+			cameraTrackingObject = objectUnderControl;
+
+			NextState = GS_ALLOCATING_UNITS;
+			break;
+		}
+		case GS_ALLOCATING_UNITS:
+		{
+			allowControl = false;
+			// Wait for the Game to prepare units, so everything stops moving before the game starts.
+			if (gameIsStable)
 			{
-				Worm* worm = (Worm*)objectUnderControl;
-				worm->shootAngle += 1.0f * elapsedTime;
-				// Wrap angle to back 
-				if (worm->shootAngle < -M_PI)
-					worm->shootAngle -= M_PI * 2.0f;
+				playerActionComplete = false;
+				NextState = GS_START_PLAY;
 			}
-			// Move Shooting Angle to the Left
-			if (keys[L'A'].isHeld)
+
+			break;
+		}
+		case GS_START_PLAY:
+		{
+			allowControl = true;
+
+			if(playerActionComplete)
+				NextState = GS_CAMERA_MODE;
+
+			break;
+		}
+		case GS_CAMERA_MODE:
+		{
+			allowControl = false;
+			playerActionComplete = false;
+
+			if (gameIsStable)
 			{
-				Worm* worm = (Worm*)objectUnderControl;
-				worm->shootAngle -= 1.0f * elapsedTime;
-				if (worm->shootAngle < -M_PI)
-					worm->shootAngle += M_PI * 2.0f;
+				// Reset camera back to the object under control
+				cameraTrackingObject = objectUnderControl;
+				NextState = GS_START_PLAY;
 			}
-			// Jump to the cursor direction
-			if (keys[L'X'].isPressed)
+
+			break;
+		}
+		default:
+		{
+			break;
+		}
+	}
+
+	// User Input
+	if (allowControl)
+	{
+		if (objectUnderControl != nullptr)
+		{
+			// Only if the object / worm is stable
+			if (objectUnderControl->stable)
 			{
-				float angle = ((Worm*)objectUnderControl)->shootAngle;
-				objectUnderControl->velocityX = 4.0f * cosf(angle);
-				objectUnderControl->velocityY = 8.0f * sinf(angle);
-				objectUnderControl->stable = false;
+				// Move Shooting Angle to the Right
+				if (keys[L'D'].isHeld)
+				{
+					Worm* worm = (Worm*)objectUnderControl;
+					worm->shootAngle += 1.0f * elapsedTime;
+					// Wrap angle to back 
+					if (worm->shootAngle < -M_PI)
+						worm->shootAngle -= M_PI * 2.0f;
+				}
+				// Move Shooting Angle to the Left
+				if (keys[L'A'].isHeld)
+				{
+					Worm* worm = (Worm*)objectUnderControl;
+					worm->shootAngle -= 1.0f * elapsedTime;
+					if (worm->shootAngle < -M_PI)
+						worm->shootAngle += M_PI * 2.0f;
+				}
+				// Jump to the cursor direction
+				if (keys[L'X'].isPressed)
+				{
+					float angle = ((Worm*)objectUnderControl)->shootAngle;
+					objectUnderControl->velocityX = 4.0f * cosf(angle);
+					objectUnderControl->velocityY = 8.0f * sinf(angle);
+					objectUnderControl->stable = false;
+				}
 			}
 		}
 	}
@@ -453,7 +534,7 @@ bool Worms::OnUserUpdate(float elapsedTime)
 						if (action > 1)
 						{
 							Explosion(o->posX, o->posY, action);
-							cameraTrackingObject = objectUnderControl;
+							cameraTrackingObject = nullptr;
 						}
 					}
 				}
@@ -526,6 +607,23 @@ bool Worms::OnUserUpdate(float elapsedTime)
 		}
 
 	}
+
+	// Check for the stability of the game, by making sure all objects have stopped moving
+	gameIsStable = true;
+	for (auto& o : objects)
+	{
+		if (!o->stable)
+		{
+			gameIsStable = false;
+			break;
+		}
+	}
+
+	if (gameIsStable)
+		Fill(2, 2, 6, 6, PIXEL_FULL, FG_RED);
+
+	// Update our Game State
+	GameState = NextState;
 
     return true;
 }
