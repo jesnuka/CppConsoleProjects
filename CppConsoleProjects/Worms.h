@@ -36,6 +36,9 @@ public:
 	int bouncesBeforeDeath = -1;
 	bool dead = false;
 
+	// For drawing the sprite, get latest traveled direction
+	int dir = 1;
+
 	float radius = 4.0f;
 	// Stable objects do not move, and don't need to have more calculations
 	bool stable = false;
@@ -91,16 +94,31 @@ public:
 		dead = false;
 		bouncesBeforeDeath = -1;
 
+		dir = 1;
+
 		// TODO: Add color selection for worms
 		if (wormSprite == nullptr)
-			wormSprite = new ConsoleSprite(L"wormR.spr");
+			wormSprite = new ConsoleSprite(L"wormStand.spr");
 	}
 
 	virtual void Draw(ConsoleEngine* engine, float offsetX, float offsetY)
 	{
-		// Position is offset by camera, atan2f to get the angle using velocities, Scale is done using radius to see the bounding radius
-		//engine->WireFrame(model, posX - offsetX, posY - offsetY, atan2f(velocityY, velocityX), radius, PIXEL_FULL, FG_DARK_GREEN);
-		engine->DrawPartialSprite(posX - offsetX - radius, posY - offsetY - radius, wormSprite, 0, 0, 8, 8);
+		switch (dir)
+		{
+			case 1:
+			{
+				engine->DrawPartialSprite(posX - offsetX - radius, posY - offsetY - radius, wormSprite, 0, 0, 8, 8);
+				break;
+			}
+			case -1:
+			{
+				engine->DrawPartialSprite(posX - offsetX - radius, posY - offsetY - radius, wormSprite, 0, 0, 8, 8, true);
+				break;
+			}
+			default:
+				break;
+		}
+			
 	}
 
 	virtual int DeathAction()

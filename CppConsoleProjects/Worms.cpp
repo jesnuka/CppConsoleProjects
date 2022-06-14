@@ -333,19 +333,20 @@ bool Worms::OnUserUpdate(float elapsedTime)
 			// Only if the object / worm is stable
 			if (objectUnderControl->stable)
 			{
+				// Assume object is a worm
+				Worm* worm = (Worm*)objectUnderControl;
+
 				// Move Shooting Angle to the Right
 				if (keys[L'D'].isHeld)
 				{
-					Worm* worm = (Worm*)objectUnderControl;
 					worm->shootAngle += 1.0f * elapsedTime;
 					// Wrap angle to back 
-					if (worm->shootAngle < -M_PI)
+					if (worm->shootAngle > M_PI)
 						worm->shootAngle -= M_PI * 2.0f;
 				}
 				// Move Shooting Angle to the Left
 				if (keys[L'A'].isHeld)
 				{
-					Worm* worm = (Worm*)objectUnderControl;
 					worm->shootAngle -= 1.0f * elapsedTime;
 					if (worm->shootAngle < -M_PI)
 						worm->shootAngle += M_PI * 2.0f;
@@ -353,7 +354,7 @@ bool Worms::OnUserUpdate(float elapsedTime)
 				// Jump to the cursor direction
 				if (keys[L'X'].isPressed)
 				{
-					float angle = ((Worm*)objectUnderControl)->shootAngle;
+					float angle = worm->shootAngle;
 					objectUnderControl->velocityX = 4.0f * cosf(angle);
 					objectUnderControl->velocityY = 8.0f * sinf(angle);
 					objectUnderControl->stable = false;
@@ -386,7 +387,14 @@ bool Worms::OnUserUpdate(float elapsedTime)
 
 					chargingWeapon = false;
 				}
+
+				// Change worm direction
+				if (worm->shootAngle > -M_PI/2 && worm->shootAngle <= M_PI/2)
+					worm->dir = 1;
+				else
+					worm->dir = -1;
 			}
+
 
 			// Shoot weapon if fireWeapon is true
 			if (fireWeapon)

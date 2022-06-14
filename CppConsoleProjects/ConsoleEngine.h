@@ -358,7 +358,7 @@ public:
 	}
 
 	// Draw part of a sprite on coordinates
-	void DrawPartialSprite(int x, int y, ConsoleSprite* sprite, int ox, int oy, int w, int h)
+	void DrawPartialSprite(int x, int y, ConsoleSprite* sprite, int ox, int oy, int w, int h, bool mirroredX = false, bool mirroredY = false)
 	{
 		if (sprite == nullptr)
 			return;
@@ -368,9 +368,20 @@ public:
 			for (int j = 0; j < h; j++)
 			{
 				if (sprite->GetSymbol(i + ox, j + oy) != L' ')
-					Draw(x + i, y + j, sprite->GetSymbol(i + ox, j + oy), sprite->GetColour(i + ox, j + oy));
+				{
+					int coordX = (x + i);
+					int coordY = (y + j);
+					if (mirroredX)
+						coordX = w + (x - i);
+					if (mirroredY)
+						coordY = h + (y - j);
+
+					Draw(coordX, coordY, sprite->GetSymbol(i + ox, j + oy), sprite->GetColour(i + ox, j + oy));
+				}
 			}
 		}
+		
+
 	}
 
 	// Draw line from start to end

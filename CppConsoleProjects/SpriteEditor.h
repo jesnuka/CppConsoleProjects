@@ -63,7 +63,7 @@ protected:
 	{
 		// Create sprite
 		sprite = new ConsoleSprite(8, 8);
-		spriteFile = L"worm.spr";
+		spriteFile = L"wormWalkL.spr";
 
 		return true;
 	}
@@ -100,6 +100,12 @@ protected:
 					currentColourFG = i;
 			}
 		}
+
+		if (keys[L'U'].isReleased)
+			currentColourFG -= 1;
+
+		if (keys[L'I'].isReleased)
+			currentColourFG += 1;
 
 		if (keys[VK_F7].isReleased)
 			currentColourBG -= 1;
