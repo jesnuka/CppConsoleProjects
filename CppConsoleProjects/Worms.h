@@ -49,8 +49,9 @@ public:
 		posY = y;
 	}
 
-	virtual void Draw(ConsoleEngine *engine, float offsetX, float offsetY) = 0;
+	virtual void Draw(ConsoleEngine *engine, float offsetX, float offsetY, bool smallScale = false) = 0;
 	virtual int DeathAction() = 0;
+	virtual bool Damage(float dmg) { return true; };
 };
 
 class Debris : public PhysicsObject
@@ -67,11 +68,11 @@ public:
 		bouncesBeforeDeath = 5;
 	}
 
-	virtual void Draw(ConsoleEngine* engine, float offsetX, float offsetY)
+	virtual void Draw(ConsoleEngine* engine, float offsetX, float offsetY, bool smallScale = false)
 	{
 		// Draw wireframe model
 		// Position is offset by camera, atan2f to get the angle using velocities, Scale is done using radius to see the bounding radius
-		engine->WireFrame(model, posX - offsetX, posY - offsetY, atan2f(velocityY, velocityX), radius, PIXEL_FULL, FG_DARK_GREEN);
+		engine->WireFrame(model, posX - offsetX, posY - offsetY, atan2f(velocityY, velocityX), smallScale ? 0.5f : radius, PIXEL_FULL, FG_DARK_GREEN);
 	}
 	
 	virtual int DeathAction()
@@ -99,12 +100,16 @@ public:
 		// TODO: Add color selection for worms
 		if (wormSprite == nullptr)
 			wormSprite = new ConsoleSprite(L"wormStand.spr");
+		if (tombSprite == nullptr)
+			tombSprite = new ConsoleSprite(L"tomb1.spr");
 	}
 
-	virtual void Draw(ConsoleEngine* engine, float offsetX, float offsetY)
+	virtual void Draw(ConsoleEngine* engine, float offsetX, float offsetY, bool smallScale = false)
 	{
-		switch (dir)
+		if (isPlayable)
 		{
+			switch (dir)
+			{
 			case 1:
 			{
 				engine->DrawPartialSprite(posX - offsetX - radius, posY - offsetY - radius, wormSprite, 0, 0, 8, 8);
@@ -117,7 +122,22 @@ public:
 			}
 			default:
 				break;
+			}
+
+			// Draw the worm healthbar
+
+			for (int i = 0; i < 11 * health; i++)
+			{
+				engine->Draw(posX - 5 + i - offsetX, posY + 5 - offsetY, PIXEL_FULL, teamColor);
+				engine->Draw(posX - 5 + i - offsetX, posY + 6 - offsetY, PIXEL_FULL, teamColor);
+			}
 		}
+		else
+		{
+			// Draw Tombstone
+			engine->DrawPartialSprite(posX - offsetX - radius, posY - offsetY - radius, tombSprite, 0, 0, 8, 8, true);
+		}
+		
 			
 	}
 
@@ -126,14 +146,92 @@ public:
 		return 0;
 	}
 
-public:
+	virtual bool Damage(float dmg)
+	{
+		health -= dmg;
+		if (health <= 0)
+		{
+			health = 0.0f;
+			isPlayable = false;
+		}
+		return health > 0;
+	}
 
+public:
 	float shootAngle = 0.0f;
+	float health = 1.0f;
+	int team = 0;
+	Color teamColor = FG_BLUE;
+	bool isPlayable = true;
 
 private:
 	// Share model across models of the same class
 	static vector<pair<float, float>> model;
 	static ConsoleSprite *wormSprite;
+	static ConsoleSprite *tombSprite;
+};
+
+// A Team of Worms
+class WormTeam
+{
+public:
+	vector<Worm *> members;
+	int currentMemberIndex = 0;
+	int teamSize = 0;
+
+	// Is the Team defeated
+	bool isTeamAlive()
+	{
+		bool allDefeated = true;
+		for (auto w : members)
+			if (w->health > 0.0f)
+				allDefeated = false;
+		return allDefeated;
+	}
+
+	Worm* GetNextMember()
+	{
+		// Return a pointer to the next valid member in the team (Not dead)
+		do
+		{
+			currentMemberIndex += 1;
+			if (currentMemberIndex >= teamSize) currentMemberIndex = 0;
+		} while (members[currentMemberIndex]->health <= 0.0f);
+		return members[currentMemberIndex];
+	}
+
+	Color GetTeamColor(int i)
+	{
+		switch (i)
+		{
+			case 0:
+			{
+				return FG_BLUE;
+				break;
+			}
+			case 1:
+			{
+				return FG_RED;
+				break;
+			}
+			case 2:
+			{
+				return FG_GREEN;
+				break;
+			}
+			case 3:
+			{
+				return FG_YELLOW;
+				break;
+			}
+			default:
+			{
+				return FG_BLUE;
+				break;
+			}
+		}
+	}
+
 };
 
 class Missile : public PhysicsObject
@@ -151,11 +249,11 @@ public:
 		dead = false;
 	}
 
-	virtual void Draw(ConsoleEngine* engine, float offsetX, float offsetY)
+	virtual void Draw(ConsoleEngine* engine, float offsetX, float offsetY, bool smallScale = false)
 	{
 		// Draw wireframe model
 		// Position is offset by camera, atan2f to get the angle using velocities, Scale is done using radius to see the bounding radius
-		engine->WireFrame(model, posX - offsetX, posY - offsetY, atan2f(velocityY, velocityX), radius, PIXEL_FULL, FG_YELLOW);
+		engine->WireFrame(model, posX - offsetX, posY - offsetY, atan2f(velocityY, velocityX), smallScale ? 0.5f : radius, PIXEL_FULL, FG_YELLOW);
 	}
 
 	virtual int DeathAction()
@@ -176,12 +274,13 @@ public:
 
 	}
 
-	virtual void Draw(ConsoleEngine *engine, float offsetX, float offsetY)
+	virtual void Draw(ConsoleEngine *engine, float offsetX, float offsetY, bool smallScale = false)
 	{
 		// Draw wireframe model of dummy, 
 		// Position is offset by camera, atan2f to get the angle using velocities, Scale is done using radius to see the bounding radius
-		engine->WireFrame(model, posX - offsetX, posY - offsetY, atan2f(velocityY, velocityX),radius, PIXEL_FULL, FG_WHITE);
+		engine->WireFrame(model, posX - offsetX, posY - offsetY, atan2f(velocityY, velocityX), smallScale ? 0.5f : radius, PIXEL_FULL, FG_WHITE);
 	}
+	
 
 	virtual int DeathAction()
 	{
@@ -216,6 +315,8 @@ private:
 
 	float mapScrollSpeed = 200.0f;
 
+	float turnTime = 15.0f;
+
 	// List of all the physics objects, as pointers because they are abstract
 	// Subclasses can therefore also be added to this list
 	// These are unique_ptr:s to allow them to be deleted when they go out of scope
@@ -225,14 +326,25 @@ private:
 	PhysicsObject* objectUnderControl = nullptr;
 	PhysicsObject* cameraTrackingObject = nullptr;
 
+	// Boolean flags used by the state machine
+	bool zoomOut = false;
 	bool fireWeapon = false;
 	bool chargingWeapon = false;
-	float chargeLevel = 0.0f;
 
 	bool gameIsStable = false;
-	bool allowControl = false;
-	bool playerActionComplete = false;
 
+	bool allowPlayerControl = false;
+	bool allowComputerControl = false;
+	bool playerHasFired = false;
+	bool showCountdown = false;
+
+	float chargeLevel = 0.0f;
+
+	// Store teams to this vector
+	vector<WormTeam> teamVector;
+	int currentTeam = 0;
+	// Gamemode 0 == PlayerVsComputer, Gamemode 1 == PlayerVsPlayer
+	bool gameMode = 0;
 
 	unsigned char* map = nullptr;
 
@@ -249,7 +361,8 @@ private:
 		GS_ALLOCATE_UNITS,
 		GS_ALLOCATING_UNITS,
 		GS_START_PLAY,
-		GS_CAMERA_MODE
+		GS_CAMERA_MODE,
+		GS_GAME_OVER1
 	} GameState, NextState;
 
 protected:

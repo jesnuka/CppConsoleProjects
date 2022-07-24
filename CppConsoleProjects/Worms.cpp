@@ -67,6 +67,7 @@ vector<pair<float, float>> DefineDebris()
 }
 
 ConsoleSprite* Worm::wormSprite = nullptr;
+ConsoleSprite* Worm::tombSprite = nullptr;
 
 // Factory function for creation
 vector<pair<float, float>> Missile::model = DefineMissile();
@@ -256,41 +257,77 @@ bool Worms::OnUserUpdate(float elapsedTime)
 	{
 		case GS_RESET:
 		{
-			allowControl = false;
+			allowPlayerControl = false;
+			gameIsStable = false;
+			playerHasFired = false;
+			showCountdown = false;
 			NextState = GS_GENERATE_TERRAIN;
 			break;
 		}
 		case GS_GENERATE_TERRAIN: // Generate the Terrain, so the Map
 		{
-			allowControl = false;
+			zoomOut = true;
 			CreateMap();
 			NextState = GS_GENERATING_TERRAIN;
 			break;
 		}
 		case GS_GENERATING_TERRAIN: 
 		{
-			allowControl = false;
 			NextState = GS_ALLOCATE_UNITS;
 			break;
 		}
 		case GS_ALLOCATE_UNITS: // Create the Units
 		{
-			allowControl = false;
-			Worm* worm = new Worm(30.0f, 1.0f);
-			objects.push_back(unique_ptr<Worm>(worm));
-			objectUnderControl = worm;
+			// TODO: Add team selector menu
+			int teams = 4;
+			int wormsPerTeam = 4;
+
+			// Calculate where each worm should be placed, with the spacing from worm to worm also calculated
+			float spacePerTeam = (float)mapWidth / (float)teams;
+			float spacePerWorm = (float)spacePerTeam / (wormsPerTeam * 2.0f);
+
+			// Create the teams
+
+			for (int i = 0; i < teams; i++)
+			{
+				teamVector.emplace_back(WormTeam());
+				// Get location of the team on the map
+				float teamMiddle = (spacePerTeam / 2.0f) + (i + spacePerTeam);
+				for (int j = 0; j < wormsPerTeam; j++)
+				{
+					// Location of the worm in relation to the team position. Y-position is at the top of the map, as worms are dropped down
+					float posX = teamMiddle + ((spacePerWorm * (float)wormsPerTeam) / 2.0f) + (j * wormsPerTeam);
+					float posY = 0.0f;
+
+					// Add the worms to the teams
+					Worm* worm = new Worm(posX, posY);
+					worm->team = i;
+					worm->teamColor = teamVector[i].GetTeamColor(i);
+					objects.push_back(unique_ptr<Worm>(worm));
+					teamVector[i].members.push_back(worm);
+					teamVector[i].teamSize = wormsPerTeam;
+				}
+
+				teamVector[i].currentMemberIndex = 0;
+			}
+
+			// Select the first worm for control and camera tracking
+			objectUnderControl = teamVector[0].members[teamVector[0].currentMemberIndex];
 			cameraTrackingObject = objectUnderControl;
+			showCountdown = false;
 
 			NextState = GS_ALLOCATING_UNITS;
 			break;
 		}
 		case GS_ALLOCATING_UNITS:
 		{
-			allowControl = false;
 			// Wait for the Game to prepare units, so everything stops moving before the game starts.
 			if (gameIsStable)
 			{
-				playerActionComplete = false;
+				allowPlayerControl = true;
+				allowComputerControl = false;
+				turnTime = 15.0f;
+				zoomOut = false;
 				NextState = GS_START_PLAY;
 			}
 
@@ -298,26 +335,72 @@ bool Worms::OnUserUpdate(float elapsedTime)
 		}
 		case GS_START_PLAY:
 		{
-			allowControl = true;
+			showCountdown = true;
 
-			if(playerActionComplete)
+			if(playerHasFired ||turnTime <= 0.0f)
 				NextState = GS_CAMERA_MODE;
 
 			break;
 		}
 		case GS_CAMERA_MODE:
 		{
-			allowControl = false;
-			playerActionComplete = false;
+			allowPlayerControl = false;
+			allowComputerControl = false;
+			showCountdown = false;
+			playerHasFired = false;
+			chargeLevel = 0.0f;
 
 			if (gameIsStable)
 			{
+				// Get the next team's worm. If there is none, game is over
+				int oldTeam = currentTeam;
+				do
+				{
+					currentTeam += 1;
+					currentTeam %= teamVector.size();
+				} while (!teamVector[currentTeam].isTeamAlive());
+
+				// Player vs Computer
+				if (gameMode == 0)
+				{
+					// Player Team
+					if (currentTeam == 0)
+					{
+						allowPlayerControl = true;
+						allowComputerControl = false;
+					}
+					else // Computer Team
+					{
+						allowPlayerControl = false;
+						allowComputerControl = true;
+					}
+				}
+
+				else // Player vs Player
+				{
+					
+				}
+
+
 				// Reset camera back to the object under control
+				objectUnderControl = teamVector[currentTeam].GetNextMember();
 				cameraTrackingObject = objectUnderControl;
+				turnTime = 15.0f;
+				zoomOut = false;
 				NextState = GS_START_PLAY;
+
+				// No new team was found
+				if (currentTeam == oldTeam)
+				{
+					NextState = GS_GAME_OVER1;
+				}
 			}
 
 			break;
+		}
+		case GS_GAME_OVER1:
+		{
+			// TODO ADD
 		}
 		default:
 		{
@@ -325,8 +408,11 @@ bool Worms::OnUserUpdate(float elapsedTime)
 		}
 	}
 
+	// Decrease the turn timer
+	turnTime -= elapsedTime;
+
 	// User Input
-	if (allowControl)
+	if (allowPlayerControl)
 	{
 		if (objectUnderControl != nullptr)
 		{
@@ -419,7 +505,6 @@ bool Worms::OnUserUpdate(float elapsedTime)
 				chargeLevel = 0.0f;
 				chargingWeapon = false;
 
-				playerActionComplete = true;
 			}
 		}
 	}
@@ -571,52 +656,87 @@ bool Worms::OnUserUpdate(float elapsedTime)
 
 
 	// Draw the Landscape
-	for (int i = 0; i < screenWidth; i++)
+	if (!zoomOut)
 	{
-		for (int j = 0; j < screenHeight; j++)
+		for (int i = 0; i < screenWidth; i++)
 		{
-			switch (map[(j + (int)(cameraPosY)) * mapWidth + (i + (int)cameraPosX)])
+			for (int j = 0; j < screenHeight; j++)
 			{
-			case 0:
-				Draw(i, j, PIXEL_FULL, FG_CYAN);
-				break;
-			case 1:
-				Draw(i, j, PIXEL_FULL, FG_DARK_GREEN);
-				break;
-			default:
-				Draw(i, j, PIXEL_FULL, FG_CYAN);
-				break;
+				switch (map[(j + (int)(cameraPosY)) * mapWidth + (i + (int)cameraPosX)])
+				{
+				case 0:
+					Draw(i, j, PIXEL_FULL, FG_CYAN);
+					break;
+				case 1:
+					Draw(i, j, PIXEL_FULL, FG_DARK_GREEN);
+					break;
+				default:
+					Draw(i, j, PIXEL_FULL, FG_CYAN);
+					break;
+				}
 			}
+		}
+	
+		// Draw all the objects using each objects own Draw method
+		for (auto& o : objects)
+		{
+			o->Draw(this, cameraPosX, cameraPosY);
+
+			Worm* worm = (Worm*)objectUnderControl;
+
+			// Draw cursor around objectUnderControl worm
+			if (o.get() == worm)
+			{
+				float centerX = worm->posX + 8.0f * cosf(worm->shootAngle) - cameraPosX;
+				float centerY = worm->posY + 8.0f * sinf(worm->shootAngle) - cameraPosY;
+
+				Draw(centerX, centerY, PIXEL_FULL, FG_BLACK);
+				Draw(centerX + 1, centerY, PIXEL_FULL, FG_BLACK);
+				Draw(centerX - 1, centerY, PIXEL_FULL, FG_BLACK);
+				Draw(centerX, centerY + 1, PIXEL_FULL, FG_BLACK);
+				Draw(centerX, centerY - 1, PIXEL_FULL, FG_BLACK);
+
+				// Draw Charge level of player's weapon
+				for (int i = 0; i < 11 * chargeLevel; i++)
+				{
+					Draw(worm->posX - 5 + i - cameraPosX, worm->posY - 12 - cameraPosY, PIXEL_FULL, FG_GREEN);
+					Draw(worm->posX - 5 + i - cameraPosX, worm->posY - 11 - cameraPosY, PIXEL_FULL, FG_RED);
+				}
+			}
+
 		}
 	}
-
-	// Draw all the objects using each objects own Draw method
-	for (auto& o : objects)
+	else // The view is Zoomed Out
 	{
-		o->Draw(this, cameraPosX, cameraPosY);
-
-		Worm* worm = (Worm*)objectUnderControl;
-
-		// Draw cursor around objectUnderControl worm
-		if (o.get() == worm)
+		// Draw the whole map on the screen at once, with all the worms visible
+		for (int i = 0; i < screenWidth; i++)
 		{
-			float centerX = worm->posX + 8.0f * cosf(worm->shootAngle) - cameraPosX;
-			float centerY = worm->posY + 8.0f * sinf(worm->shootAngle) - cameraPosY;
-
-			Draw(centerX, centerY, PIXEL_FULL, FG_BLACK);
-			Draw(centerX + 1, centerY, PIXEL_FULL, FG_BLACK);
-			Draw(centerX - 1, centerY, PIXEL_FULL, FG_BLACK);
-			Draw(centerX, centerY + 1, PIXEL_FULL, FG_BLACK);
-			Draw(centerX, centerY - 1, PIXEL_FULL, FG_BLACK);
-
-			// Draw Charge level of player's weapon
-			for (int i = 0; i < 11 * chargeLevel; i++)
+			for (int j = 0; j < screenHeight; j++)
 			{
-				Draw(worm->posX - 5 + i - cameraPosX, worm->posY - 12 - cameraPosY, PIXEL_FULL, FG_GREEN);
-				Draw(worm->posX - 5 + i - cameraPosX, worm->posY - 11 - cameraPosY, PIXEL_FULL, FG_RED);
+				// Rescale the coordinates
+				float fx = (float)i / (float)screenWidth * (float)mapWidth;
+				float fy = (float)j / (float)screenHeight * (float)mapHeight;
+
+				switch (map[((int)fy) * mapWidth + ((int)fx)])
+				{
+				case 0:
+					Draw(i, j, PIXEL_FULL, FG_CYAN);
+					break;
+				case 1:
+					Draw(i, j, PIXEL_FULL, FG_DARK_GREEN);
+					break;
+				default:
+					Draw(i, j, PIXEL_FULL, FG_CYAN);
+					break;
+				}
 			}
 		}
-
+		// Draw all the objects using each objects own Draw method
+		for (auto& o : objects)
+		{
+			o->Draw(this, o->posX-(o->posX / (float)mapWidth) * (float)screenWidth, 
+				o->posY - (o->posY / (float)mapHeight) * (float)screenHeight, true);
+		}
 	}
 
 	// Check for the stability of the game, by making sure all objects have stopped moving
@@ -630,11 +750,20 @@ bool Worms::OnUserUpdate(float elapsedTime)
 		}
 	}
 
-	if (gameIsStable)
-		Fill(2, 2, 6, 6, PIXEL_FULL, FG_RED);
+	// Draw Health Bars for Teams ( Total remaining health of all members of the team)
+	for (size_t i = 0; i < teamVector.size(); i++)
+	{
+		float totalHealth = 0.0f;
+		float maxHealth = (float)teamVector[i].teamSize;
+		for (auto w : teamVector[i].members)
+			totalHealth += w->health;
+
+		Fill(4, 4 + i * 4, (totalHealth / maxHealth)* (float)(screenWidth - 8) + 4, 4 + i * 4 + 3, PIXEL_FULL, teamVector[i].GetTeamColor(i));
+	}
 
 	// Update our Game State
 	GameState = NextState;
 
     return true;
 }
+
