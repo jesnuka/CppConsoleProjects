@@ -318,6 +318,8 @@ private:
 	float turnTimeMax = 30.0f;
 	float turnTime = turnTimeMax;
 
+	float angleRotationSpeed = 1.5f;
+
 	// List of all the physics objects, as pointers because they are abstract
 	// Subclasses can therefore also be added to this list
 	// These are unique_ptr:s to allow them to be deleted when they go out of scope
@@ -347,6 +349,21 @@ private:
 	// Gamemode 0 == PlayerVsComputer, Gamemode 1 == PlayerVsPlayer
 	bool gameMode = 0;
 
+	// Variables used by the Computer to determine actions and behavior
+	bool Com_Jump = false;
+	bool Com_AimLeft = false;
+	bool Com_AimRight = false;
+	bool Com_ChargeWeapon = false;
+
+	float Com_TargetAngle = 0.0f;
+	float Com_TargetChargeLevel = 0.0f;
+	float Com_SafePosition = 0.0f;
+	Worm* Com_TargetWorm = nullptr;
+	float Com_TargetX = 0.0f;
+	float Com_TargetY = 0.0f;
+
+
+
 	unsigned char* map = nullptr;
 
 	void CreateMap();
@@ -365,6 +382,17 @@ private:
 		GS_CAMERA_MODE,
 		GS_GAME_OVER1
 	} GameState, NextState;
+
+	enum COMPUTERSTATE
+	{
+		COM_ASSESS_ENVIRONMENT = 0,
+		COM_MOVE,
+		COM_CHOOSE_TARGET,
+		COM_POSITION_FOR_TARGET,
+		COM_AIM,
+		COM_FIRE,
+	} ComputerGameState, ComputerNextState;
+
 
 protected:
 

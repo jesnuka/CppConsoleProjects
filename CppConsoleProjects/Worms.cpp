@@ -223,6 +223,9 @@ bool Worms::OnUserCreate()
 	GameState = GS_RESET;
 	NextState = GS_RESET;
 
+	ComputerGameState = COM_ASSESS_ENVIRONMENT;
+	ComputerNextState = COM_ASSESS_ENVIRONMENT;
+
     return true;
 }
 
@@ -375,10 +378,8 @@ bool Worms::OnUserUpdate(float elapsedTime)
 					}
 					else // Computer Team
 					{
-						allowPlayerControl = true;
-						allowComputerControl = false;
-					//	allowPlayerControl = false;
-					//	allowComputerControl = true;
+						allowPlayerControl = false;
+						allowComputerControl = true;
 					}
 				}
 
@@ -433,7 +434,7 @@ bool Worms::OnUserUpdate(float elapsedTime)
 				// Move Shooting Angle to the Right
 				if (keys[L'D'].isHeld)
 				{
-					worm->shootAngle += 1.0f * elapsedTime;
+					worm->shootAngle += 1.0f * angleRotationSpeed * elapsedTime;
 					// Wrap angle to back 
 					if (worm->shootAngle > M_PI)
 						worm->shootAngle -= M_PI * 2.0f;
@@ -441,7 +442,7 @@ bool Worms::OnUserUpdate(float elapsedTime)
 				// Move Shooting Angle to the Left
 				if (keys[L'A'].isHeld)
 				{
-					worm->shootAngle -= 1.0f * elapsedTime;
+					worm->shootAngle -= 1.0f * angleRotationSpeed * elapsedTime;
 					if (worm->shootAngle < -M_PI)
 						worm->shootAngle += M_PI * 2.0f;
 				}
@@ -514,6 +515,96 @@ bool Worms::OnUserUpdate(float elapsedTime)
 				chargingWeapon = false;
 				playerHasFired = true;
 
+			}
+		}
+	}
+
+	// Computer Input
+	if (allowComputerControl)
+	{
+		switch (ComputerGameState)
+		{
+			case COM_ASSESS_ENVIRONMENT:
+			{
+				// Randomize which behavior the computer will follow
+				int action = rand() % 3;
+
+				switch (action)
+				{
+					case 0: // Defensive behavior - Move away from team
+					{
+						// Find nearest ally and direction to them
+						float allyDistance = INFINITY;
+						float direction = 0;
+						Worm* worm = (Worm*)objectUnderControl;
+
+						for (auto w : teamVector[currentTeam].members)
+						{
+							if (w != objectUnderControl)
+							{
+								if (fabs(w->posX - worm->posX) < allyDistance)
+								{
+									allyDistance = fabs(w->posX - worm->posX);
+									direction = (w->posX - worm->posX) < 0.0f ? 1.0f : -1.0f;
+								}
+							}
+						}
+
+						if (allyDistance < 50.0f)
+							Com_SafePosition = worm->posX + direction * 80.0f;
+						else
+							Com_SafePosition = worm->posX;
+
+						break;
+					}
+					case 1: // Risky Behavior - Move towards the middle of the map
+					{
+						Worm* worm = (Worm*)objectUnderControl;
+						float direction = ((float)(mapWidth / 2.0f) - worm->posX) < 0.0f ? -1.0f : 1.0f;
+						Com_SafePosition = worm->posX + direction * 200.0f;
+
+						break;
+					}
+					case 2: // Idle Behavior - Stay still
+					{
+						Worm* worm = (Worm*)objectUnderControl;
+						Com_SafePosition = worm->posX;
+
+						break;
+					}
+					default:
+					{
+						Worm* worm = (Worm*)objectUnderControl;
+						Com_SafePosition = worm->posX;
+						break;
+					}
+				}
+
+				break;
+			}
+			case COM_MOVE:
+			{
+				break;
+			}
+			case COM_CHOOSE_TARGET:
+			{
+				break;
+			}
+			case COM_POSITION_FOR_TARGET:
+			{
+				break;
+			}
+			case COM_AIM:
+			{
+				break;
+			}
+			case COM_FIRE:
+			{
+				break;
+			}
+			default:
+			{
+				break;
 			}
 		}
 	}
