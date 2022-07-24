@@ -770,6 +770,27 @@ bool Worms::OnUserUpdate(float elapsedTime)
 		Fill(4, 4 + i * 4, (totalHealth / maxHealth)* (float)(screenWidth - 8) + 4, 4 + i * 4 + 3, PIXEL_FULL, teamVector[i].GetTeamColor(i));
 	}
 
+	// Draw Countdown
+	if (showCountdown)
+	{
+		wchar_t d[] = L"w$]m.k{\%\x7Fo"; int tx = 4, ty = teamVector.size() * 4 + 8;
+		for (int r = 0; r < 13; r++) {
+			for (int c = 0; c < ((turnTime < 10.0f) ? 1 : 2); c++) {
+				int a = to_wstring(turnTime)[c] - 48; if (!(r % 6)) {
+					DrawString(tx,ty, wstring((d[a] & (1 << (r / 2)) ? L" #####  " : L"        ")), FG_BLACK, true);
+					tx += 8;
+				}
+				else {
+					DrawString(tx, ty, wstring((d[a] & (1 << (r < 6 ? 1 : 4)) ? L"#     " : L"      ")), FG_BLACK, true); 
+					tx += 6; 
+					DrawString(tx, ty, wstring((d[a] & (1 << (r < 6 ? 2 : 5)) ? L"# " : L"  ")), FG_BLACK, true); 
+					tx += 2;
+				}
+			}
+			ty++; tx = 4;
+		}
+	}
+
 	// Update our Game State
 	GameState = NextState;
 
