@@ -218,6 +218,7 @@ bool Worms::OnUserCreate()
 	map = new unsigned char[mapWidth * mapHeight];
 	memset(map, 0, mapWidth * mapHeight * sizeof(unsigned char));
 
+
 	// Initialize Game State variables
 	GameState = GS_RESET;
 	NextState = GS_RESET;
@@ -227,8 +228,8 @@ bool Worms::OnUserCreate()
 
 bool Worms::OnUserUpdate(float elapsedTime)
 {
-	// Debug Input
-	if (keys[L'M'].isReleased)
+	// Debug Inputs
+	/*if (keys[L'M'].isReleased)
 		CreateMap();
 
 	if (mouse[2].isReleased)
@@ -250,7 +251,7 @@ bool Worms::OnUserUpdate(float elapsedTime)
 		objects.push_back(unique_ptr<Worm>(worm));
 	}
 
-	
+	*/
 
 	// Game State handling using a state machine
 	switch (GameState)
@@ -268,12 +269,16 @@ bool Worms::OnUserUpdate(float elapsedTime)
 		{
 			zoomOut = true;
 			CreateMap();
+			gameIsStable = false;
+			showCountdown = false;
 			NextState = GS_GENERATING_TERRAIN;
 			break;
 		}
 		case GS_GENERATING_TERRAIN: 
 		{
-			NextState = GS_ALLOCATE_UNITS;
+			showCountdown = false;
+			if(gameIsStable)
+				NextState = GS_ALLOCATE_UNITS;
 			break;
 		}
 		case GS_ALLOCATE_UNITS: // Create the Units
@@ -287,16 +292,15 @@ bool Worms::OnUserUpdate(float elapsedTime)
 			float spacePerWorm = (float)spacePerTeam / (wormsPerTeam * 2.0f);
 
 			// Create the teams
-
 			for (int i = 0; i < teams; i++)
 			{
 				teamVector.emplace_back(WormTeam());
 				// Get location of the team on the map
-				float teamMiddle = (spacePerTeam / 2.0f) + (i + spacePerTeam);
+				float teamMiddle = (spacePerTeam / 2.0f) + (i * spacePerTeam);
 				for (int j = 0; j < wormsPerTeam; j++)
 				{
 					// Location of the worm in relation to the team position. Y-position is at the top of the map, as worms are dropped down
-					float posX = teamMiddle + ((spacePerWorm * (float)wormsPerTeam) / 2.0f) + (j * wormsPerTeam);
+					float posX = teamMiddle - ((spacePerWorm * (float)wormsPerTeam) / 2.0f) + (j * spacePerWorm);
 					float posY = 0.0f;
 
 					// Add the worms to the teams
@@ -326,7 +330,7 @@ bool Worms::OnUserUpdate(float elapsedTime)
 			{
 				allowPlayerControl = true;
 				allowComputerControl = false;
-				turnTime = 15.0f;
+				turnTime = turnTimeMax;
 				zoomOut = false;
 				NextState = GS_START_PLAY;
 			}
@@ -337,7 +341,7 @@ bool Worms::OnUserUpdate(float elapsedTime)
 		{
 			showCountdown = true;
 
-			if(playerHasFired ||turnTime <= 0.0f)
+ 			if(playerHasFired ||turnTime <= 0.0f)
 				NextState = GS_CAMERA_MODE;
 
 			break;
@@ -358,7 +362,7 @@ bool Worms::OnUserUpdate(float elapsedTime)
 				{
 					currentTeam += 1;
 					currentTeam %= teamVector.size();
-				} while (!teamVector[currentTeam].isTeamAlive());
+				} while (!teamVector[currentTeam].isTeamAlive() && currentTeam != oldTeam);
 
 				// Player vs Computer
 				if (gameMode == 0)
@@ -371,21 +375,25 @@ bool Worms::OnUserUpdate(float elapsedTime)
 					}
 					else // Computer Team
 					{
-						allowPlayerControl = false;
-						allowComputerControl = true;
+						allowPlayerControl = true;
+						allowComputerControl = false;
+					//	allowPlayerControl = false;
+					//	allowComputerControl = true;
 					}
 				}
 
 				else // Player vs Player
 				{
-					
+
+					allowPlayerControl = true;
+					allowComputerControl = false;
 				}
 
 
 				// Reset camera back to the object under control
 				objectUnderControl = teamVector[currentTeam].GetNextMember();
 				cameraTrackingObject = objectUnderControl;
-				turnTime = 15.0f;
+				turnTime = turnTimeMax;
 				zoomOut = false;
 				NextState = GS_START_PLAY;
 
@@ -504,6 +512,7 @@ bool Worms::OnUserUpdate(float elapsedTime)
 				fireWeapon = false;
 				chargeLevel = 0.0f;
 				chargingWeapon = false;
+				playerHasFired = true;
 
 			}
 		}

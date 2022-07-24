@@ -186,7 +186,7 @@ public:
 		for (auto w : members)
 			if (w->health > 0.0f)
 				allDefeated = false;
-		return allDefeated;
+		return !allDefeated;
 	}
 
 	Worm* GetNextMember()
@@ -315,7 +315,8 @@ private:
 
 	float mapScrollSpeed = 200.0f;
 
-	float turnTime = 15.0f;
+	float turnTimeMax = 30.0f;
+	float turnTime = turnTimeMax;
 
 	// List of all the physics objects, as pointers because they are abstract
 	// Subclasses can therefore also be added to this list
