@@ -256,7 +256,7 @@ bool Worms::OnUserUpdate(float elapsedTime)
 
 	*/
 
-	// Game State handling using a state machine
+	// Game State handling using a state machine for Player
 	switch (GameState)
 	{
 		case GS_RESET:
@@ -417,114 +417,12 @@ bool Worms::OnUserUpdate(float elapsedTime)
 		}
 	}
 
-	// Decrease the turn timer
-	turnTime -= elapsedTime;
-
-	// User Input
-	if (allowPlayerControl)
-	{
-		if (objectUnderControl != nullptr)
-		{
-			// Only if the object / worm is stable
-			if (objectUnderControl->stable)
-			{
-				// Assume object is a worm
-				Worm* worm = (Worm*)objectUnderControl;
-
-				// Move Shooting Angle to the Right
-				if (keys[L'D'].isHeld)
-				{
-					worm->shootAngle += 1.0f * angleRotationSpeed * elapsedTime;
-					// Wrap angle to back 
-					if (worm->shootAngle > M_PI)
-						worm->shootAngle -= M_PI * 2.0f;
-				}
-				// Move Shooting Angle to the Left
-				if (keys[L'A'].isHeld)
-				{
-					worm->shootAngle -= 1.0f * angleRotationSpeed * elapsedTime;
-					if (worm->shootAngle < -M_PI)
-						worm->shootAngle += M_PI * 2.0f;
-				}
-				// Jump to the cursor direction
-				if (keys[L'X'].isPressed)
-				{
-					float angle = worm->shootAngle;
-					objectUnderControl->velocityX = 4.0f * cosf(angle);
-					objectUnderControl->velocityY = 8.0f * sinf(angle);
-					objectUnderControl->stable = false;
-				}
-
-				// Start weapon charging
-				if (keys[VK_SPACE].isPressed)
-				{
-					chargingWeapon = true;
-					fireWeapon = false;
-					chargeLevel = 0.0f;
-				}
-				if (keys[VK_SPACE].isHeld)
-				{
-					if (chargingWeapon)
-					{
-						// Increase weapon charge while button is held down
-						chargeLevel += 0.75f * elapsedTime;
-						if (chargeLevel >= 1.0f)
-						{
-							chargeLevel = 1.0f;
-							fireWeapon = true;
-						}
-					}
-				}
-				if (keys[VK_SPACE].isReleased)
-				{
-					if (chargingWeapon)
-						fireWeapon = true;
-
-					chargingWeapon = false;
-				}
-
-				// Change worm direction
-				if (worm->shootAngle > -M_PI/2 && worm->shootAngle <= M_PI/2)
-					worm->dir = 1;
-				else
-					worm->dir = -1;
-			}
-
-
-			// Shoot weapon if fireWeapon is true
-			if (fireWeapon)
-			{
-				Worm* worm = (Worm*)objectUnderControl;
-
-				// Weapon origin
-				float originX = worm->posX;
-				float originY = worm->posY;
-
-				// Weapon direction
-				float dirX = cosf(worm->shootAngle);
-				float dirY = sinf(worm->shootAngle);
-
-				// Create the weapon object
-				Missile* missile = new Missile(originX, originY, dirX * 40.0f * chargeLevel, dirY * 40.0f * chargeLevel);
-				objects.push_back(unique_ptr<Missile>(missile));
-
-				cameraTrackingObject = missile;
-
-				fireWeapon = false;
-				chargeLevel = 0.0f;
-				chargingWeapon = false;
-				playerHasFired = true;
-
-			}
-		}
-	}
-
-	// Computer Input
+	// Computer State Machine handling
 	if (allowComputerControl)
 	{
 		switch (ComputerGameState)
 		{
-			case COM_ASSESS_ENVIRONMENT:
+			case COM_ASSESS_ENVIRONMENT: // Choose Behavior for the Worm
 			{
 				// Randomize which behavior the computer will follow
 				int action = rand() % 3;
@@ -578,28 +476,249 @@ bool Worms::OnUserUpdate(float elapsedTime)
 						Com_SafePosition = worm->posX;
 						break;
 					}
+
+					// SafePosition has to be clamped, to avoid worms going out of bounds
+					if (Com_SafePosition <= 20.0f) Com_SafePosition = 20.0f;
+					if (Com_SafePosition >= mapWidth - 20.0f) Com_SafePosition = mapWidth - 20.0f;
+
+					ComputerNextState = COM_MOVE;
 				}
 
 				break;
 			}
-			case COM_MOVE:
+			case COM_MOVE: // Move the Worm by jumping towards SafePosition
 			{
+				Worm* worm = (Worm*)objectUnderControl;
+				
+				// Spend at most half of TurnTime for movement
+				if (turnTime >= turnTimeMax / 2.0f && worm->posX != Com_SafePosition)
+				{
+					if (Com_SafePosition < worm->posX && gameIsStable)
+					{
+						// TODO: More accurate calculations for jump
+						worm->shootAngle = -M_PI * 0.6f;
+						Com_Jump = true;
+						ComputerNextState = COM_MOVE;
+					}
+					if (Com_SafePosition > worm->posX && gameIsStable)
+					{
+						// TODO: More accurate calculations for jump
+						worm->shootAngle = -M_PI * 0.4f;
+						Com_Jump = true;
+						ComputerNextState = COM_MOVE;
+					}
+				}
+				else
+					ComputerNextState = COM_CHOOSE_TARGET;
+
 				break;
 			}
-			case COM_CHOOSE_TARGET:
+			case COM_CHOOSE_TARGET: // Choose target for the Worm
 			{
+				Com_Jump = false;
+
+				// Select another team, which is alive and not own team
+				Worm* worm = (Worm*)objectUnderControl;
+				int targetTeam = 0;
+				do
+				{
+					targetTeam = rand() % teamVector.size();
+				} while (targetTeam == worm->team || !teamVector[targetTeam].isTeamAlive());
+
+				// TODO: Add more targeting strategies, such as targeting between worms etc.
+				// Randomize which targeting behavior the computer will follow
+				int action = rand() % 2;
+
+				switch (action)
+				{
+					case 0: // Target an enemy worm with the most health
+					{
+						Worm* targetWorm = teamVector[targetTeam].members[0];
+						for (auto w : teamVector[targetTeam].members)
+							if (w->health > targetWorm->health)
+								targetWorm = w;
+
+						Com_TargetWorm = targetWorm;
+						Com_TargetX = targetWorm->posX;
+						Com_TargetY = targetWorm->posY;
+						ComputerNextState = COM_POSITION_FOR_TARGET;
+						break;
+					}
+					case 1: // Target enemy worm with the least health
+					{
+						Worm* targetWorm = teamVector[targetTeam].members[0];
+						for (auto w : teamVector[targetTeam].members)
+							if (w->health < targetWorm->health && w->health > 0.0f)
+								targetWorm = w;
+						Com_TargetWorm = targetWorm;
+						Com_TargetX = targetWorm->posX;
+						Com_TargetY = targetWorm->posY;
+						ComputerNextState = COM_POSITION_FOR_TARGET;
+						break;
+					}
+					default:
+					{
+						Worm* targetWorm = teamVector[targetTeam].members[0];
+						for (auto w : teamVector[targetTeam].members)
+							if (w->health > targetWorm->health)
+								targetWorm = w;
+						Com_TargetWorm = targetWorm;
+						Com_TargetX = targetWorm->posX;
+						Com_TargetY = targetWorm->posY;
+						ComputerNextState = COM_POSITION_FOR_TARGET;
+						break;
+					}
+
+				}
+
 				break;
 			}
-			case COM_POSITION_FOR_TARGET:
+			case COM_POSITION_FOR_TARGET: // Calculate the trajectory to shoot the target, and move worm if necessary so the target can be hit
 			{
+				Worm* worm = (Worm*)objectUnderControl;
+
+				float dirX = (Com_TargetX - worm->posX);
+				float dirY = (Com_TargetY - worm->posY);
+
+				float speed = 30.0f;
+				float gravity = 2.0f;
+
+				Com_Jump = false;
+
+				// v^4 - g(gx^2 + 2yv^2)
+				// If a > 0, the value is real, not imaginary. So if a < 0, there is no solution, so the worm has to move
+				float a = pow(speed, 4) - gravity * (gravity * dirX * dirX + 2.0f * dirY * speed * speed);
+
+				// Target is out of range
+				if (a < 0)
+				{
+					if (turnTime >= (turnTimeMax / 5))
+					{
+						// Move towards the target until it is in range
+						if (Com_TargetWorm->posX < worm->posX && gameIsStable)
+						{
+							worm->shootAngle = -M_PI * 0.6f;
+							Com_Jump = true;
+							ComputerNextState = COM_POSITION_FOR_TARGET;
+						}
+						// Move towards the target until it is in range
+						if (Com_TargetWorm->posX > worm->posX && gameIsStable)
+						{
+							worm->shootAngle = -M_PI * 0.4f;
+							Com_Jump = true;
+							ComputerNextState = COM_POSITION_FOR_TARGET;
+						}
+					}
+					else
+					{
+						// TODO: Change how worm behaves if time runs out
+						// For now, shoot towards enemy anyways
+						Com_TargetAngle = worm->shootAngle;
+						Com_TargetChargeLevel = 0.75f;
+						ComputerNextState = COM_AIM;
+					}
+				}
+				else
+				{
+					// Target is in range
+					// Calculate the trajectory of the shot
+					float b1 = pow(speed, 2) + sqrtf(a);
+					float b2 = pow(speed, 2) - sqrtf(a);
+
+					// Maximum height
+					float theta1 = atanf(b1 / (gravity * dirX)); 
+					// Minimum height
+					float theta2 = atanf(b2 / (gravity * dirX));
+
+					// TODO: More specific calculations to make sure shot hits target as close as possible, without colliding first
+					int action = rand() % 3;
+
+					switch (action)
+					{
+						case 0: // Aim at Maximum Height
+						{
+							Com_TargetAngle = theta1 - (dirX > 0 ? M_PI : 0.0f);
+							break;
+						}
+						case 1: // Aim at Minimum Height
+						{
+							Com_TargetAngle = theta2 - (dirX > 0 ? M_PI : 0.0f);
+							break;
+						}
+						case 2:
+						{
+							if (theta1 == 0)
+								theta1 = 1.0f;
+							Com_TargetAngle = (((float)rand() / theta1 ) * theta2)  - (dirX > 0 ? M_PI : 0.0f);
+							break;
+						}
+						default:
+						{
+							Com_TargetAngle = theta1 - (dirX > 0 ? M_PI : 0.0f);
+							break;
+						}
+					}
+
+					float shotX = cosf(Com_TargetAngle);
+					float shotY = sinf(Com_TargetAngle);
+
+					// Clamp to only 3/4 power
+					// TODO: Choose power based on target position
+					Com_TargetChargeLevel = 0.75f;
+					ComputerNextState = COM_AIM;
+
+				}
+
+				// TODO: RE-Calculate target if the current can't be hit by any means, use a "drilling" weapon etc.
 				break;
 			}
-			case COM_AIM:
+		/*	case COM_CHOOSE_WEAPON: // TODO: Fill this, when more weapons exist
 			{
+				break;
+			}*/
+			case COM_AIM: // Line up the aim cursor with the targetAngle
+			{
+				Worm* worm = (Worm*)objectUnderControl;
+				Com_AimLeft = false;
+				Com_AimRight = false;
+				Com_Jump = false;
+
+				if (worm->shootAngle < Com_TargetAngle)
+					Com_AimRight = true;
+				else
+					Com_AimLeft = true;
+
+				// Aim cursor and targetAngle are aligned, shoot
+				// TODO: Add noise to aiming
+				if (fabs(worm->shootAngle - Com_TargetAngle) <= 0.001f)
+				{
+					Com_AimLeft = false;
+					Com_AimRight = false;
+					chargeLevel = 0.0f;
+					ComputerNextState = COM_FIRE;
+				}
+				else
+					ComputerNextState = COM_AIM;
+
 				break;
 			}
 			case COM_FIRE:
 			{
+				// Charge weapon and fire
+				Com_ChargingWeapon = true;
+				fireWeapon = false;
+				chargingWeapon = true;
+
+				if (chargeLevel >= Com_TargetChargeLevel)
+				{
+					fireWeapon = true;
+					Com_ChargingWeapon = false;
+					chargingWeapon = false;
+					allowComputerControl = false;
+					ComputerNextState = COM_ASSESS_ENVIRONMENT;
+				}
+
+
 				break;
 			}
 			default:
@@ -608,6 +727,109 @@ bool Worms::OnUserUpdate(float elapsedTime)
 			}
 		}
 	}
+
+	// Decrease the turn timer
+	turnTime -= elapsedTime;
+
+	// Input Commands for Player and Computer
+
+	if (objectUnderControl != nullptr)
+	{
+		// Only if the object / worm is stable
+		if (objectUnderControl->stable)
+		{
+			// Assume object is a worm
+			Worm* worm = (Worm*)objectUnderControl;
+
+			// Move Shooting Angle to the Right
+			if ((allowPlayerControl && keys[L'D'].isHeld) || (allowComputerControl && Com_AimRight))
+			{
+				worm->shootAngle += 1.0f * angleRotationSpeed * elapsedTime;
+				// Wrap angle to back 
+				if (worm->shootAngle > M_PI)
+					worm->shootAngle -= M_PI * 2.0f;
+			}
+			// Move Shooting Angle to the Left
+			if ((allowPlayerControl && keys[L'A'].isHeld) || (allowComputerControl && Com_AimLeft))
+			{
+				worm->shootAngle -= 1.0f * angleRotationSpeed * elapsedTime;
+				if (worm->shootAngle < -M_PI)
+					worm->shootAngle += M_PI * 2.0f;
+			}
+			// Jump to the cursor direction
+			if ((allowPlayerControl && keys[L'X'].isPressed) || (allowComputerControl && Com_Jump))
+			{
+				float angle = worm->shootAngle;
+				objectUnderControl->velocityX = 4.0f * cosf(angle);
+				objectUnderControl->velocityY = 8.0f * sinf(angle);
+				objectUnderControl->stable = false;
+
+				Com_Jump = false;
+			}
+
+			// Start weapon charging
+			if ((allowPlayerControl && keys[VK_SPACE].isPressed))
+			{
+				chargingWeapon = true;
+				fireWeapon = false;
+				chargeLevel = 0.0f;
+			}
+			if ((allowPlayerControl && keys[VK_SPACE].isHeld) || (allowComputerControl && Com_ChargingWeapon))
+			{
+				if (chargingWeapon)
+				{
+					// Increase weapon charge while button is held down
+					chargeLevel += 0.75f * elapsedTime;
+					if (chargeLevel >= 1.0f)
+					{
+						chargeLevel = 1.0f;
+						fireWeapon = true;
+					}
+				}
+			}
+			if ((allowPlayerControl && keys[VK_SPACE].isReleased))
+			{
+				if (chargingWeapon)
+					fireWeapon = true;
+
+				chargingWeapon = false;
+			}
+
+			// Change worm direction
+			if (worm->shootAngle > -M_PI / 2 && worm->shootAngle <= M_PI / 2)
+				worm->dir = 1;
+			else
+				worm->dir = -1;
+		}
+
+
+		// Shoot weapon if fireWeapon is true
+		if (fireWeapon)
+		{
+			Worm* worm = (Worm*)objectUnderControl;
+
+			// Weapon origin
+			float originX = worm->posX;
+			float originY = worm->posY;
+
+			// Weapon direction
+			float dirX = cosf(worm->shootAngle);
+			float dirY = sinf(worm->shootAngle);
+
+			// Create the weapon object
+			Missile* missile = new Missile(originX, originY, dirX * 40.0f * chargeLevel, dirY * 40.0f * chargeLevel);
+			objects.push_back(unique_ptr<Missile>(missile));
+
+			cameraTrackingObject = missile;
+
+			fireWeapon = false;
+			chargeLevel = 0.0f;
+			chargingWeapon = false;
+			playerHasFired = true;
+
+		}
+	}
+	
 
 	// Camera moves to the camera target position smoothly
 	if (cameraTrackingObject != nullptr)

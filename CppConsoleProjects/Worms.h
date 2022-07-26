@@ -51,7 +51,7 @@ public:
 
 	virtual void Draw(ConsoleEngine *engine, float offsetX, float offsetY, bool smallScale = false) = 0;
 	virtual int DeathAction() = 0;
-	virtual bool Damage(float dmg) { return true; };
+	virtual bool Damage(float dmg) = 0;
 };
 
 class Debris : public PhysicsObject
@@ -78,6 +78,11 @@ public:
 	virtual int DeathAction()
 	{
 		return 0;
+	}
+
+	virtual bool Damage(float d)
+	{
+		return true; // No damage
 	}
 
 private:
@@ -261,6 +266,11 @@ public:
 		return 20; // Big radius explosion
 	}
 
+	virtual bool Damage(float d)
+	{
+		return true; // No damage
+	}
+
 private:
 	// Share model across models of the same class
 	static vector<pair<float, float>> model;
@@ -285,6 +295,11 @@ public:
 	virtual int DeathAction()
 	{
 		return 0; 
+	}
+
+	virtual bool Damage(float d)
+	{
+		return true; // No damage
 	}
 
 private:
@@ -353,7 +368,7 @@ private:
 	bool Com_Jump = false;
 	bool Com_AimLeft = false;
 	bool Com_AimRight = false;
-	bool Com_ChargeWeapon = false;
+	bool Com_ChargingWeapon = false;
 
 	float Com_TargetAngle = 0.0f;
 	float Com_TargetChargeLevel = 0.0f;
