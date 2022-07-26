@@ -203,6 +203,7 @@ void Worms::Explosion(float worldX, float worldY, float radius)
 		{
 			o->velocityX = (dx / distance) * radius;
 			o->velocityY = (dy / distance) * radius;
+			o->Damage(((radius - distance) / radius) * 0.8f);
 			o->stable = false;
 		}
 	}
@@ -256,7 +257,7 @@ bool Worms::OnUserUpdate(float elapsedTime)
 
 	*/
 
-	// Game State handling using a state machine for Player
+	// Game State handling using a state machine
 	switch (GameState)
 	{
 		case GS_RESET:
@@ -344,8 +345,11 @@ bool Worms::OnUserUpdate(float elapsedTime)
 		{
 			showCountdown = true;
 
- 			if(playerHasFired ||turnTime <= 0.0f)
+ 			if(playerHasFired ||turnTime <= 0.0f || objectUnderControl->dead)
+			{
+				ComputerNextState = COM_ASSESS_ENVIRONMENT;
 				NextState = GS_CAMERA_MODE;
+			}
 
 			break;
 		}
@@ -365,7 +369,7 @@ bool Worms::OnUserUpdate(float elapsedTime)
 				{
 					currentTeam += 1;
 					currentTeam %= teamVector.size();
-				} while (!teamVector[currentTeam].isTeamAlive() && currentTeam != oldTeam);
+				} while (!teamVector[currentTeam].isTeamAlive());
 
 				// Player vs Computer
 				if (gameMode == 0)
@@ -477,12 +481,13 @@ bool Worms::OnUserUpdate(float elapsedTime)
 						break;
 					}
 
-					// SafePosition has to be clamped, to avoid worms going out of bounds
-					if (Com_SafePosition <= 20.0f) Com_SafePosition = 20.0f;
-					if (Com_SafePosition >= mapWidth - 20.0f) Com_SafePosition = mapWidth - 20.0f;
-
-					ComputerNextState = COM_MOVE;
 				}
+
+				// SafePosition has to be clamped, to avoid worms going out of bounds
+				if (Com_SafePosition <= 20.0f) Com_SafePosition = 20.0f;
+				if (Com_SafePosition >= mapWidth - 20.0f) Com_SafePosition = mapWidth - 20.0f;
+
+				ComputerNextState = COM_MOVE;
 
 				break;
 			}
@@ -491,8 +496,10 @@ bool Worms::OnUserUpdate(float elapsedTime)
 				Worm* worm = (Worm*)objectUnderControl;
 				
 				// Spend at most half of TurnTime for movement
-				if (turnTime >= turnTimeMax / 2.0f && worm->posX != Com_SafePosition)
+			//	if (turnTime >= (turnTimeMax / 2.0f) && worm->posX != Com_SafePosition)
+				if (turnTime >= (15.0f) && worm->posX != Com_SafePosition)
 				{
+					// TODO: Make more accurate. Worm can jump back and forth over the target position right now, never getting there
 					if (Com_SafePosition < worm->posX && gameIsStable)
 					{
 						// TODO: More accurate calculations for jump
@@ -503,6 +510,7 @@ bool Worms::OnUserUpdate(float elapsedTime)
 					if (Com_SafePosition > worm->posX && gameIsStable)
 					{
 						// TODO: More accurate calculations for jump
+						//worm->shootAngle = M_PI * 0.6f;
 						worm->shootAngle = -M_PI * 0.4f;
 						Com_Jump = true;
 						ComputerNextState = COM_MOVE;
@@ -631,7 +639,7 @@ bool Worms::OnUserUpdate(float elapsedTime)
 					float theta2 = atanf(b2 / (gravity * dirX));
 
 					// TODO: More specific calculations to make sure shot hits target as close as possible, without colliding first
-					int action = rand() % 3;
+					int action = rand() % 2;
 
 					switch (action)
 					{
@@ -642,16 +650,17 @@ bool Worms::OnUserUpdate(float elapsedTime)
 						}
 						case 1: // Aim at Minimum Height
 						{
-							Com_TargetAngle = theta2 - (dirX > 0 ? M_PI : 0.0f);
+						//	Com_TargetAngle = theta2 - (dirX > 0 ? M_PI : 0.0f);
+							Com_TargetAngle = theta1 - (dirX > 0 ? M_PI : 0.0f);
 							break;
 						}
-						case 2:
+					/*	case 2:
 						{
 							if (theta1 == 0)
 								theta1 = 1.0f;
 							Com_TargetAngle = (((float)rand() / theta1 ) * theta2)  - (dirX > 0 ? M_PI : 0.0f);
 							break;
-						}
+						}*/
 						default:
 						{
 							Com_TargetAngle = theta1 - (dirX > 0 ? M_PI : 0.0f);
@@ -732,6 +741,10 @@ bool Worms::OnUserUpdate(float elapsedTime)
 	turnTime -= elapsedTime;
 
 	// Input Commands for Player and Computer
+
+	// Toggle Zoom Out
+	if (keys[VK_TAB].isReleased)
+		zoomOut = !zoomOut;
 
 	if (objectUnderControl != nullptr)
 	{
@@ -868,6 +881,13 @@ bool Worms::OnUserUpdate(float elapsedTime)
 		// Update physics of physics objects
 		for (auto &o : objects)
 		{
+			// Out of bounds
+			if (o->posX < 0.0f || o->posX > mapWidth)
+			{
+				o->Damage(10000);
+				o->dead = true;
+			}
+
 			// Apply Gravity to object
 			//o->accelY += 9.81f;
 			o->accelY += 2.0f;
@@ -1104,8 +1124,9 @@ bool Worms::OnUserUpdate(float elapsedTime)
 		}
 	}
 
-	// Update our Game State
+	// Update Game States
 	GameState = NextState;
+	ComputerGameState = ComputerNextState;
 
     return true;
 }
