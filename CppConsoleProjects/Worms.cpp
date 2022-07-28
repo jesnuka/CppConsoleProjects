@@ -585,8 +585,8 @@ bool Worms::OnUserUpdate(float elapsedTime)
 			{
 				Worm* worm = (Worm*)objectUnderControl;
 
-				float dirX = (Com_TargetX - worm->posX);
-				float dirY = (Com_TargetY - worm->posY);
+				float dirX = -(Com_TargetX - worm->posX);
+				float dirY = -(Com_TargetY - worm->posY);
 
 				float speed = 30.0f;
 				float gravity = 2.0f;
