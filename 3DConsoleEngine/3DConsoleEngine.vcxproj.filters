@@ -20,7 +20,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ConsoleEngine.h">
+    <ClInclude Include="3DConsoleEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

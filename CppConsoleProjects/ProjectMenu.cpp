@@ -18,6 +18,7 @@
 #include "ColoredConsoleFPS.h"
 #include "Splines.h"
 #include "Worms.h"
+#include "../3DConsoleEngine/3DConsoleEngine.h"
 
 using namespace std;
 
@@ -40,10 +41,12 @@ private:
 	Splines splines;
 	SpriteEditor spriteEditor;
 	Worms wormsGame;
+	ConsoleEngine3D engine3D;
+
 
 
 	int projectSelection = 0;
-	int projectAmount = 6;
+	int projectAmount = 7;
 	vector<short> selectionColors;
 
 	virtual bool OnUserCreate()
@@ -61,36 +64,40 @@ private:
 		switch (project)
 		{
 		case 0:
-			racingGame.ConstructConsole(160, 100, 8, 8);
-			racingGame.Start();
+			if (racingGame.ConstructConsole(160, 100, 8, 8))
+				racingGame.Start();
 			break;
 		case 1:
-			asteroidsGame.ConstructConsole(160, 100, 8, 8);
-			asteroidsGame.Start();
+			if (asteroidsGame.ConstructConsole(160, 100, 8, 8))
+				asteroidsGame.Start();
 			break;
 		case 2:
-			splines.ConstructConsole(160, 80, 9, 9);
-			splines.Start();
+			if (splines.ConstructConsole(160, 80, 9, 9))
+				splines.Start();
 			break;
 		case 3:
-			improvedFPSGame.ConstructConsole(120, 40, 9, 9);
-			improvedFPSGame.Start();
-				break;
+			if (improvedFPSGame.ConstructConsole(120, 40, 9, 9))
+				improvedFPSGame.Start();
+			break;
 		case 4:
-			wormsGame.ConstructConsole(256, 160, 5, 5);
-			wormsGame.Start();
+			if (wormsGame.ConstructConsole(256, 160, 5, 5))
+				wormsGame.Start();
 			break;
 		case 5:
-			spriteEditor.ConstructConsole(160, 100, 8, 8);
-			spriteEditor.Start();
+			if (spriteEditor.ConstructConsole(160, 100, 8, 8))
+				spriteEditor.Start();
+			break;
+		case 6:
+			if (engine3D.ConstructConsole(256, 240, 4, 4))
+				engine3D.Start();
 			break;
 		/*case 3:
 			coloredFPSGame.ConstructConsole(200, 100, 6, 6);
 			coloredFPSGame.Start();*/
 			break;
 		default:
-			asteroidsGame.ConstructConsole(160, 100, 8, 8);
-			asteroidsGame.Start();
+			if(asteroidsGame.ConstructConsole(160, 100, 8, 8))
+				asteroidsGame.Start();
 			break;
 		}
 		return 1;
@@ -126,6 +133,7 @@ private:
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 12, L"- RAY CAST FPS - ", selectionColors[3]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 15, L"- WORMS - ", selectionColors[4]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 18, L"- SPRITE EDITOR - ", selectionColors[5]);
+		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 21, L"- 3D CONSOLE ENGINE - ", selectionColors[6]);
 		//DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 15, L"- ADVANCED RAY CAST FPS - ", selectionColors[4]);
 
 		// Draw selection lines

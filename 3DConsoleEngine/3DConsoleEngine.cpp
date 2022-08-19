@@ -15,10 +15,15 @@
 	https://github.com/OneLoneCoder/videos/blob/master/LICENSE
 */
 
+#include "3DConsoleEngine.h"
 
-#include "ConsoleEngine.h"
 
-
-int main()
+/*int main()
 {
-}
+	// TODO: Use ProjectMenu instead
+	ConsoleEngine3D engine3D;
+
+	if (engine3D.ConstructConsole(256, 240, 4, 4))
+		engine3D.Start();
+	return 0;
+}*/
