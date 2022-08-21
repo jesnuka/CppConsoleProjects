@@ -48,6 +48,7 @@ public:
 
 private:
 	mesh meshCube;
+	float rotationTheta = 0.0f;
 	mat4x4 matProjection;
 
 	void MultiplyMatrixVector(vec3d& input, vec3d& output, mat4x4& matrix)

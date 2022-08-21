@@ -544,6 +544,14 @@ public:
 		}
 	}
 
+	// Draw 3 lines based on coordinates, to form a triangle
+	void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, wchar_t c = PIXEL_FULL, short color = FG_WHITE)
+	{
+		Line(x1, y1, x2, y2, c, color);
+		Line(x2, y2, x3, y3, c, color);
+		Line(x3, y3, x1, y1, c, color);
+	}
+
 	// Destructor
 	~ConsoleEngine()
 	{
