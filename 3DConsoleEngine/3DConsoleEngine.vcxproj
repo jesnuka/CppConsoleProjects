@@ -127,10 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="3DConsoleEngine.cpp" />
+    <ClCompile Include="ConsoleEngine3D.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="3DConsoleEngine.h" />
+    <ClInclude Include="..\CppConsoleProjects\ConsoleEngine.h" />
+    <ClInclude Include="ConsoleEngine3D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

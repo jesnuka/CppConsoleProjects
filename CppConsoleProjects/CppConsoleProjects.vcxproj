@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\3DConsoleEngine\ConsoleEngine3D.cpp" />
     <ClCompile Include="Asteroids.cpp" />
     <ClCompile Include="ColoredConsoleFPS.cpp" />
     <ClCompile Include="ConsoleFPS.cpp" />

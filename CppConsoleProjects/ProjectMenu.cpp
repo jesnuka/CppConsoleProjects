@@ -18,7 +18,7 @@
 #include "ColoredConsoleFPS.h"
 #include "Splines.h"
 #include "Worms.h"
-#include "../3DConsoleEngine/3DConsoleEngine.h"
+#include "../3DConsoleEngine/ConsoleEngine3D.h"
 
 using namespace std;
 

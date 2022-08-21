@@ -1,7 +1,6 @@
-﻿  3DConsoleEngine.cpp
-D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine.h(515,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  Generating code
-  Previous IPDB not found, fall back to full compilation.
-  All 1 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  Finished generating code
-  3DConsoleEngine.vcxproj -> D:\Projects\Cpp_Projects\CppConsoleProjects\x64\Release\3DConsoleEngine.exe
+﻿  ConsoleEngine3D.cpp
+D:\Projects\Cpp_Projects\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(515,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(58,49): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(81,12): warning C4101: 'triProj': unreferenced local variable
+MSVCRT.lib(exe_main.obj) : error LNK2001: unresolved external symbol main
+D:\Projects\Cpp_Projects\CppConsoleProjects\x64\Release\3DConsoleEngine.exe : fatal error LNK1120: 1 unresolved externals
