@@ -51,6 +51,9 @@ private:
 	float rotationTheta = 0.0f;
 	mat4x4 matProjection;
 
+	// Represents the camera's position for now
+	vec3d camera;
+
 	void MultiplyMatrixVector(vec3d& input, vec3d& output, mat4x4& matrix)
 	{
 		output.x = input.x * matrix.m[0][0] + input.y * matrix.m[1][0] + input.z * matrix.m[2][0] + matrix.m[3][0];

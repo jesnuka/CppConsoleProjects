@@ -34,7 +34,7 @@ bool ConsoleEngine3D::OnUserCreate()
 
 		// North
 		{1.0f, 0.0f, 1.0f,		1.0f, 1.0f, 1.0f,	0.0f, 1.0f, 1.0f },
-		{1.0f, 0.0f, 0.0f,		0.0f, 1.0f, 1.0f,	0.0f, 0.0f, 1.0f },
+		{1.0f, 0.0f, 1.0f,		0.0f, 1.0f, 1.0f,	0.0f, 0.0f, 1.0f },
 
 		// West
 		{0.0f, 0.0f, 1.0f,		0.0f, 1.0f, 1.0f,	0.0f, 1.0f, 0.0f },
@@ -48,6 +48,8 @@ bool ConsoleEngine3D::OnUserCreate()
 		{1.0f, 0.0f, 1.0f,		0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f },
 		{1.0f, 0.0f, 1.0f,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f, 0.0f }
 	};
+
+
 
 	// Projection Matrix is populated, as screen dimensions and FoV are not going to change for now
 	float nearPlane = 0.1f;
@@ -124,35 +126,66 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 		triTranslated.p[1].z = triRotatedZX.p[1].z + 3.0f;
 		triTranslated.p[2].z = triRotatedZX.p[2].z + 3.0f;
 
-		// Project from 3D to 2D
-		MultiplyMatrixVector(triTranslated.p[0], triProjected.p[0], matProjection);
-		MultiplyMatrixVector(triTranslated.p[1], triProjected.p[1], matProjection);
-		MultiplyMatrixVector(triTranslated.p[2], triProjected.p[2], matProjection);
+		vec3d normal;
+		vec3d lineA;
+		vec3d lineB;
 
-		// Scale the vertices to view
+		lineA.x = triTranslated.p[1].x - triTranslated.p[0].x;
+		lineA.y = triTranslated.p[1].y - triTranslated.p[0].y;
+		lineA.z = triTranslated.p[1].z - triTranslated.p[0].z;
 
-		// Shift coordinates between 0 - 2
-		triProjected.p[0].x += 1.0f;
-		triProjected.p[1].x += 1.0f;
-		triProjected.p[2].x += 1.0f;
+
+		lineB.x = triTranslated.p[2].x - triTranslated.p[0].x;
+		lineB.y = triTranslated.p[2].y - triTranslated.p[0].y;
+		lineB.z = triTranslated.p[2].z - triTranslated.p[0].z;
+
+		// Get the normal as the cross product of the lines
+		normal.x = lineA.y * lineB.z - lineA.z * lineB.y;
+		normal.y = lineA.z * lineB.x - lineA.x * lineB.z;
+		normal.z = lineA.x * lineB.y - lineA.y * lineB.x;
+
+		// Normalize the normal, to get an unit vector
+		float len = sqrtf(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
+		normal.x /= len;
+		normal.y /= len;
+		normal.z /= len;
+
+		// World Space to Screen Space, only if the triangle is visible to the camera,
+		// This is true, when the dot product of the normal and the camera is < 0.0f
+		if(normal.x * (triTranslated.p[0].x - camera.x) +
+		   normal.y * (triTranslated.p[0].y - camera.y) +
+		   normal.z * (triTranslated.p[0].z - camera.z) < 0.0f)
+		{
+			// Project from 3D to 2D , 
+			MultiplyMatrixVector(triTranslated.p[0], triProjected.p[0], matProjection);
+			MultiplyMatrixVector(triTranslated.p[1], triProjected.p[1], matProjection);
+			MultiplyMatrixVector(triTranslated.p[2], triProjected.p[2], matProjection);
+		
+			// Scale the vertices to view
+
+			// Shift coordinates between 0 - 2
+			triProjected.p[0].x += 1.0f;
+			triProjected.p[1].x += 1.0f;
+			triProjected.p[2].x += 1.0f;
 			   
-		triProjected.p[0].y += 1.0f;
-		triProjected.p[1].y += 1.0f;
-		triProjected.p[2].y += 1.0f;
+			triProjected.p[0].y += 1.0f;
+			triProjected.p[1].y += 1.0f;
+			triProjected.p[2].y += 1.0f;
 
-		// Divide by 2, scale to the correct axis size
-		triProjected.p[0].x *= 0.5f * (float)screenWidth;
-		triProjected.p[1].x *= 0.5f * (float)screenWidth;
-		triProjected.p[2].x *= 0.5f * (float)screenWidth;
+			// Divide by 2, scale to the correct axis size
+			triProjected.p[0].x *= 0.5f * (float)screenWidth;
+			triProjected.p[1].x *= 0.5f * (float)screenWidth;
+			triProjected.p[2].x *= 0.5f * (float)screenWidth;
 			   
-		triProjected.p[0].y *= 0.5f * (float)screenHeight;
-		triProjected.p[1].y *= 0.5f * (float)screenHeight;
-		triProjected.p[2].y *= 0.5f * (float)screenHeight;
+			triProjected.p[0].y *= 0.5f * (float)screenHeight;
+			triProjected.p[1].y *= 0.5f * (float)screenHeight;
+			triProjected.p[2].y *= 0.5f * (float)screenHeight;
 
 
-		DrawTriangle(triProjected.p[0].x, triProjected.p[0].y,
-			triProjected.p[1].x, triProjected.p[1].y,
-			triProjected.p[2].x, triProjected.p[2].y);
+			DrawTriangle(triProjected.p[0].x, triProjected.p[0].y,
+				triProjected.p[1].x, triProjected.p[1].y,
+				triProjected.p[2].x, triProjected.p[2].y);
+		}
 	}
 
 	return true;

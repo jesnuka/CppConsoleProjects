@@ -138,6 +138,7 @@
     <ClCompile Include="Worms.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\3DConsoleEngine\ConsoleEngine3D.h" />
     <ClInclude Include="Asteroids.h" />
     <ClInclude Include="ColoredConsoleFPS.h" />
     <ClInclude Include="ConsoleEngine.h" />

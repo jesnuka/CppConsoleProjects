@@ -71,5 +71,8 @@
     <ClInclude Include="Worms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\3DConsoleEngine\ConsoleEngine3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
