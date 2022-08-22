@@ -181,10 +181,24 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 			triProjected.p[1].y *= 0.5f * (float)screenHeight;
 			triProjected.p[2].y *= 0.5f * (float)screenHeight;
 
-
-			DrawTriangle(triProjected.p[0].x, triProjected.p[0].y,
-				triProjected.p[1].x, triProjected.p[1].y,
-				triProjected.p[2].x, triProjected.p[2].y);
+			switch (drawMode)
+			{
+			case 0: // Wireframe
+				DrawTriangle(triProjected.p[0].x, triProjected.p[0].y,
+					triProjected.p[1].x, triProjected.p[1].y,
+					triProjected.p[2].x, triProjected.p[2].y);
+				break;
+			case 1: // Filled
+				FillTriangle(triProjected.p[0].x, triProjected.p[0].y,
+					triProjected.p[1].x, triProjected.p[1].y,
+					triProjected.p[2].x, triProjected.p[2].y);
+				break;
+			default: // Wireframe by default
+				DrawTriangle(triProjected.p[0].x, triProjected.p[0].y,
+					triProjected.p[1].x, triProjected.p[1].y,
+					triProjected.p[2].x, triProjected.p[2].y);
+				break;
+			}
 		}
 	}
 

@@ -46,6 +46,9 @@ public:
 		appName = L"Console Engine 3D";
 	}
 
+	// 0 == Wireframe, 1 == Filled 
+	int drawMode = 1;
+
 private:
 	mesh meshCube;
 	float rotationTheta = 0.0f;
