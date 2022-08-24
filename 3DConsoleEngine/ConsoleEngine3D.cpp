@@ -20,11 +20,10 @@
 bool ConsoleEngine3D::OnUserCreate()
 {
 
-//	if(!meshCurrent.LoadObjectFile("bunnyLo.obj"))
+//	if(!meshCurrent.LoadObjectFile("teapot.obj"))
 		// File could not be loaded
 
-	meshCurrent.LoadObjectFile("bunnyHi.obj");
-	//meshCurrent.LoadObjectFile("bunnyLo.obj");
+	meshCurrent.LoadObjectFile("teapot.obj");
 
 	// Create the Projection Matrix using the utility function
 	matProjection = MatrixMakeProjection(90.0f, (float)screenHeight / (float)screenWidth, 0.1f, 1000.0f);
@@ -47,7 +46,7 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 
 	// Create the translation matrix
 	mat4x4 matTranslation;
-	matTranslation = MatrixMakeTranslation(0.0f, 0.0f, 0.25f);
+	matTranslation = MatrixMakeTranslation(0.0f, 0.0f, 5.0f);
 
 	// Create the world matrix, which is first rotated, then translated
 	mat4x4 matWorld;
