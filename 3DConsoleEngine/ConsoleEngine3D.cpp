@@ -19,10 +19,10 @@
 
 bool ConsoleEngine3D::OnUserCreate()
 {
+
 	// Create Cube Mesh, with Unit length sides
 	// Triangles are built by going clockwise for the vertices
-
-	meshCube.tris =
+	/*meshCube.tris =
 	{
 		// South
 		{0.0f, 0.0f, 0.0f,		0.0f, 1.0f, 0.0f,	1.0f, 1.0f, 0.0f },
@@ -48,8 +48,12 @@ bool ConsoleEngine3D::OnUserCreate()
 		{1.0f, 0.0f, 1.0f,		0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f },
 		{1.0f, 0.0f, 1.0f,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f, 0.0f }
 	};
+	*/
 
+//	if(!meshCurrent.LoadObjectFile("bunnyLo.obj"))
+		// File could not be loaded
 
+	meshCurrent.LoadObjectFile("bunnyLo.obj");
 
 	// Projection Matrix is populated, as screen dimensions and FoV are not going to change for now
 	float nearPlane = 0.1f;
@@ -99,7 +103,7 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 	matRotationX.m[3][3] = 1;
 
 	// Draw the Triangles of meshes
-	for (auto tri : meshCube.tris)
+	for (auto tri : meshCurrent.tris)
 	{
 		
 		triangle triProjected;
@@ -122,9 +126,9 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 
 		// Translate the object in the Z plane, offsetting them to the screen
 		triTranslated = triRotatedZX;
-		triTranslated.p[0].z = triRotatedZX.p[0].z + 3.0f;
-		triTranslated.p[1].z = triRotatedZX.p[1].z + 3.0f;
-		triTranslated.p[2].z = triRotatedZX.p[2].z + 3.0f;
+		triTranslated.p[0].z = triRotatedZX.p[0].z + 0.25f;
+		triTranslated.p[1].z = triRotatedZX.p[1].z + 0.25f;
+		triTranslated.p[2].z = triRotatedZX.p[2].z + 0.25f;
 
 		vec3d normal;
 		vec3d lineA;

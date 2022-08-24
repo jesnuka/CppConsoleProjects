@@ -17,6 +17,8 @@
 */
 
 #include "../CppConsoleProjects/ConsoleEngine.h" 
+#include <fstream>
+#include <strstream>
 
 struct vec3d
 {
@@ -34,6 +36,49 @@ struct triangle
 struct mesh
 {
 	vector<triangle> tris;
+
+	bool LoadObjectFile(string filename)
+	{
+		// Open filename, if it exists
+		ifstream f(filename);
+		if (!f.is_open())
+			return false;
+
+		// Temporal vertice pool
+		vector<vec3d> vertices;
+
+		while (!f.eof())
+		{
+			// Assume for now that line length doesn't exceed 128 characters
+			char line[128];
+			f.getline(line, 128);
+
+			// Turn the line into a string stream
+			strstream s;
+			s << line;
+
+			char j;
+
+			if (line[0] == 'v')
+			{
+				vec3d v;
+				// Read vertice values from stream 
+				s >> j >> v.x >> v.y >> v.z;
+				vertices.push_back(v);
+			}
+			if (line[0] == 'f')
+			{
+				// Create faces and push them as triangles to the tris vector
+				// Vertices are fetched from the temporary vertice pool, using the index given in the object file
+				// Indexing in the obj file starts from 1, so subtract the index by 1
+				int f[3];
+				s >> j >> f[0] >> f[1] >> f[2];
+				tris.push_back({vertices[f[0] - 1], vertices[f[1] - 1], vertices[f[2] - 1] });
+			}
+		}
+
+		return true;
+	}
 };
 
 struct mat4x4
@@ -54,6 +99,7 @@ public:
 
 private:
 	mesh meshCube;
+	mesh meshCurrent;
 	float rotationTheta = 0.0f;
 	mat4x4 matProjection;
 
