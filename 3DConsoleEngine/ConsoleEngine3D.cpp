@@ -156,10 +156,31 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 		   normal.y * (triTranslated.p[0].y - camera.y) +
 		   normal.z * (triTranslated.p[0].z - camera.z) < 0.0f)
 		{
-			// Project from 3D to 2D , 
+
+			// Illuminate using a single directional light
+			vec3d lightDir = { 0.0f, 0.0f, -1.0f };
+			// Normalize
+			float len = sqrtf(lightDir.x * lightDir.x + lightDir.y * lightDir.y + lightDir.z * lightDir.z);
+			lightDir.x /= len;
+			lightDir.y /= len;
+			lightDir.z /= len;
+
+			// Dot product, get the similarity between the triangle normal and the light direction
+			float dotProduct = normal.x * lightDir.x + normal.y * lightDir.y + normal.z * lightDir.z;
+
+			// Use Dot Product to get a gray shading color, as is necessary for the console
+			CHAR_INFO col = GetColor(dotProduct);
+			triTranslated.color = col.Attributes;
+			triTranslated.symbol = col.Char.UnicodeChar;
+
+
+			// Project from 3D to 2D 
 			MultiplyMatrixVector(triTranslated.p[0], triProjected.p[0], matProjection);
 			MultiplyMatrixVector(triTranslated.p[1], triProjected.p[1], matProjection);
 			MultiplyMatrixVector(triTranslated.p[2], triProjected.p[2], matProjection);
+			// Remember to copy the color and symbol information as well
+			triProjected.color = triTranslated.color;
+			triProjected.symbol = triTranslated.symbol;
 		
 			// Scale the vertices to view
 
@@ -191,7 +212,8 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 			case 1: // Filled
 				FillTriangle(triProjected.p[0].x, triProjected.p[0].y,
 					triProjected.p[1].x, triProjected.p[1].y,
-					triProjected.p[2].x, triProjected.p[2].y);
+					triProjected.p[2].x, triProjected.p[2].y, 
+					triProjected.symbol, triProjected.color);
 				break;
 			default: // Wireframe by default
 				DrawTriangle(triProjected.p[0].x, triProjected.p[0].y,

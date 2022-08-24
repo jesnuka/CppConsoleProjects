@@ -26,6 +26,9 @@ struct vec3d
 struct triangle
 {
 	vec3d p[3];
+
+	wchar_t symbol;
+	short color;
 };
 
 struct mesh
@@ -71,6 +74,44 @@ private:
 			output.z /= w;
 		}
 	}
+
+	CHAR_INFO GetColor(float luminance)
+	{
+		// Choose color and symbol based on luminance, to create a shading effect
+		short bg_col;
+		short fg_col;
+		wchar_t symbol;
+
+		// Turn luminance (0-1) to int between (0 - 12)
+		int pixel_bw = (int)(13.0f * luminance);
+
+		switch (pixel_bw)
+		{
+			case 0: bg_col = BG_BLACK; fg_col = FG_BLACK; symbol = PIXEL_FULL; break;
+
+			case 1: bg_col = BG_BLACK; fg_col = FG_DARK_GREY; symbol = PIXEL_QUARTER; break;
+			case 2: bg_col = BG_BLACK; fg_col = FG_DARK_GREY; symbol = PIXEL_HALF; break;
+			case 3: bg_col = BG_BLACK; fg_col = FG_DARK_GREY; symbol = PIXEL_THREEQUARTERS; break;
+			case 4: bg_col = BG_BLACK; fg_col = FG_DARK_GREY; symbol = PIXEL_FULL; break;
+
+			case 5: bg_col = BG_DARK_GREY; fg_col = FG_GREY; symbol = PIXEL_QUARTER; break;
+			case 6: bg_col = BG_DARK_GREY; fg_col = FG_GREY; symbol = PIXEL_HALF; break;
+			case 7: bg_col = BG_DARK_GREY; fg_col = FG_GREY; symbol = PIXEL_THREEQUARTERS; break;
+			case 8: bg_col = BG_DARK_GREY; fg_col = FG_GREY; symbol = PIXEL_FULL; break;
+
+			case 9:  bg_col = BG_GREY; fg_col = FG_WHITE; symbol = PIXEL_QUARTER; break;
+			case 10: bg_col = BG_GREY; fg_col = FG_WHITE; symbol = PIXEL_HALF; break;
+			case 11: bg_col = BG_GREY; fg_col = FG_WHITE; symbol = PIXEL_THREEQUARTERS; break;
+			case 12: bg_col = BG_GREY; fg_col = FG_WHITE; symbol = PIXEL_FULL; break;
+			default:
+				bg_col = BG_BLACK; fg_col = FG_BLACK; symbol = PIXEL_FULL;
+		}
+
+		CHAR_INFO c;
+		c.Attributes = bg_col | fg_col;
+		c.Char.UnicodeChar = symbol;
+		return c;
+	 }
 
 protected:
 	virtual bool OnUserCreate();
