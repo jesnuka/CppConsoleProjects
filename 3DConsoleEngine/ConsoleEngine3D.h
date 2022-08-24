@@ -23,7 +23,10 @@
 
 struct vec3d
 {
-	float x, y, z, w;
+	float x = 0.0f;
+	float y = 0.0f;
+	float z = 0.0f;
+	float w = 1.0f;
 };
 
 struct triangle
@@ -32,6 +35,16 @@ struct triangle
 
 	wchar_t symbol;
 	short color;
+
+	// Get the triangle centroid
+	vec3d Centroid()
+	{
+		vec3d c;
+		c.x = (p[0].x + p[1].x + p[2].x) / 3.0f;
+		c.y = (p[0].y + p[1].y + p[2].y) / 3.0f;
+		c.z = (p[0].z + p[1].z + p[2].z) / 3.0f;
+		return c;
+	}
 };
 
 struct mesh
