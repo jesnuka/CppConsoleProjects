@@ -19,6 +19,7 @@
 #include "../CppConsoleProjects/ConsoleEngine.h" 
 #include <fstream>
 #include <strstream>
+#include <algorithm>
 
 struct vec3d
 {

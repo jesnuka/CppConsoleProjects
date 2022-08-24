@@ -53,8 +53,8 @@ bool ConsoleEngine3D::OnUserCreate()
 //	if(!meshCurrent.LoadObjectFile("bunnyLo.obj"))
 		// File could not be loaded
 
-	//meshCurrent.LoadObjectFile("bunnyHi.obj");
-	meshCurrent.LoadObjectFile("bunnyLo.obj");
+	meshCurrent.LoadObjectFile("bunnyHi.obj");
+	//meshCurrent.LoadObjectFile("bunnyLo.obj");
 
 	// Projection Matrix is populated, as screen dimensions and FoV are not going to change for now
 	float nearPlane = 0.1f;
@@ -102,6 +102,9 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 	matRotationX.m[2][1] = -sinf(rotationTheta * 0.5f);
 	matRotationX.m[2][2] = cosf(rotationTheta * 0.5f);
 	matRotationX.m[3][3] = 1;
+
+	// Store triangles that will be drawn to the screen 
+	vector <triangle> trianglesToDraw;
 
 	// Draw the Triangles of meshes
 	for (auto tri : meshCurrent.tris)
@@ -207,25 +210,42 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 			triProjected.p[1].y *= 0.5f * (float)screenHeight;
 			triProjected.p[2].y *= 0.5f * (float)screenHeight;
 
+			// Store the triangle for sorting, to determine if it will be drawn or not
+			trianglesToDraw.push_back(triProjected);
+
+			}
+		}
+
+		// Sort triangles from back to front, to determine which triangles to draw
+		sort(trianglesToDraw.begin(), trianglesToDraw.end(), [](triangle& t1, triangle& t2)
+			{
+				// Get midpoint Z value of both triangles, to determine approximately which triangle is closer
+				float z1 = (t1.p[0].z + t1.p[1].z + t1.p[2].z) / 3.0f;
+				float z2 = (t2.p[0].z + t2.p[1].z + t2.p[2].z) / 3.0f;
+				return z1 > z2;
+			});
+
+		// Draw triangles to be drawn
+		for(auto &tri : trianglesToDraw)
+		{
 			switch (drawMode)
 			{
 			case 0: // Wireframe
-				DrawTriangle(triProjected.p[0].x, triProjected.p[0].y,
-					triProjected.p[1].x, triProjected.p[1].y,
-					triProjected.p[2].x, triProjected.p[2].y);
+				DrawTriangle(tri.p[0].x, tri.p[0].y,
+					tri.p[1].x, tri.p[1].y,
+					tri.p[2].x, tri.p[2].y);
 				break;
 			case 1: // Filled
-				FillTriangle(triProjected.p[0].x, triProjected.p[0].y,
-					triProjected.p[1].x, triProjected.p[1].y,
-					triProjected.p[2].x, triProjected.p[2].y, 
-					triProjected.symbol, triProjected.color);
+				FillTriangle(tri.p[0].x, tri.p[0].y,
+					tri.p[1].x, tri.p[1].y,
+					tri.p[2].x, tri.p[2].y,
+					tri.symbol, tri.color);
 				break;
 			default: // Wireframe by default
-				DrawTriangle(triProjected.p[0].x, triProjected.p[0].y,
-					triProjected.p[1].x, triProjected.p[1].y,
-					triProjected.p[2].x, triProjected.p[2].y);
+				DrawTriangle(tri.p[0].x, tri.p[0].y,
+					tri.p[1].x, tri.p[1].y,
+					tri.p[2].x, tri.p[2].y);
 				break;
-			}
 		}
 	}
 
