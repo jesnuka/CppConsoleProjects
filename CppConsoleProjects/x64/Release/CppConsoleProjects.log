@@ -1,26 +1,26 @@
 ﻿  ConsoleEngine3D.cpp
 D:\Projects\Cpp_Projects\CppConsoleProjects\CppConsoleProjects\ConsoleEngine.h(515,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(64,49): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(65,49): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(215,44): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(215,23): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(214,44): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(214,23): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(213,44): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(213,23): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(212,56): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(212,35): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(213,56): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(213,35): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(220,44): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(220,23): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(219,44): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(219,23): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(218,44): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(218,23): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(217,56): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(217,35): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(218,56): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(218,35): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(226,44): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(226,23): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(225,44): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(225,23): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(224,44): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(224,23): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(223,56): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(223,35): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(224,56): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(224,35): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   Generating code
-  1 of 1193 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  6 of 1193 functions ( 0.5%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

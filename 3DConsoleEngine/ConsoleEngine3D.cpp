@@ -53,6 +53,7 @@ bool ConsoleEngine3D::OnUserCreate()
 //	if(!meshCurrent.LoadObjectFile("bunnyLo.obj"))
 		// File could not be loaded
 
+	//meshCurrent.LoadObjectFile("bunnyHi.obj");
 	meshCurrent.LoadObjectFile("bunnyLo.obj");
 
 	// Projection Matrix is populated, as screen dimensions and FoV are not going to change for now
