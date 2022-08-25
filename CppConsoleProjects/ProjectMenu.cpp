@@ -46,7 +46,7 @@ private:
 
 
 	int projectSelection = 0;
-	int projectAmount = 7;
+	int projectAmount = 8;
 	vector<short> selectionColors;
 
 	virtual bool OnUserCreate()
@@ -80,20 +80,19 @@ private:
 				improvedFPSGame.Start();
 			break;
 		case 4:
+			coloredFPSGame.ConstructConsole(200, 100, 6, 6);
+			coloredFPSGame.Start();
+		case 5:
 			if (wormsGame.ConstructConsole(256, 160, 5, 5))
 				wormsGame.Start();
 			break;
-		case 5:
+		case 6:
 			if (spriteEditor.ConstructConsole(160, 100, 8, 8))
 				spriteEditor.Start();
 			break;
-		case 6:
+		case 7:
 			if (engine3D.ConstructConsole(256, 240, 4, 4))
 				engine3D.Start();
-			break;
-		/*case 3:
-			coloredFPSGame.ConstructConsole(200, 100, 6, 6);
-			coloredFPSGame.Start();*/
 			break;
 		default:
 			if(asteroidsGame.ConstructConsole(160, 100, 8, 8))
@@ -131,10 +130,10 @@ private:
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 6, L"- ASTEROIDS - ", selectionColors[1]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 9, L"- SPLINES - ", selectionColors[2]);
 		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 12, L"- RAY CAST FPS - ", selectionColors[3]);
-		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 15, L"- WORMS - ", selectionColors[4]);
-		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 18, L"- SPRITE EDITOR - ", selectionColors[5]);
-		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 21, L"- 3D CONSOLE ENGINE - ", selectionColors[6]);
-		//DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 15, L"- ADVANCED RAY CAST FPS - ", selectionColors[4]);
+		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 15, L"- ADVANCED RAY CAST FPS - ", selectionColors[4]);
+		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 18, L"- WORMS - ", selectionColors[5]);
+		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 21, L"- SPRITE EDITOR - ", selectionColors[6]);
+		DrawString(screenWidth/2 - 10, screenHeight/2 - screenHeight / 4 + 24, L"- 3D CONSOLE ENGINE - ", selectionColors[7]);
 
 		// Draw selection lines
 
