@@ -9,7 +9,7 @@ Simple Worms game with 4 teams, one controlled by the player and the three other
 [X] - Jump in crossahair direction
 [Space] - Charge your weapon. Let go to shoot at the current charge level
 
-![Worms](https://github.com/jesnuka/CppConsoleProjects/tree/main/img/worms.png?raw=true)
+![Worms](https://github.com/jesnuka/CppConsoleProjects/blob/main/img/worms.png?raw=true)
 
 ## Racing
 Simple racing game where the aim is to get the best lap time.
@@ -17,7 +17,7 @@ Simple racing game where the aim is to get the best lap time.
 [UP] - Accelerate car
 [LEFT / RIGHT] - Move car left and right on the track
 
-![Racing](https://github.com/jesnuka/CppConsoleProjects/tree/main/img/racing.png?raw=true)
+![Racing](https://github.com/jesnuka/CppConsoleProjects/blob/main/img/racing.png?raw=true)
 
 ## Asteroids
 Works like the original Asteroids game. Shoot asteroids without getting hit to get more points.
@@ -26,7 +26,7 @@ Works like the original Asteroids game. Shoot asteroids without getting hit to g
 [LEFT / RIGHT] - Rotate the spaceship
 [Space] - Shoot bullets
 
-![Asteroids](https://github.com/jesnuka/CppConsoleProjects/tree/main/img/asteroids.png?raw=true)
+![Asteroids](https://github.com/jesnuka/CppConsoleProjects/blob/main/img/asteroids.png?raw=true)
 
 ## First Person Game
 Walk around a 3D-like first person maze.
@@ -35,7 +35,7 @@ Walk around a 3D-like first person maze.
 [LEFT / RIGHT] - Turn left and right
 [Q / E] - Strafe left and right
 
-![First Person Game](https://github.com/jesnuka/CppConsoleProjects/tree/main/img/consoleFPS.png?raw=true)
+![First Person Game](https://github.com/jesnuka/CppConsoleProjects/blob/main/img/consoleFPS.png?raw=true)
 
 ## Splines
 Display drawing of splines using points, and move a model around them in constant speed.
@@ -44,4 +44,4 @@ Display drawing of splines using points, and move a model around them in constan
 [X / Z] - Change which point is currently selected
 [A / D] - Move the model on the spline
 
-![Splines](https://github.com/jesnuka/CppConsoleProjects/tree/main/img/splines.png?raw=true)
+![Splines](https://github.com/jesnuka/CppConsoleProjects/blob/main/img/splines.png?raw=true)
