@@ -20,6 +20,8 @@
 bool ConsoleEngine3D::OnUserCreate()
 {
 
+
+
 //	if(!meshCurrent.LoadObjectFile("teapot.obj"))
 		// File could not be loaded
 
@@ -33,13 +35,40 @@ bool ConsoleEngine3D::OnUserCreate()
 
 bool ConsoleEngine3D::OnUserUpdate(float elapsedTime) 
 {
+	// User Input
+
+	// Camera movement
+	if (keys[VK_UP].isHeld)
+		camera.y -= 8.0f * elapsedTime;
+	if (keys[VK_DOWN].isHeld)
+		camera.y += 8.0f * elapsedTime;
+	if (keys[VK_LEFT].isHeld)
+		camera.x -= 8.0f * elapsedTime;
+	if (keys[VK_RIGHT].isHeld)
+		camera.x += 8.0f * elapsedTime;
+
+	// Temporary forward vector for moving forward and backward
+	vec3d forwardTemp = VectorMultiply(lookDirection, 8.0f * elapsedTime);
+
+	// Move Camera forward and backward
+	if (keys[L'W'].isHeld)
+		camera = VectorAdd(camera, forwardTemp);
+	if (keys[L'S'].isHeld)
+		camera = VectorSubtract(camera, forwardTemp);
+
+	// Camera rotation
+	if (keys[L'A'].isHeld)
+		yaw += 2.0f * elapsedTime;
+	if (keys[L'D'].isHeld)
+		yaw -= 2.0f * elapsedTime;
+
 	// Empty the screen
 	Fill(0, 0, screenWidth, screenHeight, L' ', 0);
 
 	// Rotate cube over time
 	mat4x4 matRotationZ;
 	mat4x4 matRotationX;
-	rotationTheta += 1.0f * elapsedTime;
+	//rotationTheta += 1.0f * elapsedTime;
 
 	matRotationZ = MatrixMakeRotationZ(rotationTheta * 0.5f);
 	matRotationX = MatrixMakeRotationX(rotationTheta);
@@ -54,6 +83,24 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 	matWorld = MatrixMultiplyMatrix(matRotationZ, matRotationX);
 	matWorld = MatrixMultiplyMatrix(matWorld, matTranslation);
 
+
+	// Camera 
+	
+	// Initialize lookDirection to be along the z-axis at first
+	vec3d vectorUp = { 0, 1, 0 };
+	vec3d vectorTarget = { 0,0,1 };
+	// Rotate camera using a rotation matrix created using the yaw value, first along the origin
+	mat4x4 matrixCameraRotation = MatrixMakeRotationY(yaw);
+	lookDirection = VectorMultiplyMatrix(vectorTarget, matrixCameraRotation);
+	// Offset to the camera location
+	vectorTarget = VectorAdd(camera, lookDirection);
+
+	// Create the camera transformation matrix, which places and orients the camera in world space
+	mat4x4 matrixCamera = MatrixPointAt(camera, vectorTarget, vectorUp);
+
+	// Make a view matrix from the camera matrix, which is inverse of the camera's transformation matrix
+	mat4x4 matrixView = MatrixQuickInverse(matrixCamera);
+
 	// Store triangles that will be drawn to the screen for later sorting
 	vector <triangle> trianglesToDraw;
 
@@ -64,6 +111,7 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 		triangle triProjected;
 		// Transformed triangle, which has worldMatrix applied
 		triangle triTransformed;
+		triangle triViewed;
 
 		triTransformed.p[0] = VectorMultiplyMatrix(tri.p[0], matWorld);
 		triTransformed.p[1] = VectorMultiplyMatrix(tri.p[1], matWorld);
@@ -108,11 +156,15 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 			triTransformed.color = col.Attributes;
 			triTransformed.symbol = col.Char.UnicodeChar;
 
+			// Convert from World Space to View Space
+			triViewed.p[0] = VectorMultiplyMatrix(triTransformed.p[0], matrixView);
+			triViewed.p[1] = VectorMultiplyMatrix(triTransformed.p[1], matrixView);
+			triViewed.p[2] = VectorMultiplyMatrix(triTransformed.p[2], matrixView);
 
 			// Project from 3D to 2D 
-			triProjected.p[0] = VectorMultiplyMatrix(triTransformed.p[0], matProjection);
-			triProjected.p[1] = VectorMultiplyMatrix(triTransformed.p[1], matProjection);
-			triProjected.p[2] = VectorMultiplyMatrix(triTransformed.p[2], matProjection);
+			triProjected.p[0] = VectorMultiplyMatrix(triViewed.p[0], matProjection);
+			triProjected.p[1] = VectorMultiplyMatrix(triViewed.p[1], matProjection);
+			triProjected.p[2] = VectorMultiplyMatrix(triViewed.p[2], matProjection);
 			// Remember to copy the color and symbol information as well
 			triProjected.color = triTransformed.color;
 			triProjected.symbol = triTransformed.symbol;

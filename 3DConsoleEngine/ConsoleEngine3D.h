@@ -119,6 +119,9 @@ private:
 
 	// Represents the camera's position for now
 	vec3d camera;
+	// Camera's look direction unit vector
+	vec3d lookDirection;
+	float yaw;
 
 	// Add two vectors together
 	vec3d VectorAdd(vec3d &v1, vec3d &v2)
@@ -288,6 +291,76 @@ private:
 
 		return matrix;
 	}
+
+	mat4x4 MatrixPointAt(vec3d &pos, vec3d &target, vec3d &up)
+	{
+		// Calculate a new Forward direction
+		vec3d newForward = VectorSubtract(target, pos);
+		newForward = VectorNormalize(newForward);
+
+		// Calculate a new Up direction
+		vec3d a = VectorMultiply(newForward, VectorDotProduct(up, newForward));
+		vec3d newUp = VectorSubtract(up, a);
+		newUp = VectorNormalize(newUp);
+
+		// Calculate a new Right direction, which is just cross product of the two other vectors
+		vec3d newRight = VectorCrossProduct(newUp, newForward);
+
+		// Construct a Dimensioning and Translation Matrix (Point At Matrix)
+		mat4x4 matrix;
+		matrix.m[0][0] = newRight.x;
+		matrix.m[0][1] = newRight.y;
+		matrix.m[0][2] = newRight.z;
+		matrix.m[0][3] = 0.0f;
+
+
+		matrix.m[1][0] = newUp.x;
+		matrix.m[1][1] = newUp.y;
+		matrix.m[1][2] = newUp.z;
+		matrix.m[1][3] = 0.0f;
+
+
+		matrix.m[2][0] = newForward.x;
+		matrix.m[2][1] = newForward.y;
+		matrix.m[2][2] = newForward.z;
+		matrix.m[2][3] = 0.0f;
+
+
+		matrix.m[3][0] = pos.x;
+		matrix.m[3][1] = pos.y;
+		matrix.m[3][2] = pos.z;
+		matrix.m[3][3] = 0.0f;
+
+		return matrix;
+	}
+
+	// Invert Matrix, works only for Rotation / Translation Matrices
+	mat4x4 MatrixQuickInverse(mat4x4 &m)
+	{
+		mat4x4 matrix;
+		matrix.m[0][0] = m.m[0][0]; 
+		matrix.m[0][1] = m.m[1][0]; 
+		matrix.m[0][2] = m.m[2][0]; 
+		matrix.m[0][3] = 0.0f;
+
+		matrix.m[1][0] = m.m[0][1]; 
+		matrix.m[1][1] = m.m[1][1]; 
+		matrix.m[1][2] = m.m[2][1]; 
+		matrix.m[1][3] = 0.0f;
+
+		matrix.m[2][0] = m.m[0][2]; 
+		matrix.m[2][1] = m.m[1][2]; 
+		matrix.m[2][2] = m.m[2][2]; 
+		matrix.m[2][3] = 0.0f;
+
+		matrix.m[3][0] = -(m.m[3][0] * matrix.m[0][0] + m.m[3][1] * matrix.m[1][0] + m.m[3][2] * matrix.m[2][0]);
+		matrix.m[3][1] = -(m.m[3][0] * matrix.m[0][1] + m.m[3][1] * matrix.m[1][1] + m.m[3][2] * matrix.m[2][1]);
+		matrix.m[3][2] = -(m.m[3][0] * matrix.m[0][2] + m.m[3][1] * matrix.m[1][2] + m.m[3][2] * matrix.m[2][2]);
+		matrix.m[3][3] = 1.0f;
+
+		return matrix;
+	}
+
 
 	CHAR_INFO GetColor(float luminance)
 	{
