@@ -108,8 +108,8 @@ public:
 		appName = L"Console Engine 3D";
 	}
 
-	// 0 == Wireframe, 1 == Filled 
-	int drawMode = 1;
+	// 0 == Wireframe, 1 == Filled , 2 == Filled with wireframe
+	int drawMode = 2;
 
 private:
 	mesh meshCube;
@@ -201,6 +201,128 @@ private:
 		output.z = input.x * matrix.m[0][2] + input.y * matrix.m[1][2] + input.z * matrix.m[2][2] + input.w * matrix.m[3][2];
 		output.w = input.x * matrix.m[0][3] + input.y * matrix.m[1][3] + input.z * matrix.m[2][3] + input.w * matrix.m[3][3];
 		return output;
+	}
+
+	// Return the point where line intersects with the plane, if it does
+	vec3d VectorIntersectPlane(vec3d &planePoint, vec3d &planeNormal, vec3d &lineStart, vec3d &lineEnd)
+	{
+		planeNormal = VectorNormalize(planeNormal);
+		float planeD = -VectorDotProduct(planeNormal, planePoint);
+		float ad = VectorDotProduct(lineStart, planeNormal);
+		float bd = VectorDotProduct(lineEnd, planeNormal);
+		float t = (-planeD - ad) / (bd - ad);
+
+		vec3d lineStartToEnd = VectorSubtract(lineEnd, lineStart);
+		vec3d lineToIntersect = VectorMultiply(lineStartToEnd, t);
+
+		return VectorAdd(lineStart, lineToIntersect);
+	}
+
+	// The Clipping Function. Return integer is how many triangles are returned by the function, from 0-2
+	int TriangleClipAgainstPlane(vec3d planePoint, vec3d planeNormal, triangle &inTriangle, triangle &outTriangle1, triangle &outTriangle2)
+	{
+		// Normalize plane to make sure it is normalized
+		planeNormal = VectorNormalize(planeNormal);
+
+		// Check whether points are inside or outside the plane
+		// Returns a signed shortest distance from the point to the plane.
+		auto dist = [&](vec3d& point)
+		{
+			vec3d normal = VectorNormalize(point);
+			return (planeNormal.x * point.x + planeNormal.y * point.y + planeNormal.z * point.z - VectorDotProduct(planeNormal, planePoint));
+		};
+
+		// Temporary storage arrays for classifying points on either side of the plane
+		// Negative distance sign means outside of the plane, positive means inside of the plane
+		vec3d* insidePoints[3];
+		vec3d* outsidePoints[3];
+		int insidePointCount = 0;
+		int outsidePointCount = 0;
+
+		// Signed distance of each point in triangle to plane
+		float d0 = dist(inTriangle.p[0]);
+		float d1 = dist(inTriangle.p[1]);
+		float d2 = dist(inTriangle.p[2]);
+
+		// Determine, based on the sign, if the points are inside or outside
+		if (d0 >= 0) 
+			insidePoints[insidePointCount++] = &inTriangle.p[0];
+		else
+			outsidePoints[outsidePointCount++] = &inTriangle.p[0];
+
+		if (d1 >= 0)
+			insidePoints[insidePointCount++] = &inTriangle.p[1];
+		else
+			outsidePoints[outsidePointCount++] = &inTriangle.p[1];
+
+		if (d2 >= 0)
+			insidePoints[insidePointCount++] = &inTriangle.p[2];
+		else
+			outsidePoints[outsidePointCount++] = &inTriangle.p[2];
+
+		// Classify triangle points and break the input triangle into 
+		// smaller output triangles if necessary, with 4 possible outcomes
+		if (insidePointCount == 0)
+		{
+			// All points outside the plane, 
+			// The whole triangle will be clipped
+			return 0;
+		}
+
+		if (insidePointCount == 3)
+		{
+			// All points are inside the plane,
+			// The whole triangle is passed through
+			outTriangle1 = inTriangle;
+
+			return 1; // Return the original triangle, so 1
+		}
+
+		if (insidePointCount == 1 && outsidePointCount == 2)
+		{
+			// Clip the triangle, two points are outside
+			// This means the triangle will be turned into a smaller triangle
+
+			// Copy appearance
+			outTriangle1.color = inTriangle.color;
+			outTriangle1.symbol = inTriangle.symbol;
+
+			// Keep the point that is inside
+			outTriangle1.p[0] = *insidePoints[0];
+
+			// Two new points are at points where the triangle intersects with the plane
+			outTriangle1.p[1] = VectorIntersectPlane(planePoint, planeNormal, *insidePoints[0], *outsidePoints[0]);
+			outTriangle1.p[2] = VectorIntersectPlane(planePoint, planeNormal, *insidePoints[0], *outsidePoints[1]);
+
+			return 1; // Return the new triangle that was formed
+		}
+
+		if (insidePointCount == 2 && outsidePointCount == 1)
+		{
+			// Clip the triangle, one point is outside
+			// This means the triangle will be turned into a quad, using two smaller triangles
+
+			// Copy appearance
+			outTriangle1.color = inTriangle.color;
+			outTriangle1.symbol = inTriangle.symbol;
+
+			outTriangle2.color = inTriangle.color;
+			outTriangle2.symbol = inTriangle.symbol;
+
+			// Set the points using the inside points, and the intersecting new points
+
+			// The first has the two inside points, and new intersecting point
+			outTriangle1.p[0] = *insidePoints[0];
+			outTriangle1.p[1] = *insidePoints[1];
+			outTriangle1.p[2] = VectorIntersectPlane(planePoint, planeNormal, *insidePoints[0], *outsidePoints[0]);
+
+			// The second has one of the inside points, an intersecting point, and the new point created for outTriangle1
+			outTriangle2.p[0] = *insidePoints[1];
+			outTriangle2.p[1] = outTriangle1.p[2];
+			outTriangle2.p[2] = VectorIntersectPlane(planePoint, planeNormal, *insidePoints[1], *outsidePoints[0]);
+
+			return 2; // Return the new triangle that was formed
+		}
 	}
 
 	// Create an identity matrix (Main diagonal ones, zeros elsewhere)

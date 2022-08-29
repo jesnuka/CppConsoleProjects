@@ -39,9 +39,9 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 
 	// Camera movement
 	if (keys[VK_UP].isHeld)
-		camera.y -= 8.0f * elapsedTime;
-	if (keys[VK_DOWN].isHeld)
 		camera.y += 8.0f * elapsedTime;
+	if (keys[VK_DOWN].isHeld)
+		camera.y -= 8.0f * elapsedTime;
 	if (keys[VK_LEFT].isHeld)
 		camera.x -= 8.0f * elapsedTime;
 	if (keys[VK_RIGHT].isHeld)
@@ -51,7 +51,7 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 	vec3d forwardTemp = VectorMultiply(lookDirection, 8.0f * elapsedTime);
 
 	// Move Camera forward and backward
-	if (keys[L'W'].isHeld)
+	if (keys[L'W'].isHeld) 
 		camera = VectorAdd(camera, forwardTemp);
 	if (keys[L'S'].isHeld)
 		camera = VectorSubtract(camera, forwardTemp);
@@ -161,40 +161,53 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 			triViewed.p[1] = VectorMultiplyMatrix(triTransformed.p[1], matrixView);
 			triViewed.p[2] = VectorMultiplyMatrix(triTransformed.p[2], matrixView);
 
-			// Project from 3D to 2D 
-			triProjected.p[0] = VectorMultiplyMatrix(triViewed.p[0], matProjection);
-			triProjected.p[1] = VectorMultiplyMatrix(triViewed.p[1], matProjection);
-			triProjected.p[2] = VectorMultiplyMatrix(triViewed.p[2], matProjection);
-			// Remember to copy the color and symbol information as well
-			triProjected.color = triTransformed.color;
-			triProjected.symbol = triTransformed.symbol;
+			// Clip Viewed Triangle against the near plane
+			int clippedTriangles = 0;
+			triangle clipped[2];
+			clippedTriangles = TriangleClipAgainstPlane({0.0f, 0.0f, 0.1f}, {0.0f, 0.0f, 1.0f}, triViewed, clipped[0], clipped[1]);
 
-			// Normalize the coordinates
-			triProjected.p[0] = VectorDivide(triProjected.p[0], triProjected.p[0].w);
-			triProjected.p[1] = VectorDivide(triProjected.p[1], triProjected.p[1].w);
-			triProjected.p[2] = VectorDivide(triProjected.p[2], triProjected.p[2].w);
+			for (int n = 0; n < clippedTriangles; n++)
+			{
+
+				// Project from 3D to 2D 
+				triProjected.p[0] = VectorMultiplyMatrix(clipped[n].p[0], matProjection);
+				triProjected.p[1] = VectorMultiplyMatrix(clipped[n].p[1], matProjection);
+				triProjected.p[2] = VectorMultiplyMatrix(clipped[n].p[2], matProjection);
+				// Remember to copy the color and symbol information as well
+				triProjected.color = triTransformed.color;
+				triProjected.symbol = triTransformed.symbol;
+
+				// Normalize the coordinates
+				triProjected.p[0] = VectorDivide(triProjected.p[0], triProjected.p[0].w);
+				triProjected.p[1] = VectorDivide(triProjected.p[1], triProjected.p[1].w);
+				triProjected.p[2] = VectorDivide(triProjected.p[2], triProjected.p[2].w);
+
+				triProjected.p[0].y *= -1.0f;
+				triProjected.p[1].y *= -1.0f;
+				triProjected.p[2].y *= -1.0f;
+
 		
-			// Offset the vertices to visible normalized space
-			vec3d offsetView = { 1.0f, 1.0f, 0.0f};
+				// Offset the vertices to visible normalized space
+				vec3d offsetView = { 1.0f, 1.0f, 0.0f};
 
-			triProjected.p[0] = VectorAdd(triProjected.p[0], offsetView);
-			triProjected.p[1] = VectorAdd(triProjected.p[1], offsetView);
-			triProjected.p[2] = VectorAdd(triProjected.p[2], offsetView);
+				triProjected.p[0] = VectorAdd(triProjected.p[0], offsetView);
+				triProjected.p[1] = VectorAdd(triProjected.p[1], offsetView);
+				triProjected.p[2] = VectorAdd(triProjected.p[2], offsetView);
 
-			// Divide by 2, scale to the correct axis size
-			triProjected.p[0].x *= 0.5f * (float)screenWidth;
-			triProjected.p[1].x *= 0.5f * (float)screenWidth;
-			triProjected.p[2].x *= 0.5f * (float)screenWidth;
+				// Divide by 2, scale to the correct axis size
+				triProjected.p[0].x *= 0.5f * (float)screenWidth;
+				triProjected.p[1].x *= 0.5f * (float)screenWidth;
+				triProjected.p[2].x *= 0.5f * (float)screenWidth;
 			   
-			triProjected.p[0].y *= 0.5f * (float)screenHeight;
-			triProjected.p[1].y *= 0.5f * (float)screenHeight;
-			triProjected.p[2].y *= 0.5f * (float)screenHeight;
+				triProjected.p[0].y *= 0.5f * (float)screenHeight;
+				triProjected.p[1].y *= 0.5f * (float)screenHeight;
+				triProjected.p[2].y *= 0.5f * (float)screenHeight;
 
-			// Store the triangle for sorting, to determine if it will be drawn or not
-			trianglesToDraw.push_back(triProjected);
-
+				// Store the triangle for sorting, to determine if it will be drawn or not
+				trianglesToDraw.push_back(triProjected);
 			}
 		}
+	}
 
 		// Sort triangles from back to front, to determine which triangles to draw
 		sort(trianglesToDraw.begin(), trianglesToDraw.end(), [](triangle& t1, triangle& t2)
@@ -220,6 +233,17 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 					tri.p[1].x, tri.p[1].y,
 					tri.p[2].x, tri.p[2].y,
 					tri.symbol, tri.color);
+				break;
+
+			case 2: // Filled with wireframe
+				FillTriangle(tri.p[0].x, tri.p[0].y,
+					tri.p[1].x, tri.p[1].y,
+					tri.p[2].x, tri.p[2].y,
+					tri.symbol, tri.color);
+
+				DrawTriangle(tri.p[0].x, tri.p[0].y,
+					tri.p[1].x, tri.p[1].y,
+					tri.p[2].x, tri.p[2].y);
 				break;
 			default: // Wireframe by default
 				DrawTriangle(tri.p[0].x, tri.p[0].y,
