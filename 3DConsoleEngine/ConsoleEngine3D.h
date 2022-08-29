@@ -21,6 +21,12 @@
 #include <strstream>
 #include <algorithm>
 
+struct vec2d
+{
+	float u = 0.0f;
+	float v = 0.0f;
+};
+
 struct vec3d
 {
 	float x = 0.0f;
@@ -31,7 +37,10 @@ struct vec3d
 
 struct triangle
 {
+	// Points
 	vec3d p[3];
+	// Texture coordinates
+	vec2d t[3];
 
 	wchar_t symbol;
 	short color;
@@ -109,7 +118,7 @@ public:
 	}
 
 	// 0 == Wireframe, 1 == Filled , 2 == Filled with wireframe
-	int drawMode = 1;
+	//int drawMode = 0;
 
 private:
 	mesh meshCube;
@@ -204,13 +213,14 @@ private:
 	}
 
 	// Return the point where line intersects with the plane, if it does
-	vec3d VectorIntersectPlane(vec3d &planePoint, vec3d &planeNormal, vec3d &lineStart, vec3d &lineEnd)
+	vec3d VectorIntersectPlane(vec3d &planePoint, vec3d &planeNormal, vec3d &lineStart, vec3d &lineEnd, float &t)
 	{
 		planeNormal = VectorNormalize(planeNormal);
 		float planeD = -VectorDotProduct(planeNormal, planePoint);
 		float ad = VectorDotProduct(lineStart, planeNormal);
 		float bd = VectorDotProduct(lineEnd, planeNormal);
-		float t = (-planeD - ad) / (bd - ad);
+		// The distance along the line between the two points where the intersection happened
+		t = (-planeD - ad) / (bd - ad);
 
 		vec3d lineStartToEnd = VectorSubtract(lineEnd, lineStart);
 		vec3d lineToIntersect = VectorMultiply(lineStartToEnd, t);
@@ -239,26 +249,50 @@ private:
 		int insidePointCount = 0;
 		int outsidePointCount = 0;
 
+		// Also track inside and outside points for Texture Coordinates
+		vec2d* insideTexPoints[3];
+		vec2d* outsideTexPoints[3];
+		int insideTexPointCount = 0;
+		int outsideTexPointCount = 0;
+
 		// Signed distance of each point in triangle to plane
 		float d0 = dist(inTriangle.p[0]);
 		float d1 = dist(inTriangle.p[1]);
 		float d2 = dist(inTriangle.p[2]);
 
 		// Determine, based on the sign, if the points are inside or outside
-		if (d0 >= 0) 
+		if (d0 >= 0)
+		{
 			insidePoints[insidePointCount++] = &inTriangle.p[0];
+			insideTexPoints[insideTexPointCount++] = &inTriangle.t[0];
+		}
 		else
+		{
 			outsidePoints[outsidePointCount++] = &inTriangle.p[0];
+			outsideTexPoints[outsideTexPointCount++] = &inTriangle.t[0];
+		}
 
 		if (d1 >= 0)
+		{
 			insidePoints[insidePointCount++] = &inTriangle.p[1];
+			insideTexPoints[insideTexPointCount++] = &inTriangle.t[1];
+		}
 		else
+		{
 			outsidePoints[outsidePointCount++] = &inTriangle.p[1];
+			outsideTexPoints[outsideTexPointCount++] = &inTriangle.t[1];
+		}
 
 		if (d2 >= 0)
+		{
 			insidePoints[insidePointCount++] = &inTriangle.p[2];
+			insideTexPoints[insideTexPointCount++] = &inTriangle.t[2];
+		}
 		else
+		{
 			outsidePoints[outsidePointCount++] = &inTriangle.p[2];
+			outsideTexPoints[outsideTexPointCount++] = &inTriangle.t[2];
+		}
 
 		// Classify triangle points and break the input triangle into 
 		// smaller output triangles if necessary, with 4 possible outcomes
@@ -289,10 +323,18 @@ private:
 
 			// Keep the point that is inside
 			outTriangle1.p[0] = *insidePoints[0];
+			outTriangle1.t[0] = *insideTexPoints[0];
 
 			// Two new points are at points where the triangle intersects with the plane
-			outTriangle1.p[1] = VectorIntersectPlane(planePoint, planeNormal, *insidePoints[0], *outsidePoints[0]);
-			outTriangle1.p[2] = VectorIntersectPlane(planePoint, planeNormal, *insidePoints[0], *outsidePoints[1]);
+			float t;
+			outTriangle1.p[1] = VectorIntersectPlane(planePoint, planeNormal, *insidePoints[0], *outsidePoints[0], t);
+			// Calculate new texture coordinates using the two points
+			outTriangle1.t[1].u = t * (outsideTexPoints[0]->u - insideTexPoints[0]->u) + insideTexPoints[0]->u;
+			outTriangle1.t[1].v = t * (outsideTexPoints[0]->v - insideTexPoints[0]->v) + insideTexPoints[0]->v;
+
+			outTriangle1.p[2] = VectorIntersectPlane(planePoint, planeNormal, *insidePoints[0], *outsidePoints[1], t);
+			outTriangle1.t[2].u = t * (outsideTexPoints[1]->u - insideTexPoints[0]->u) + insideTexPoints[0]->u;
+			outTriangle1.t[2].v = t * (outsideTexPoints[1]->v - insideTexPoints[0]->v) + insideTexPoints[0]->v;
 
 			return 1; // Return the new triangle that was formed
 		}
@@ -310,16 +352,26 @@ private:
 			outTriangle2.symbol = inTriangle.symbol;
 
 			// Set the points using the inside points, and the intersecting new points
-
+			float t;
 			// The first has the two inside points, and new intersecting point
 			outTriangle1.p[0] = *insidePoints[0];
 			outTriangle1.p[1] = *insidePoints[1];
-			outTriangle1.p[2] = VectorIntersectPlane(planePoint, planeNormal, *insidePoints[0], *outsidePoints[0]);
+			outTriangle1.t[0] = *insideTexPoints[0];
+			outTriangle1.t[1] = *insideTexPoints[1];
+
+			outTriangle1.p[2] = VectorIntersectPlane(planePoint, planeNormal, *insidePoints[0], *outsidePoints[0], t);
+			outTriangle1.t[2].u = t * (outsideTexPoints[0]->u - insideTexPoints[0]->u) + insideTexPoints[0]->u;
+			outTriangle1.t[2].v = t * (outsideTexPoints[0]->v - insideTexPoints[0]->v) + insideTexPoints[0]->v;
 
 			// The second has one of the inside points, an intersecting point, and the new point created for outTriangle1
 			outTriangle2.p[0] = *insidePoints[1];
 			outTriangle2.p[1] = outTriangle1.p[2];
-			outTriangle2.p[2] = VectorIntersectPlane(planePoint, planeNormal, *insidePoints[1], *outsidePoints[0]);
+			outTriangle2.t[0] = *insideTexPoints[0];
+			outTriangle2.t[1] = *insideTexPoints[1];
+
+			outTriangle2.p[2] = VectorIntersectPlane(planePoint, planeNormal, *insidePoints[1], *outsidePoints[0], t);
+			outTriangle2.t[2].u = t * (outsideTexPoints[0]->u - insideTexPoints[0]->u) + insideTexPoints[0]->u;
+			outTriangle2.t[2].v = t * (outsideTexPoints[0]->v - insideTexPoints[0]->v) + insideTexPoints[0]->v;
 
 			return 2; // Return the new triangle that was formed
 		}

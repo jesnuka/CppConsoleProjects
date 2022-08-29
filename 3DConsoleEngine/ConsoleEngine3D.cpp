@@ -20,12 +20,39 @@
 bool ConsoleEngine3D::OnUserCreate()
 {
 
+	meshCube.tris = {
 
+		// SOUTH
+		{ 0.0f, 0.0f, 0.0f,1.0f,    0.0f, 1.0f, 0.0f,1.0f,    1.0f, 1.0f, 0.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+		{ 0.0f, 0.0f, 0.0f,1.0f,    1.0f, 1.0f, 0.0f,1.0f,    1.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+						   												 		  
+		// EAST                                                     	 		  
+		{ 1.0f, 0.0f, 0.0f,1.0f,    1.0f, 1.0f, 0.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+		{ 1.0f, 0.0f, 0.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0f,    1.0f, 0.0f, 1.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+						   														
+		// NORTH                                   								
+		{ 1.0f, 0.0f, 1.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0f,    0.0f, 1.0f, 1.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+		{ 1.0f, 0.0f, 1.0f,1.0f,    0.0f, 1.0f, 1.0f,1.0f,    0.0f, 0.0f, 1.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+						   														
+		// WEST                                    								 
+		{ 0.0f, 0.0f, 1.0f,1.0f,    0.0f, 1.0f, 1.0f,1.0f,    0.0f, 1.0f, 0.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+		{ 0.0f, 0.0f, 1.0f,1.0f,    0.0f, 1.0f, 0.0f,1.0f,    0.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+																				   
+		// TOP            														 
+		{ 0.0f, 1.0f, 0.0f,1.0f,    0.0f, 1.0f, 1.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+		{ 0.0f, 1.0f, 0.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0,    1.0f, 1.0f, 0.0f,1.0f ,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+						 														 
+		// BOTTOM       														 
+		{ 1.0f, 0.0f, 1.0f,1.0f,    0.0f, 0.0f, 1.0f,1.0f,    0.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+		{ 1.0f, 0.0f, 1.0f,1.0f,    0.0f, 0.0f, 0.0f,1.0f,    1.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+
+	};
 
 //	if(!meshCurrent.LoadObjectFile("teapot.obj"))
 		// File could not be loaded
 
-	meshCurrent.LoadObjectFile("teapot.obj");
+	//meshCurrent.LoadObjectFile("teapot.obj");
+	meshCurrent = meshCube;
 
 	// Create the Projection Matrix using the utility function
 	matProjection = MatrixMakeProjection(90.0f, (float)screenHeight / (float)screenWidth, 0.1f, 1000.0f);
@@ -113,9 +140,14 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 		triangle triTransformed;
 		triangle triViewed;
 
+		// Transform the object using the World Matrix
 		triTransformed.p[0] = VectorMultiplyMatrix(tri.p[0], matWorld);
 		triTransformed.p[1] = VectorMultiplyMatrix(tri.p[1], matWorld);
 		triTransformed.p[2] = VectorMultiplyMatrix(tri.p[2], matWorld);
+		// Also copy the texture coordinate information over to the new triangles
+		triTransformed.t[0] = tri.t[0];
+		triTransformed.t[1] = tri.t[1];
+		triTransformed.t[2] = tri.t[2];
 
 		vec3d normal;
 		vec3d line1;
@@ -160,6 +192,13 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 			triViewed.p[0] = VectorMultiplyMatrix(triTransformed.p[0], matrixView);
 			triViewed.p[1] = VectorMultiplyMatrix(triTransformed.p[1], matrixView);
 			triViewed.p[2] = VectorMultiplyMatrix(triTransformed.p[2], matrixView);
+			// Remember to copy the color and symbol information as well
+			triViewed.color = triTransformed.color;
+			triViewed.symbol = triTransformed.symbol;
+			// Also copy the texture coordinate information over to the new triangles
+			triViewed.t[0] = triTransformed.t[0];
+			triViewed.t[1] = triTransformed.t[1];
+			triViewed.t[2] = triTransformed.t[2];
 
 			// Clip Viewed Triangle against the near plane
 			int clippedTriangles = 0;
@@ -173,9 +212,12 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 				triProjected.p[0] = VectorMultiplyMatrix(clipped[n].p[0], matProjection);
 				triProjected.p[1] = VectorMultiplyMatrix(clipped[n].p[1], matProjection);
 				triProjected.p[2] = VectorMultiplyMatrix(clipped[n].p[2], matProjection);
-				// Remember to copy the color and symbol information as well
-				triProjected.color = triTransformed.color;
-				triProjected.symbol = triTransformed.symbol;
+				triViewed.color = clipped[n].color;
+				triViewed.symbol = clipped[n].symbol;
+				// Also copy the texture coordinate information over to the new triangles
+				triProjected.t[0] = clipped[n].t[0];
+				triProjected.t[1] = clipped[n].t[1];
+				triProjected.t[2] = clipped[n].t[2];
 
 				// Normalize the coordinates
 				triProjected.p[0] = VectorDivide(triProjected.p[0], triProjected.p[0].w);
@@ -264,12 +306,15 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 			// Finally, the triangles can be drawn
 			for (auto& tri : listTriangles)
 			{
-				switch (drawMode)
+				DrawTriangle(tri.p[0].x, tri.p[0].y,
+					tri.p[1].x, tri.p[1].y,
+					tri.p[2].x, tri.p[2].y, PIXEL_FULL, FG_WHITE);
+			/*	switch (drawMode)
 				{
 				case 0: // Wireframe
 					DrawTriangle(tri.p[0].x, tri.p[0].y,
 						tri.p[1].x, tri.p[1].y,
-						tri.p[2].x, tri.p[2].y);
+						tri.p[2].x, tri.p[2].y, PIXEL_FULL, FG_WHITE);
 					break;
 				case 1: // Filled
 					FillTriangle(tri.p[0].x, tri.p[0].y,
@@ -293,7 +338,7 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 						tri.p[1].x, tri.p[1].y,
 						tri.p[2].x, tri.p[2].y);
 					break;
-				}
+				}*/
 			}
 
 		}
