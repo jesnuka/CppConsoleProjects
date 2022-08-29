@@ -218,40 +218,85 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 				return z1 > z2;
 			});
 
-		// Draw triangles to be drawn
-		for(auto &tri : trianglesToDraw)
+		// Rasterize triangles
+		for (auto& tri : trianglesToDraw)
 		{
-			switch (drawMode)
+			// First clip triangles against all four edges of the screen
+			// 
+			triangle clipped[2];
+			list<triangle> listTriangles;
+			listTriangles.push_back(tri);
+			int newTriangles = 1;
+
+			// Test against all 4 planes
+			// Once triangles are tested, they are guaranteed to lie inside of the plane
+			for (int p = 0; p < 4; p++)
 			{
-			case 0: // Wireframe
-				DrawTriangle(tri.p[0].x, tri.p[0].y,
-					tri.p[1].x, tri.p[1].y,
-					tri.p[2].x, tri.p[2].y);
-				break;
-			case 1: // Filled
-				FillTriangle(tri.p[0].x, tri.p[0].y,
-					tri.p[1].x, tri.p[1].y,
-					tri.p[2].x, tri.p[2].y,
-					tri.symbol, tri.color);
-				break;
+				int trisToAdd = 0;
+				while (newTriangles > 0)
+				{
+					triangle triTest = listTriangles.front();
+					listTriangles.pop_front();
+					newTriangles--;
 
-			case 2: // Filled with wireframe
-				FillTriangle(tri.p[0].x, tri.p[0].y,
-					tri.p[1].x, tri.p[1].y,
-					tri.p[2].x, tri.p[2].y,
-					tri.symbol, tri.color);
+					switch (p)
+					{
+					case 0: // Top of the screen
+						trisToAdd = TriangleClipAgainstPlane({ 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, triTest, clipped[0], clipped[1]); 
+						break;
+					case 1: // Bottom of the screen
+						trisToAdd = TriangleClipAgainstPlane({ 0.0f, (float)screenHeight - 1, 0.0f }, { 0.0f, -1.0f, 0.0f }, triTest, clipped[0], clipped[1]); 
+						break;
+					case 2: // Screen left side
+						trisToAdd = TriangleClipAgainstPlane({0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, triTest, clipped[0], clipped[1]);
+						break;
+					case 3: // Screen right side
+						trisToAdd = TriangleClipAgainstPlane({(float)screenWidth - 1, 0.0f, 0.0f}, {-1.0f, 0.0f, 0.0f}, triTest, clipped[0], clipped[1]);
+						break;
+					}
 
-				DrawTriangle(tri.p[0].x, tri.p[0].y,
-					tri.p[1].x, tri.p[1].y,
-					tri.p[2].x, tri.p[2].y);
-				break;
-			default: // Wireframe by default
-				DrawTriangle(tri.p[0].x, tri.p[0].y,
-					tri.p[1].x, tri.p[1].y,
-					tri.p[2].x, tri.p[2].y);
-				break;
+					for (int w = 0; w < trisToAdd; w++)
+						listTriangles.push_back(clipped[w]);
+				}
+				newTriangles = listTriangles.size();
+			}
+
+			// Finally, the triangles can be drawn
+			for (auto& tri : listTriangles)
+			{
+				switch (drawMode)
+				{
+				case 0: // Wireframe
+					DrawTriangle(tri.p[0].x, tri.p[0].y,
+						tri.p[1].x, tri.p[1].y,
+						tri.p[2].x, tri.p[2].y);
+					break;
+				case 1: // Filled
+					FillTriangle(tri.p[0].x, tri.p[0].y,
+						tri.p[1].x, tri.p[1].y,
+						tri.p[2].x, tri.p[2].y,
+						tri.symbol, tri.color);
+					break;
+
+				case 2: // Filled with wireframe
+					FillTriangle(tri.p[0].x, tri.p[0].y,
+						tri.p[1].x, tri.p[1].y,
+						tri.p[2].x, tri.p[2].y,
+						tri.symbol, tri.color);
+
+					DrawTriangle(tri.p[0].x, tri.p[0].y,
+						tri.p[1].x, tri.p[1].y,
+						tri.p[2].x, tri.p[2].y);
+					break;
+				default: // Wireframe by default
+					DrawTriangle(tri.p[0].x, tri.p[0].y,
+						tri.p[1].x, tri.p[1].y,
+						tri.p[2].x, tri.p[2].y);
+					break;
+				}
+			}
+
 		}
-	}
 
 	return true;
 }
