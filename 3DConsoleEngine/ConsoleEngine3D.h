@@ -109,7 +109,7 @@ public:
 	}
 
 	// 0 == Wireframe, 1 == Filled , 2 == Filled with wireframe
-	int drawMode = 2;
+	int drawMode = 1;
 
 private:
 	mesh meshCube;
