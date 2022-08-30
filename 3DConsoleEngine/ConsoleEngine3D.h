@@ -61,7 +61,7 @@ struct mesh
 {
 	vector<triangle> tris;
 
-	bool LoadObjectFile(string filename)
+	bool LoadObjectFile(string filename, bool hasTexture = false)
 	{
 		// Open filename, if it exists
 		ifstream f(filename);
@@ -70,6 +70,7 @@ struct mesh
 
 		// Temporal vertice pool
 		vector<vec3d> vertices;
+		vector<vec2d> textures;
 
 		while (!f.eof())
 		{
@@ -85,19 +86,65 @@ struct mesh
 
 			if (line[0] == 'v')
 			{
-				vec3d v;
-				// Read vertice values from stream 
-				s >> j >> v.x >> v.y >> v.z;
-				vertices.push_back(v);
+				// Line is either Vertex or Texture coordinate
+				if (line[1] == 't')
+				{
+					vec2d v;
+					// Read vertice values from stream 
+					s >> j >> j >> v.u >> v.v;
+					textures.push_back(v);
+				}
+				else
+				{
+					vec3d v;
+					// Read vertice values from stream 
+					s >> j >> v.x >> v.y >> v.z;
+					vertices.push_back(v);
+				}
 			}
-			if (line[0] == 'f')
+			if (!hasTexture)
 			{
-				// Create faces and push them as triangles to the tris vector
-				// Vertices are fetched from the temporary vertice pool, using the index given in the object file
-				// Indexing in the obj file starts from 1, so subtract the index by 1
-				int f[3];
-				s >> j >> f[0] >> f[1] >> f[2];
-				tris.push_back({vertices[f[0] - 1], vertices[f[1] - 1], vertices[f[2] - 1] });
+				if (line[0] == 'f')
+				{
+					// Create faces and push them as triangles to the tris vector
+					// Vertices are fetched from the temporary vertice pool, using the index given in the object file
+					// Indexing in the obj file starts from 1, so subtract the index by 1
+					int f[3];
+					s >> j >> f[0] >> f[1] >> f[2];
+					tris.push_back({ vertices[f[0] - 1], vertices[f[1] - 1], vertices[f[2] - 1] });
+				}
+			}
+			else // Object has Texture
+			{
+				// Texture and Vertex data is stored as 3 pairs, divided by / symbol.
+				// Get this data from the lines accordingly
+				if (line[0] == 'f')
+				{
+					s >> j;
+					string tokens[6];
+					int tokenCount = -1;
+
+					while (!s.eof())
+					{
+						char c = s.get(); 
+						if (c == ' ' || c == '/')
+							tokenCount++;
+						else
+							tokens[tokenCount].append(1, c);
+					}
+
+					tokens[tokenCount].pop_back();
+
+					tris.push_back(
+						{
+							vertices[stoi(tokens[0]) - 1],
+							vertices[stoi(tokens[2]) - 1],
+							vertices[stoi(tokens[4]) - 1],
+							textures[stoi(tokens[1]) - 1],
+							textures[stoi(tokens[3]) - 1],
+							textures[stoi(tokens[5]) - 1],
+						});
+				}
 			}
 		}
 
