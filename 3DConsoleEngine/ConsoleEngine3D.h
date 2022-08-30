@@ -180,6 +180,8 @@ private:
 	vec3d lookDirection;
 	float yaw;
 
+	float* depthBuffer = nullptr;
+
 	ConsoleSprite* spriteTexture1;
 
 	// Input XY-coordinate pairs from the Screen Space, as well as UV-Coordinate pairs, with also the sprite as the texture
@@ -310,10 +312,16 @@ private:
 					texV = (1.0f - t) * texStartV + t * texEndV;
 					texW = (1.0f - t) * texStartW + t * texEndW;
 
-					// Draw a single pixel
-					Draw(j, i, tex->SampleSymbol(texU / texW, texV / texW), tex->SampleColour(texU / texW, texV / texW));
-					// Increase t every pixel
-					t += tStep;
+					// Check from Depth Buffer if we have already drawn something in front of this pixel
+					if (texW > depthBuffer[i * screenWidth + j])
+					{
+						// Draw a single pixel
+						Draw(j, i, tex->SampleSymbol(texU / texW, texV / texW), tex->SampleColour(texU / texW, texV / texW));
+						// Add new depth value to depthBuffer
+						depthBuffer[i * screenWidth + j] = texW;
+						// Increase t every pixel
+						t += tStep;
+					}
 				}
 			}
 		}
@@ -381,11 +389,17 @@ private:
 				texU = (1.0f - t) * texStartU + t * texEndU;
 				texV = (1.0f - t) * texStartV + t * texEndV;
 				texW = (1.0f - t) * texStartW + t * texEndW;
-
-				// Draw a single pixel
-				Draw(j, i, tex->SampleSymbol(texU / texW, texV / texW), tex->SampleColour(texU / texW, texV / texW));
-				// Increase t every pixel
-				t += tStep;
+				// Check from Depth Buffer if we have already drawn something in front of this pixel
+				if (texW > depthBuffer[i * screenWidth + j])
+				{
+					// Draw a single pixel
+					Draw(j, i, tex->SampleSymbol(texU / texW, texV / texW), tex->SampleColour(texU / texW, texV / texW));
+					// Add new depth value to depthBuffer
+					depthBuffer[i * screenWidth + j] = texW;
+					// Increase t every pixel
+					t += tStep;
+					
+				}
 			}
 		}
 

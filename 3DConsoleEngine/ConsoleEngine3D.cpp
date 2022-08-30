@@ -20,6 +20,8 @@
 bool ConsoleEngine3D::OnUserCreate()
 {
 
+	depthBuffer = new float[screenWidth * screenHeight];
+
 	meshCube.tris = {
 
 		// SOUTH
@@ -91,9 +93,6 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 		yaw += 2.0f * elapsedTime;
 	if (keys[L'D'].isHeld)
 		yaw -= 2.0f * elapsedTime;
-
-	// Empty the screen
-	Fill(0, 0, screenWidth, screenHeight, L' ', 0);
 
 	// Rotate cube over time
 	mat4x4 matRotationZ;
@@ -268,14 +267,22 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 		}
 	}
 
+		// Sorting is not needed if no transparency is used
 		// Sort triangles from back to front, to determine which triangles to draw
-		sort(trianglesToDraw.begin(), trianglesToDraw.end(), [](triangle& t1, triangle& t2)
+	/*	sort(trianglesToDraw.begin(), trianglesToDraw.end(), [](triangle& t1, triangle& t2)
 			{
 				// Get midpoint Z value of both triangles, to determine approximately which triangle is closer
 				float z1 = (t1.p[0].z + t1.p[1].z + t1.p[2].z) / 3.0f;
 				float z2 = (t2.p[0].z + t2.p[1].z + t2.p[2].z) / 3.0f;
 				return z1 > z2;
-			});
+			});*/
+
+		// Empty the screen
+		Fill(0, 0, screenWidth, screenHeight, L' ', 0);
+
+		// Clear the Depth Buffer
+		for (int i = 0; i < screenWidth * screenHeight; i++)
+			depthBuffer[i] = 0.0f;
 
 		// Rasterize triangles
 		for (auto& tri : trianglesToDraw)
