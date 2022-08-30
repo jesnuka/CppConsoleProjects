@@ -165,11 +165,12 @@ public:
 		appName = L"Console Engine 3D";
 	}
 
-	// 0 == Wireframe, 1 == Filled , 2 == Filled with wireframe
-	//int drawMode = 0;
+	// 0 = Rasterized Filled Teapot, 1 = Wireframe Textured Cube
+	int drawMode = 0;
 
 private:
 	mesh meshCube;
+	mesh meshTeapot;
 	mesh meshCurrent;
 	float rotationTheta = 0.0f;
 	mat4x4 matProjection;

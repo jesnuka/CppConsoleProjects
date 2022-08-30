@@ -63,7 +63,7 @@ protected:
 	{
 		// Create sprite
 		sprite = new ConsoleSprite(8, 8);
-		spriteFile = L"tomb2.spr";
+		spriteFile = L"texture.spr";
 
 		return true;
 	}

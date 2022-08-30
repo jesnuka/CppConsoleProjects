@@ -51,13 +51,13 @@ bool ConsoleEngine3D::OnUserCreate()
 	};
 
 	// Pre-load the sprite
-	spriteTexture1 = new ConsoleSprite(L"wormStand.spr");
 
 //	if(!meshCurrent.LoadObjectFile("teapot.obj"))
 		// File could not be loaded
 
-	//meshCurrent.LoadObjectFile("teapot.obj");
-	meshCurrent = meshCube;
+	meshTeapot.LoadObjectFile("teapot.obj");
+	spriteTexture1 = new ConsoleSprite(L"texture.spr");
+	//meshCurrent = meshCube;
 
 	// Create the Projection Matrix using the utility function
 	matProjection = MatrixMakeProjection(90.0f, (float)screenHeight / (float)screenWidth, 0.1f, 1000.0f);
@@ -68,6 +68,12 @@ bool ConsoleEngine3D::OnUserCreate()
 bool ConsoleEngine3D::OnUserUpdate(float elapsedTime) 
 {
 	// User Input
+
+	// Change Draw Mode
+	if (keys[L'0'].isReleased)
+		drawMode = 0;
+	if (keys[L'1'].isReleased)
+		drawMode = 1;
 
 	// Camera movement
 	if (keys[VK_UP].isHeld)
@@ -134,6 +140,10 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 	vector <triangle> trianglesToDraw;
 
 	// Draw the Triangles of meshes
+	if (drawMode == 0)
+		meshCurrent = meshTeapot;
+	if (drawMode == 1)
+		meshCurrent = meshCube;
 	for (auto tri : meshCurrent.tris)
 	{
 		
@@ -214,8 +224,9 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 				triProjected.p[0] = VectorMultiplyMatrix(clipped[n].p[0], matProjection);
 				triProjected.p[1] = VectorMultiplyMatrix(clipped[n].p[1], matProjection);
 				triProjected.p[2] = VectorMultiplyMatrix(clipped[n].p[2], matProjection);
-				triViewed.color = clipped[n].color;
-				triViewed.symbol = clipped[n].symbol;
+				// Remember to copy the color and symbol information as well
+				triProjected.color = triTransformed.color;
+				triProjected.symbol = triTransformed.symbol;
 				// Also copy the texture coordinate information over to the new triangles
 				triProjected.t[0] = clipped[n].t[0];
 				triProjected.t[1] = clipped[n].t[1];
@@ -267,15 +278,18 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 		}
 	}
 
-		// Sorting is not needed if no transparency is used
+		// Sorting is not needed if no transparency is used when textured, but needed for filled rasterized triangles
 		// Sort triangles from back to front, to determine which triangles to draw
-	/*	sort(trianglesToDraw.begin(), trianglesToDraw.end(), [](triangle& t1, triangle& t2)
+	if (drawMode == 0)
+	{
+		sort(trianglesToDraw.begin(), trianglesToDraw.end(), [](triangle& t1, triangle& t2)
 			{
 				// Get midpoint Z value of both triangles, to determine approximately which triangle is closer
 				float z1 = (t1.p[0].z + t1.p[1].z + t1.p[2].z) / 3.0f;
 				float z2 = (t2.p[0].z + t2.p[1].z + t2.p[2].z) / 3.0f;
 				return z1 > z2;
-			});*/
+			});
+	}
 
 		// Empty the screen
 		Fill(0, 0, screenWidth, screenHeight, L' ', 0);
@@ -330,44 +344,30 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 			// Finally, the triangles can be drawn
 			for (auto& tri : listTriangles)
 			{
-				TexturedTriangle(tri.p[0].x, tri.p[0].y, tri.t[0].u, tri.t[0].v, tri.t[0].w,
-							 	 tri.p[1].x, tri.p[1].y, tri.t[1].u, tri.t[1].v, tri.t[1].w,
-								 tri.p[2].x, tri.p[2].y, tri.t[2].u, tri.t[2].v, tri.t[2].w,
-									spriteTexture1);
-
-				DrawTriangle(tri.p[0].x, tri.p[0].y,
-					tri.p[1].x, tri.p[1].y,
-					tri.p[2].x, tri.p[2].y, PIXEL_FULL, FG_WHITE);
-			/*	switch (drawMode)
+				switch (drawMode)
 				{
-				case 0: // Wireframe
+				case 0: // Rasterized Filled Teapot
+					FillTriangle(tri.p[0].x, tri.p[0].y,
+						tri.p[1].x, tri.p[1].y,
+						tri.p[2].x, tri.p[2].y,
+						tri.symbol, tri.color);
+					break;
+				case 1: // Wireframe Textured Cube
+					TexturedTriangle(tri.p[0].x, tri.p[0].y, tri.t[0].u, tri.t[0].v, tri.t[0].w,
+						tri.p[1].x, tri.p[1].y, tri.t[1].u, tri.t[1].v, tri.t[1].w,
+						tri.p[2].x, tri.p[2].y, tri.t[2].u, tri.t[2].v, tri.t[2].w,
+						spriteTexture1);
+
 					DrawTriangle(tri.p[0].x, tri.p[0].y,
 						tri.p[1].x, tri.p[1].y,
 						tri.p[2].x, tri.p[2].y, PIXEL_FULL, FG_WHITE);
-					break;
-				case 1: // Filled
-					FillTriangle(tri.p[0].x, tri.p[0].y,
-						tri.p[1].x, tri.p[1].y,
-						tri.p[2].x, tri.p[2].y,
-						tri.symbol, tri.color);
-					break;
-
-				case 2: // Filled with wireframe
-					FillTriangle(tri.p[0].x, tri.p[0].y,
-						tri.p[1].x, tri.p[1].y,
-						tri.p[2].x, tri.p[2].y,
-						tri.symbol, tri.color);
-
-					DrawTriangle(tri.p[0].x, tri.p[0].y,
-						tri.p[1].x, tri.p[1].y,
-						tri.p[2].x, tri.p[2].y);
 					break;
 				default: // Wireframe by default
 					DrawTriangle(tri.p[0].x, tri.p[0].y,
 						tri.p[1].x, tri.p[1].y,
 						tri.p[2].x, tri.p[2].y);
 					break;
-				}*/
+				}
 			}
 
 		}
