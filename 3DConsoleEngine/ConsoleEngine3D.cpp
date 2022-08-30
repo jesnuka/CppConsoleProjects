@@ -24,29 +24,32 @@ bool ConsoleEngine3D::OnUserCreate()
 
 		// SOUTH
 		{ 0.0f, 0.0f, 0.0f,1.0f,    0.0f, 1.0f, 0.0f,1.0f,    1.0f, 1.0f, 0.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
-		{ 0.0f, 0.0f, 0.0f,1.0f,    1.0f, 1.0f, 0.0f,1.0f,    1.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+		{ 0.0f, 0.0f, 0.0f,1.0f,    1.0f, 1.0f, 0.0f,1.0f,    1.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f },
 						   												 		  
 		// EAST                                                     	 		  
 		{ 1.0f, 0.0f, 0.0f,1.0f,    1.0f, 1.0f, 0.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
-		{ 1.0f, 0.0f, 0.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0f,    1.0f, 0.0f, 1.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+		{ 1.0f, 0.0f, 0.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0f,    1.0f, 0.0f, 1.0f,1.0f,	0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f },
 						   														
 		// NORTH                                   								
 		{ 1.0f, 0.0f, 1.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0f,    0.0f, 1.0f, 1.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
-		{ 1.0f, 0.0f, 1.0f,1.0f,    0.0f, 1.0f, 1.0f,1.0f,    0.0f, 0.0f, 1.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+		{ 1.0f, 0.0f, 1.0f,1.0f,    0.0f, 1.0f, 1.0f,1.0f,    0.0f, 0.0f, 1.0f,1.0f,	0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f },
 						   														
 		// WEST                                    								 
 		{ 0.0f, 0.0f, 1.0f,1.0f,    0.0f, 1.0f, 1.0f,1.0f,    0.0f, 1.0f, 0.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
-		{ 0.0f, 0.0f, 1.0f,1.0f,    0.0f, 1.0f, 0.0f,1.0f,    0.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+		{ 0.0f, 0.0f, 1.0f,1.0f,    0.0f, 1.0f, 0.0f,1.0f,    0.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f },
 																				   
 		// TOP            														 
 		{ 0.0f, 1.0f, 0.0f,1.0f,    0.0f, 1.0f, 1.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
-		{ 0.0f, 1.0f, 0.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0,    1.0f, 1.0f, 0.0f,1.0f ,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+		{ 0.0f, 1.0f, 0.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0,    1.0f, 1.0f, 0.0f,1.0f ,	0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f },
 						 														 
 		// BOTTOM       														 
 		{ 1.0f, 0.0f, 1.0f,1.0f,    0.0f, 0.0f, 1.0f,1.0f,    0.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
-		{ 1.0f, 0.0f, 1.0f,1.0f,    0.0f, 0.0f, 0.0f,1.0f,    1.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
+		{ 1.0f, 0.0f, 1.0f,1.0f,    0.0f, 0.0f, 0.0f,1.0f,    1.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f },
 
 	};
+
+	// Pre-load the sprite
+	spriteTexture1 = new ConsoleSprite(L"wormStand.spr");
 
 //	if(!meshCurrent.LoadObjectFile("teapot.obj"))
 		// File could not be loaded
@@ -306,6 +309,11 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 			// Finally, the triangles can be drawn
 			for (auto& tri : listTriangles)
 			{
+				TexturedTriangle(tri.p[0].x, tri.p[0].y, tri.t[0].u, tri.t[0].v,
+							 	 tri.p[1].x, tri.p[1].y, tri.t[1].u, tri.t[1].v, 
+								 tri.p[2].x, tri.p[2].y, tri.t[2].u, tri.t[2].v, 
+									spriteTexture1);
+
 				DrawTriangle(tri.p[0].x, tri.p[0].y,
 					tri.p[1].x, tri.p[1].y,
 					tri.p[2].x, tri.p[2].y, PIXEL_FULL, FG_WHITE);

@@ -132,6 +132,189 @@ private:
 	vec3d lookDirection;
 	float yaw;
 
+	ConsoleSprite* spriteTexture1;
+
+	// Input XY-coordinate pairs from the Screen Space, as well as UV-Coordinate pairs, with also the sprite as the texture
+	void TexturedTriangle(int x1, int y1, float u1, float v1, 
+						  int x2, int y2, float u2, float v2, 
+						  int x3, int y3, float u3, float v3, 
+						  ConsoleSprite *tex)
+	{
+		// Sort the coordinates from low Y to high Y
+		if (y2 < y1)
+		{
+			swap(y1, y2);
+			swap(x1, x2);
+			swap(u1, u2);
+			swap(v1, v2);
+		}
+		if (y3 < y1)
+		{
+			swap(y1, y3);
+			swap(x1, x3);
+			swap(u1, u3);
+			swap(v1, v3);
+		}
+		if (y3 < y2)
+		{
+			swap(y2, y3);
+			swap(x2, x3);
+			swap(u2, u3);
+			swap(v2, v3);
+		}
+
+		int dy1 = y2 - y1;
+		int dx1 = x2 - x1;
+		float dv1 = v2 - v1;
+		float du1 = u2 - u1;
+
+
+		int dy2 = y3 - y1;
+		int dx2 = x3 - x1;
+		float dv2 = v3 - v1;
+		float du2 = u3 - u1;
+
+		float texU;
+		float texV;
+
+		float xStepValueA = 0;
+		float xStepValueB = 0;
+		float uStepValue1 = 0;
+		float uStepValue2 = 0;
+		float vStepValue1 = 0;
+		float vStepValue2 = 0;
+
+		// If the line between the two points on the triangle is horizontal, dx will be infinity, so test against that
+		if (dy1)
+			xStepValueA = dx1 / (float)abs(dy1);
+		if (dy2)
+			xStepValueB = dx2 / (float)abs(dy2);
+
+		if (dy1)
+			uStepValue1 = du1 / (float)abs(dy1);
+		if (dy1)
+			vStepValue1 = dv1 / (float)abs(dy1);
+		// Other side as well
+		if (dy2)
+			uStepValue2 = du2 / (float)abs(dy2);
+		if (dy2)
+			vStepValue2 = dv2 / (float)abs(dy2);
+
+		// Scanline filling
+
+		// If the line exists, it means we are drawing the top half of the triangle
+		if (dy1)
+		{
+			// Draw until we reach y2, as y2 is either the flat bottom or the middle of the triangle
+			for (int i = y1; i <= y2; i++)
+			{
+				// Get vertex position along the edge
+				int ax = x1 + (float)(i - y1) * xStepValueA;
+				int bx = x1 + (float)(i - y1) * xStepValueB;
+
+				// Following one line, get the starting value
+				float texStartU = u1 + (float)(i - y1) * uStepValue1;
+				float texStartV = v1 + (float)(i - y1) * vStepValue1;
+
+				// Following the other, get the ending value
+				float texEndU = u1 + (float)(i - y1) * uStepValue2;
+				float texEndV = v1 + (float)(i - y1) * vStepValue2;
+
+				// However, also make sure we are always drawing from a smaller x value before going to larger values
+				if (ax > bx)
+				{
+					swap(ax, bx);
+					swap(texStartU, texEndU);
+					swap(texStartV, texEndV);
+				}
+
+				texU = texStartU;
+				texV = texStartV;
+
+				// tStep is 1 divided by the number of scanline pixels on this line
+				float tStep = 1.0f / ((float)(bx - ax));
+				// t represents where we are at in the scanline
+				float t = 0.0f;
+
+				for (int j = ax; j < bx; j++)
+				{
+					// Linearly interpolate between the starting and ending point
+					texU = (1.0f - t) * texStartU + t * texEndU;
+					texV = (1.0f - t) * texStartV + t * texEndV;
+
+					// Draw a single pixel
+					Draw(j, i, tex->SampleSymbol(texU, texV), tex->SampleColour(texU, texV));
+					// Increase t every pixel
+					t += tStep;
+				}
+			}
+		}
+
+		// Update the gradients using the new point 3
+		dy1 = y3 - y2;
+		dx1 = x3 - x2;
+		dv1 = v3 - v2;
+		du1 = u3 - u2;
+
+		if (dy1)
+			xStepValueA = dx1 / (float)abs(dy1);
+		if (dy2)
+			xStepValueB = dx2 / (float)abs(dy2);
+
+		uStepValue1 = 0.0f;
+		vStepValue1 = 0.0f;
+
+		if (dy1)
+			uStepValue1 = du1 / (float)abs(dy1);
+		if (dy1)
+			vStepValue1 = dv1 / (float)abs(dy1);
+
+		// Draw the rest of the triangle
+		for (int i = y2; i <= y3; i++)
+		{
+			// Get vertex position along the edge
+			int ax = x2 + (float)(i - y2) * xStepValueA;
+			int bx = x1 + (float)(i - y1) * xStepValueB;
+
+			// Following one line, get the starting value
+			float texStartU = u2 + (float)(i - y2) * uStepValue1;
+			float texStartV = v2 + (float)(i - y2) * vStepValue1;
+
+			// Following the other, get the ending value
+			float texEndU = u1 + (float)(i - y1) * uStepValue2;
+			float texEndV = v1 + (float)(i - y1) * vStepValue2;
+
+			// However, also make sure we are always drawing from a smaller x value before going to larger values
+			if (ax > bx)
+			{
+				swap(ax, bx);
+				swap(texStartU, texEndU);
+				swap(texStartV, texEndV);
+			}
+
+			texU = texStartU;
+			texV = texStartV;
+
+			// tStep is 1 divided by the number of scanline pixels on this line
+			float tStep = 1.0f / ((float)(bx - ax));
+			// t represents where we are at in the scanline
+			float t = 0.0f;
+
+			for (int j = ax; j < bx; j++)
+			{
+				// Linearly interpolate between the starting and ending point
+				texU = (1.0f - t) * texStartU + t * texEndU;
+				texV = (1.0f - t) * texStartV + t * texEndV;
+
+				// Draw a single pixel
+				Draw(j, i, tex->SampleSymbol(texU, texV), tex->SampleColour(texU, texV));
+				// Increase t every pixel
+				t += tStep;
+			}
+		}
+
+	}
+
 	// Add two vectors together
 	vec3d VectorAdd(vec3d &v1, vec3d &v2)
 	{
