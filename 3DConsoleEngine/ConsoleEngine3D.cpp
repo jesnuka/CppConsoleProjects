@@ -23,28 +23,28 @@ bool ConsoleEngine3D::OnUserCreate()
 	meshCube.tris = {
 
 		// SOUTH
-		{ 0.0f, 0.0f, 0.0f,1.0f,    0.0f, 1.0f, 0.0f,1.0f,    1.0f, 1.0f, 0.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
-		{ 0.0f, 0.0f, 0.0f,1.0f,    1.0f, 1.0f, 0.0f,1.0f,    1.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f },
-						   												 		  
-		// EAST                                                     	 		  
-		{ 1.0f, 0.0f, 0.0f,1.0f,    1.0f, 1.0f, 0.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
-		{ 1.0f, 0.0f, 0.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0f,    1.0f, 0.0f, 1.0f,1.0f,	0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f },
-						   														
-		// NORTH                                   								
-		{ 1.0f, 0.0f, 1.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0f,    0.0f, 1.0f, 1.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
-		{ 1.0f, 0.0f, 1.0f,1.0f,    0.0f, 1.0f, 1.0f,1.0f,    0.0f, 0.0f, 1.0f,1.0f,	0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f },
-						   														
-		// WEST                                    								 
-		{ 0.0f, 0.0f, 1.0f,1.0f,    0.0f, 1.0f, 1.0f,1.0f,    0.0f, 1.0f, 0.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
-		{ 0.0f, 0.0f, 1.0f,1.0f,    0.0f, 1.0f, 0.0f,1.0f,    0.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f },
-																				   
-		// TOP            														 
-		{ 0.0f, 1.0f, 0.0f,1.0f,    0.0f, 1.0f, 1.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
-		{ 0.0f, 1.0f, 0.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0,    1.0f, 1.0f, 0.0f,1.0f ,	0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f },
-						 														 
-		// BOTTOM       														 
-		{ 1.0f, 0.0f, 1.0f,1.0f,    0.0f, 0.0f, 1.0f,1.0f,    0.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f },
-		{ 1.0f, 0.0f, 1.0f,1.0f,    0.0f, 0.0f, 0.0f,1.0f,    1.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f },
+		{ 0.0f, 0.0f, 0.0f,1.0f,    0.0f, 1.0f, 0.0f,1.0f,    1.0f, 1.0f, 0.0f,1.0f,	0.0f, 1.0f, 1.0f,		0.0f, 0.0f,1.0f,		1.0f, 0.0f, 1.0f },
+		{ 0.0f, 0.0f, 0.0f,1.0f,    1.0f, 1.0f, 0.0f,1.0f,    1.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f, 1.0f,		1.0f, 0.0f,1.0f,		1.0f, 1.0f, 1.0f },
+						   												 		  				   
+		// EAST                                                     	 		  				    
+		{ 1.0f, 0.0f, 0.0f,1.0f,    1.0f, 1.0f, 0.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0f,	0.0f, 1.0f, 1.0f,		0.0f, 0.0f,1.0f,		1.0f, 0.0f, 1.0f },
+		{ 1.0f, 0.0f, 0.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0f,    1.0f, 0.0f, 1.0f,1.0f,	0.0f, 1.0f, 1.0f,		1.0f, 0.0f,1.0f,		1.0f, 1.0f, 1.0f },
+						   																		
+		// NORTH                                   												   
+		{ 1.0f, 0.0f, 1.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0f,    0.0f, 1.0f, 1.0f,1.0f,	0.0f, 1.0f, 1.0f,		0.0f, 0.0f,1.0f,		1.0f, 0.0f, 1.0f },
+		{ 1.0f, 0.0f, 1.0f,1.0f,    0.0f, 1.0f, 1.0f,1.0f,    0.0f, 0.0f, 1.0f,1.0f,	0.0f, 1.0f, 1.0f,		1.0f, 0.0f,1.0f,		1.0f, 1.0f, 1.0f },
+						   																		  
+		// WEST                                    								 				  
+		{ 0.0f, 0.0f, 1.0f,1.0f,    0.0f, 1.0f, 1.0f,1.0f,    0.0f, 1.0f, 0.0f,1.0f,	0.0f, 1.0f, 1.0f,		0.0f, 0.0f,1.0f,		1.0f, 0.0f, 1.0f },
+		{ 0.0f, 0.0f, 1.0f,1.0f,    0.0f, 1.0f, 0.0f,1.0f,    0.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f, 1.0f,		1.0f, 0.0f,1.0f,		1.0f, 1.0f, 1.0f },
+																				   				   
+		// TOP            														 				 
+		{ 0.0f, 1.0f, 0.0f,1.0f,    0.0f, 1.0f, 1.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0f,	0.0f, 1.0f, 1.0f,		0.0f, 0.0f,1.0f,		1.0f, 0.0f, 1.0f },
+		{ 0.0f, 1.0f, 0.0f,1.0f,    1.0f, 1.0f, 1.0f,1.0,    1.0f, 1.0f, 0.0f,1.0f ,	0.0f, 1.0f, 1.0f,		1.0f, 0.0f,1.0f,		1.0f, 1.0f, 1.0f },
+						 														 				   
+		// BOTTOM       														 				 
+		{ 1.0f, 0.0f, 1.0f,1.0f,    0.0f, 0.0f, 1.0f,1.0f,    0.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f, 1.0f,		0.0f, 0.0f,1.0f,		1.0f, 0.0f, 1.0f },
+		{ 1.0f, 0.0f, 1.0f,1.0f,    0.0f, 0.0f, 0.0f,1.0f,    1.0f, 0.0f, 0.0f,1.0f,	0.0f, 1.0f, 1.0f,		1.0f, 0.0f,1.0f,		1.0f, 1.0f, 1.0f },
 
 	};
 
@@ -98,7 +98,7 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 	// Rotate cube over time
 	mat4x4 matRotationZ;
 	mat4x4 matRotationX;
-	//rotationTheta += 1.0f * elapsedTime;
+	rotationTheta += 1.0f * elapsedTime;
 
 	matRotationZ = MatrixMakeRotationZ(rotationTheta * 0.5f);
 	matRotationX = MatrixMakeRotationX(rotationTheta);
@@ -222,10 +222,24 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 				triProjected.t[1] = clipped[n].t[1];
 				triProjected.t[2] = clipped[n].t[2];
 
+				// Use the vertex vector W component to transform texture coordinates
+				triProjected.t[0].u = triProjected.t[0].u / triProjected.p[0].w;
+				triProjected.t[1].u = triProjected.t[1].u / triProjected.p[1].w;
+				triProjected.t[2].u = triProjected.t[2].u / triProjected.p[2].w;
+
+				triProjected.t[0].v = triProjected.t[0].v / triProjected.p[0].w;
+				triProjected.t[1].v = triProjected.t[1].v / triProjected.p[1].w;
+				triProjected.t[2].v = triProjected.t[2].v / triProjected.p[2].w;
+
+				triProjected.t[0].w = 1.0f / triProjected.p[0].w;
+				triProjected.t[1].w = 1.0f / triProjected.p[1].w;
+				triProjected.t[2].w = 1.0f / triProjected.p[2].w;
+
 				// Normalize the coordinates
 				triProjected.p[0] = VectorDivide(triProjected.p[0], triProjected.p[0].w);
 				triProjected.p[1] = VectorDivide(triProjected.p[1], triProjected.p[1].w);
 				triProjected.p[2] = VectorDivide(triProjected.p[2], triProjected.p[2].w);
+
 
 				triProjected.p[0].y *= -1.0f;
 				triProjected.p[1].y *= -1.0f;
@@ -309,9 +323,9 @@ bool ConsoleEngine3D::OnUserUpdate(float elapsedTime)
 			// Finally, the triangles can be drawn
 			for (auto& tri : listTriangles)
 			{
-				TexturedTriangle(tri.p[0].x, tri.p[0].y, tri.t[0].u, tri.t[0].v,
-							 	 tri.p[1].x, tri.p[1].y, tri.t[1].u, tri.t[1].v, 
-								 tri.p[2].x, tri.p[2].y, tri.t[2].u, tri.t[2].v, 
+				TexturedTriangle(tri.p[0].x, tri.p[0].y, tri.t[0].u, tri.t[0].v, tri.t[0].w,
+							 	 tri.p[1].x, tri.p[1].y, tri.t[1].u, tri.t[1].v, tri.t[1].w,
+								 tri.p[2].x, tri.p[2].y, tri.t[2].u, tri.t[2].v, tri.t[2].w,
 									spriteTexture1);
 
 				DrawTriangle(tri.p[0].x, tri.p[0].y,

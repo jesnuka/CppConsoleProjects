@@ -25,6 +25,7 @@ struct vec2d
 {
 	float u = 0.0f;
 	float v = 0.0f;
+	float w = 1.0f;
 };
 
 struct vec3d
@@ -135,9 +136,9 @@ private:
 	ConsoleSprite* spriteTexture1;
 
 	// Input XY-coordinate pairs from the Screen Space, as well as UV-Coordinate pairs, with also the sprite as the texture
-	void TexturedTriangle(int x1, int y1, float u1, float v1, 
-						  int x2, int y2, float u2, float v2, 
-						  int x3, int y3, float u3, float v3, 
+	void TexturedTriangle(int x1, int y1, float u1, float v1, float w1,
+						  int x2, int y2, float u2, float v2, float w2,
+						  int x3, int y3, float u3, float v3, float w3,
 						  ConsoleSprite *tex)
 	{
 		// Sort the coordinates from low Y to high Y
@@ -147,6 +148,7 @@ private:
 			swap(x1, x2);
 			swap(u1, u2);
 			swap(v1, v2);
+			swap(w1, w2);
 		}
 		if (y3 < y1)
 		{
@@ -154,6 +156,7 @@ private:
 			swap(x1, x3);
 			swap(u1, u3);
 			swap(v1, v3);
+			swap(w1, w3);
 		}
 		if (y3 < y2)
 		{
@@ -161,28 +164,37 @@ private:
 			swap(x2, x3);
 			swap(u2, u3);
 			swap(v2, v3);
+			swap(w2, w3);
 		}
 
 		int dy1 = y2 - y1;
 		int dx1 = x2 - x1;
 		float dv1 = v2 - v1;
 		float du1 = u2 - u1;
+		float dw1 = w2 - w1;
 
 
 		int dy2 = y3 - y1;
 		int dx2 = x3 - x1;
 		float dv2 = v3 - v1;
 		float du2 = u3 - u1;
+		float dw2 = w3 - w1;
 
 		float texU;
 		float texV;
+		float texW;
 
 		float xStepValueA = 0;
 		float xStepValueB = 0;
+
 		float uStepValue1 = 0;
 		float uStepValue2 = 0;
+
 		float vStepValue1 = 0;
 		float vStepValue2 = 0;
+
+		float wStepValue1 = 0;
+		float wStepValue2 = 0;
 
 		// If the line between the two points on the triangle is horizontal, dx will be infinity, so test against that
 		if (dy1)
@@ -194,11 +206,15 @@ private:
 			uStepValue1 = du1 / (float)abs(dy1);
 		if (dy1)
 			vStepValue1 = dv1 / (float)abs(dy1);
+		if (dy1)
+			wStepValue1 = dw1 / (float)abs(dy1);
 		// Other side as well
 		if (dy2)
 			uStepValue2 = du2 / (float)abs(dy2);
 		if (dy2)
 			vStepValue2 = dv2 / (float)abs(dy2);
+		if (dy2)
+			wStepValue2 = dw2 / (float)abs(dy2);
 
 		// Scanline filling
 
@@ -215,10 +231,12 @@ private:
 				// Following one line, get the starting value
 				float texStartU = u1 + (float)(i - y1) * uStepValue1;
 				float texStartV = v1 + (float)(i - y1) * vStepValue1;
+				float texStartW = w1 + (float)(i - y1) * wStepValue1;
 
 				// Following the other, get the ending value
 				float texEndU = u1 + (float)(i - y1) * uStepValue2;
 				float texEndV = v1 + (float)(i - y1) * vStepValue2;
+				float texEndW = w1 + (float)(i - y1) * wStepValue2;
 
 				// However, also make sure we are always drawing from a smaller x value before going to larger values
 				if (ax > bx)
@@ -226,10 +244,12 @@ private:
 					swap(ax, bx);
 					swap(texStartU, texEndU);
 					swap(texStartV, texEndV);
+					swap(texStartW, texEndW);
 				}
 
 				texU = texStartU;
 				texV = texStartV;
+				texW = texStartW;
 
 				// tStep is 1 divided by the number of scanline pixels on this line
 				float tStep = 1.0f / ((float)(bx - ax));
@@ -241,9 +261,10 @@ private:
 					// Linearly interpolate between the starting and ending point
 					texU = (1.0f - t) * texStartU + t * texEndU;
 					texV = (1.0f - t) * texStartV + t * texEndV;
+					texW = (1.0f - t) * texStartW + t * texEndW;
 
 					// Draw a single pixel
-					Draw(j, i, tex->SampleSymbol(texU, texV), tex->SampleColour(texU, texV));
+					Draw(j, i, tex->SampleSymbol(texU / texW, texV / texW), tex->SampleColour(texU / texW, texV / texW));
 					// Increase t every pixel
 					t += tStep;
 				}
@@ -255,6 +276,7 @@ private:
 		dx1 = x3 - x2;
 		dv1 = v3 - v2;
 		du1 = u3 - u2;
+		dw1 = w3 - w2;
 
 		if (dy1)
 			xStepValueA = dx1 / (float)abs(dy1);
@@ -268,6 +290,8 @@ private:
 			uStepValue1 = du1 / (float)abs(dy1);
 		if (dy1)
 			vStepValue1 = dv1 / (float)abs(dy1);
+		if (dy1)
+			wStepValue1 = dw1 / (float)abs(dy1);
 
 		// Draw the rest of the triangle
 		for (int i = y2; i <= y3; i++)
@@ -279,10 +303,12 @@ private:
 			// Following one line, get the starting value
 			float texStartU = u2 + (float)(i - y2) * uStepValue1;
 			float texStartV = v2 + (float)(i - y2) * vStepValue1;
+			float texStartW = w2 + (float)(i - y2) * wStepValue1;
 
 			// Following the other, get the ending value
 			float texEndU = u1 + (float)(i - y1) * uStepValue2;
 			float texEndV = v1 + (float)(i - y1) * vStepValue2;
+			float texEndW = w1 + (float)(i - y1) * wStepValue2;
 
 			// However, also make sure we are always drawing from a smaller x value before going to larger values
 			if (ax > bx)
@@ -290,10 +316,12 @@ private:
 				swap(ax, bx);
 				swap(texStartU, texEndU);
 				swap(texStartV, texEndV);
+				swap(texStartW, texEndW);
 			}
 
 			texU = texStartU;
 			texV = texStartV;
+			texW = texStartW;
 
 			// tStep is 1 divided by the number of scanline pixels on this line
 			float tStep = 1.0f / ((float)(bx - ax));
@@ -305,9 +333,10 @@ private:
 				// Linearly interpolate between the starting and ending point
 				texU = (1.0f - t) * texStartU + t * texEndU;
 				texV = (1.0f - t) * texStartV + t * texEndV;
+				texW = (1.0f - t) * texStartW + t * texEndW;
 
 				// Draw a single pixel
-				Draw(j, i, tex->SampleSymbol(texU, texV), tex->SampleColour(texU, texV));
+				Draw(j, i, tex->SampleSymbol(texU / texW, texV / texW), tex->SampleColour(texU / texW, texV / texW));
 				// Increase t every pixel
 				t += tStep;
 			}
@@ -514,10 +543,12 @@ private:
 			// Calculate new texture coordinates using the two points
 			outTriangle1.t[1].u = t * (outsideTexPoints[0]->u - insideTexPoints[0]->u) + insideTexPoints[0]->u;
 			outTriangle1.t[1].v = t * (outsideTexPoints[0]->v - insideTexPoints[0]->v) + insideTexPoints[0]->v;
+			outTriangle1.t[1].w = t * (outsideTexPoints[0]->w - insideTexPoints[0]->w) + insideTexPoints[0]->w;
 
 			outTriangle1.p[2] = VectorIntersectPlane(planePoint, planeNormal, *insidePoints[0], *outsidePoints[1], t);
 			outTriangle1.t[2].u = t * (outsideTexPoints[1]->u - insideTexPoints[0]->u) + insideTexPoints[0]->u;
 			outTriangle1.t[2].v = t * (outsideTexPoints[1]->v - insideTexPoints[0]->v) + insideTexPoints[0]->v;
+			outTriangle1.t[2].w = t * (outsideTexPoints[1]->w - insideTexPoints[0]->w) + insideTexPoints[0]->w;
 
 			return 1; // Return the new triangle that was formed
 		}
@@ -545,18 +576,21 @@ private:
 			outTriangle1.p[2] = VectorIntersectPlane(planePoint, planeNormal, *insidePoints[0], *outsidePoints[0], t);
 			outTriangle1.t[2].u = t * (outsideTexPoints[0]->u - insideTexPoints[0]->u) + insideTexPoints[0]->u;
 			outTriangle1.t[2].v = t * (outsideTexPoints[0]->v - insideTexPoints[0]->v) + insideTexPoints[0]->v;
+			outTriangle1.t[2].w = t * (outsideTexPoints[0]->w - insideTexPoints[0]->w) + insideTexPoints[0]->w;
 
 			// The second has one of the inside points, an intersecting point, and the new point created for outTriangle1
 			outTriangle2.p[0] = *insidePoints[1];
+			outTriangle2.t[0] = *insideTexPoints[1];
+
 			outTriangle2.p[1] = outTriangle1.p[2];
-			outTriangle2.t[0] = *insideTexPoints[0];
-			outTriangle2.t[1] = *insideTexPoints[1];
+			outTriangle2.t[1] = outTriangle1.t[2];
 
 			outTriangle2.p[2] = VectorIntersectPlane(planePoint, planeNormal, *insidePoints[1], *outsidePoints[0], t);
-			outTriangle2.t[2].u = t * (outsideTexPoints[0]->u - insideTexPoints[0]->u) + insideTexPoints[0]->u;
-			outTriangle2.t[2].v = t * (outsideTexPoints[0]->v - insideTexPoints[0]->v) + insideTexPoints[0]->v;
+			outTriangle2.t[2].u = t * (outsideTexPoints[0]->u - insideTexPoints[1]->u) + insideTexPoints[1]->u;
+			outTriangle2.t[2].v = t * (outsideTexPoints[0]->v - insideTexPoints[1]->v) + insideTexPoints[1]->v;
+			outTriangle2.t[2].w = t * (outsideTexPoints[0]->w - insideTexPoints[1]->w) + insideTexPoints[1]->w;
 
-			return 2; // Return the new triangle that was formed
+			return 2; // Return the 2 new triangles that were formed
 		}
 	}
 
