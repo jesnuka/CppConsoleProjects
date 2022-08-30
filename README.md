@@ -8,7 +8,9 @@ Currently features loading of OBJ files, moving around the scene using a camera,
 [A / D] - Rotate Camera
 [W / S] - Move Camera forward and backward
 [Arrow Keys] - Move Camera left, right, up and down
+[0 / 1] - Change between "Filled shaded teapot mesh" and "Textured cube mesh"
 ![3DEngine](https://github.com/jesnuka/CppConsoleProjects/blob/main/img/engine3d.png?raw=true)
+![3DEngine2](https://github.com/jesnuka/CppConsoleProjects/blob/main/img/engine3d_2.png?raw=true)
 
 ## Worms
 Simple Worms game with 4 teams, one controlled by the player and the three others controlled by an AI. 

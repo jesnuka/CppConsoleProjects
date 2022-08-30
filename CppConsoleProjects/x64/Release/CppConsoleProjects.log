@@ -31,7 +31,7 @@ D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(
 D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(366,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 D:\Projects\Cpp_Projects\CppConsoleProjects\3DConsoleEngine\ConsoleEngine3D.cpp(366,27): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   Generating code
-  1 of 1404 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  0 of 1404 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
